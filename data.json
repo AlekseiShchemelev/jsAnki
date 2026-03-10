@@ -1,0 +1,1198 @@
+{
+  "topics": [
+    {
+      "id": "basics",
+      "title": "Неделя 1: Основы языка",
+      "cards": [
+        {
+          "term": "variable",
+          "english": "variable",
+          "russian": "переменная (именованное хранилище данных)",
+          "example": "let name = 'John';"
+        },
+        {
+          "term": "value",
+          "english": "value",
+          "russian": "значение (данные, которые хранятся в переменной)",
+          "example": "let x = 42; // 42 is the value"
+        },
+        {
+          "term": "data type",
+          "english": "data type",
+          "russian": "тип данных (число, строка, буль и т.д.)",
+          "example": "typeof 'hello' // 'string'"
+        },
+        {
+          "term": "number",
+          "english": "number",
+          "russian": "число (целое или с плавающей точкой)",
+          "example": "let age = 25;\nlet price = 99.99;"
+        },
+        {
+          "term": "string",
+          "english": "string",
+          "russian": "строка (текстовые данные)",
+          "example": "let greeting = 'Hello World';"
+        },
+        {
+          "term": "boolean",
+          "english": "boolean",
+          "russian": "логический тип (true / false)",
+          "example": "let isActive = true;\nlet isComplete = false;"
+        },
+        {
+          "term": "null",
+          "english": "null",
+          "russian": "«ничего», пустое значение (специальное значение)",
+          "example": "let data = null;"
+        },
+        {
+          "term": "undefined",
+          "english": "undefined",
+          "russian": "«не определено» (значение не присвоено)",
+          "example": "let x;\nconsole.log(x); // undefined"
+        },
+        {
+          "term": "object",
+          "english": "object",
+          "russian": "объект (коллекция свойств)",
+          "example": "let user = {\n  name: 'John',\n  age: 30\n};"
+        },
+        {
+          "term": "symbol",
+          "english": "symbol",
+          "russian": "символ (уникальный идентификатор, ES6)",
+          "example": "let id = Symbol('id');"
+        },
+        {
+          "term": "typeof",
+          "english": "typeof operator",
+          "russian": "оператор определения типа",
+          "example": "typeof 42;        // 'number'\ntypeof 'hello';   // 'string'"
+        },
+        {
+          "term": "literal",
+          "english": "literal",
+          "russian": "литерал (явно заданное значение)",
+          "example": "42          // number literal\n'hello'     // string literal"
+        },
+        {
+          "term": "var",
+          "english": "var keyword",
+          "russian": "ключевое слово для объявления переменной (устаревшее)",
+          "example": "var name = 'John'; // function scope"
+        },
+        {
+          "term": "let",
+          "english": "let keyword",
+          "russian": "объявление переменной с блочной областью видимости",
+          "example": "let count = 0;\nif (true) {\n  let count = 1;\n}"
+        },
+        {
+          "term": "const",
+          "english": "const keyword",
+          "russian": "объявление константы (неизменяемая ссылка)",
+          "example": "const PI = 3.14159;"
+        },
+        {
+          "term": "assignment",
+          "english": "assignment",
+          "russian": "присваивание (оператор =)",
+          "example": "let x = 10;  // = is assignment"
+        },
+        {
+          "term": "operator",
+          "english": "operator",
+          "russian": "оператор (символ для выполнения операции)",
+          "example": "+, -, *, /, %, ===, &&"
+        },
+        {
+          "term": "arithmetic operators",
+          "english": "arithmetic operators",
+          "russian": "арифметические операторы (+, -, *, /, %, **)",
+          "example": "10 + 5  // 15\n10 % 3  // 1\n2 ** 3  // 8"
+        },
+        {
+          "term": "increment",
+          "english": "increment",
+          "russian": "инкремент (++, увеличение на 1)",
+          "example": "let i = 5;\ni++;  // i is now 6"
+        },
+        {
+          "term": "decrement",
+          "english": "decrement",
+          "russian": "декремент (--, уменьшение на 1)",
+          "example": "let i = 5;\ni--;  // i is now 4"
+        },
+        {
+          "term": "comparison operators",
+          "english": "comparison operators",
+          "russian": "операторы сравнения (==, ===, !=, !==, >, <, >=, <=)",
+          "example": "5 === '5'  // false\n5 == '5'   // true"
+        },
+        {
+          "term": "logical operators",
+          "english": "logical operators",
+          "russian": "логические операторы (&& — AND, || — OR, ! — NOT)",
+          "example": "true && false  // false\ntrue || false  // true\n!true          // false"
+        },
+        {
+          "term": "ternary operator",
+          "english": "ternary operator",
+          "russian": "тернарный оператор (условие ? значение1 : значение2)",
+          "example": "let age = 20;\nlet status = age >= 18 ? 'adult' : 'minor';"
+        },
+        {
+          "term": "if statement",
+          "english": "if statement",
+          "russian": "условный оператор «если»",
+          "example": "if (score >= 90) {\n  console.log('A');\n}"
+        },
+        {
+          "term": "else",
+          "english": "else",
+          "russian": "иначе (блок при ложном условии)",
+          "example": "if (x > 0) {\n  console.log('positive');\n} else {\n  console.log('not positive');\n}"
+        },
+        {
+          "term": "else if",
+          "english": "else if",
+          "russian": "иначе если (цепочка условий)",
+          "example": "if (x > 0) {\n  // positive\n} else if (x < 0) {\n  // negative\n} else {\n  // zero\n}"
+        },
+        {
+          "term": "switch",
+          "english": "switch statement",
+          "russian": "оператор множественного выбора",
+          "example": "switch (day) {\n  case 1: console.log('Mon'); break;\n  default: console.log('Other');\n}"
+        },
+        {
+          "term": "case",
+          "english": "case",
+          "russian": "вариант в switch",
+          "example": "switch (x) {\n  case 1: // do something\n  case 2: // do something else\n}"
+        },
+        {
+          "term": "default",
+          "english": "default",
+          "russian": "действие по умолчанию в switch",
+          "example": "switch (x) {\n  default: console.log('unknown');\n}"
+        },
+        {
+          "term": "break",
+          "english": "break",
+          "russian": "прервать выполнение цикла или switch",
+          "example": "for (let i = 0; i < 10; i++) {\n  if (i === 5) break;\n}"
+        },
+        {
+          "term": "continue",
+          "english": "continue",
+          "russian": "перейти к следующей итерации цикла",
+          "example": "for (let i = 0; i < 5; i++) {\n  if (i === 2) continue;\n  console.log(i);\n}"
+        },
+        {
+          "term": "for loop",
+          "english": "for loop",
+          "russian": "цикл со счётчиком",
+          "example": "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}"
+        },
+        {
+          "term": "while loop",
+          "english": "while loop",
+          "russian": "цикл с предусловием",
+          "example": "let i = 0;\nwhile (i < 5) {\n  console.log(i);\n  i++;\n}"
+        },
+        {
+          "term": "do...while loop",
+          "english": "do...while loop",
+          "russian": "цикл с постусловием",
+          "example": "let i = 0;\ndo {\n  console.log(i);\n  i++;\n} while (i < 5);"
+        },
+        {
+          "term": "infinite loop",
+          "english": "infinite loop",
+          "russian": "бесконечный цикл (ошибка)",
+          "example": "while (true) {\n  // This will run forever!\n}"
+        }
+      ]
+    },
+    {
+      "id": "functions",
+      "title": "Неделя 2: Функции и объекты",
+      "cards": [
+        {
+          "term": "function",
+          "english": "function",
+          "russian": "функция (блок кода для переиспользования)",
+          "example": "function greet(name) {\n  return 'Hello ' + name;\n}"
+        },
+        {
+          "term": "function declaration",
+          "english": "function declaration",
+          "russian": "объявление функции (через function f() {})",
+          "example": "function add(a, b) {\n  return a + b;\n}"
+        },
+        {
+          "term": "function expression",
+          "english": "function expression",
+          "russian": "функциональное выражение (const f = function() {})",
+          "example": "const add = function(a, b) {\n  return a + b;\n};"
+        },
+        {
+          "term": "arrow function",
+          "english": "arrow function",
+          "russian": "стрелочная функция (() => {})",
+          "example": "const add = (a, b) => a + b;\nconst greet = name => `Hello ${name}`;"
+        },
+        {
+          "term": "parameter",
+          "english": "parameter",
+          "russian": "параметр (переменная в определении функции)",
+          "example": "function greet(name) { // name is parameter\n  console.log(name);\n}"
+        },
+        {
+          "term": "argument",
+          "english": "argument",
+          "russian": "аргумент (значение, передаваемое при вызове)",
+          "example": "greet('John'); // 'John' is argument"
+        },
+        {
+          "term": "return",
+          "english": "return statement",
+          "russian": "оператор возврата значения из функции",
+          "example": "function add(a, b) {\n  return a + b;\n}"
+        },
+        {
+          "term": "callback",
+          "english": "callback function",
+          "russian": "функция обратного вызова (передаётся как аргумент)",
+          "example": "setTimeout(() => {\n  console.log('Done!');\n}, 1000);"
+        },
+        {
+          "term": "anonymous function",
+          "english": "anonymous function",
+          "russian": "анонимная функция (без имени)",
+          "example": "btn.addEventListener('click', function() {\n  console.log('clicked');\n});"
+        },
+        {
+          "term": "recursion",
+          "english": "recursion",
+          "russian": "рекурсия (вызов функции самой себя)",
+          "example": "function factorial(n) {\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n}"
+        },
+        {
+          "term": "IIFE",
+          "english": "Immediately Invoked Function Expression",
+          "russian": "немедленно вызываемое функциональное выражение",
+          "example": "(function() {\n  console.log('Executed immediately');\n})();"
+        },
+        {
+          "term": "scope",
+          "english": "scope",
+          "russian": "область видимости (глобальная / локальная)",
+          "example": "let global = 'global';\nfunction foo() {\n  let local = 'local';\n}"
+        },
+        {
+          "term": "closure",
+          "english": "closure",
+          "russian": "замыкание (функция запоминает свою внешнюю область)",
+          "example": "function createCounter() {\n  let count = 0;\n  return () => ++count;\n}"
+        },
+        {
+          "term": "hoisting",
+          "english": "hoisting",
+          "russian": "поднятие (переменные и функции «поднимаются» в начало)",
+          "example": "console.log(x); // undefined (hoisted)\nvar x = 5;"
+        },
+        {
+          "term": "this",
+          "english": "this keyword",
+          "russian": "контекст выполнения (указывает на объект)",
+          "example": "const obj = {\n  name: 'John',\n  greet() { console.log(this.name); }\n};"
+        },
+        {
+          "term": "call()",
+          "english": "call() method",
+          "russian": "метод для вызова функции с указанным this",
+          "example": "func.call(obj, arg1, arg2);"
+        },
+        {
+          "term": "apply()",
+          "english": "apply() method",
+          "russian": "аналогично call, но аргументы передаются массивом",
+          "example": "func.apply(obj, [arg1, arg2]);"
+        },
+        {
+          "term": "bind()",
+          "english": "bind() method",
+          "russian": "создаёт новую функцию с привязанным this",
+          "example": "const boundFunc = func.bind(obj);"
+        },
+        {
+          "term": "rest parameters",
+          "english": "rest parameters",
+          "russian": "остаточные параметры (...args)",
+          "example": "function sum(...nums) {\n  return nums.reduce((a, b) => a + b);\n}"
+        },
+        {
+          "term": "spread operator",
+          "english": "spread operator",
+          "russian": "оператор расширения (...) для массивов/объектов",
+          "example": "const arr = [1, 2, 3];\nconst newArr = [...arr, 4, 5];"
+        },
+        {
+          "term": "default parameters",
+          "english": "default parameters",
+          "russian": "параметры по умолчанию",
+          "example": "function greet(name = 'Guest') {\n  console.log('Hello ' + name);\n}"
+        },
+        {
+          "term": "pure function",
+          "english": "pure function",
+          "russian": "чистая функция (без побочных эффектов)",
+          "example": "function add(a, b) {\n  return a + b; // always same output for same input\n}"
+        },
+        {
+          "term": "higher-order function",
+          "english": "higher-order function",
+          "russian": "функция высшего порядка (принимает или возвращает функцию)",
+          "example": "function multiplyBy(n) {\n  return (x) => x * n;\n}\nconst double = multiplyBy(2);"
+        },
+        {
+          "term": "object literal",
+          "english": "object literal",
+          "russian": "литерал объекта ({ key: value })",
+          "example": "const user = {\n  name: 'John',\n  age: 30\n};"
+        },
+        {
+          "term": "property",
+          "english": "property",
+          "russian": "свойство (пара ключ-значение)",
+          "example": "const obj = { name: 'John' };\n// name is property"
+        },
+        {
+          "term": "method",
+          "english": "method",
+          "russian": "метод (функция, являющаяся свойством объекта)",
+          "example": "const obj = {\n  greet() { console.log('Hi'); }\n};"
+        },
+        {
+          "term": "key",
+          "english": "key",
+          "russian": "ключ (имя свойства)",
+          "example": "const obj = { name: 'John' };\n// 'name' is the key"
+        },
+        {
+          "term": "dot notation",
+          "english": "dot notation",
+          "russian": "точечная запись (obj.prop)",
+          "example": "obj.name  // dot notation"
+        },
+        {
+          "term": "bracket notation",
+          "english": "bracket notation",
+          "russian": "скобочная запись (obj[\"prop\"])",
+          "example": "obj['name']  // bracket notation"
+        },
+        {
+          "term": "delete operator",
+          "english": "delete operator",
+          "russian": "удаляет свойство объекта",
+          "example": "delete obj.name;"
+        },
+        {
+          "term": "in operator",
+          "english": "in operator",
+          "russian": "проверяет существование свойства",
+          "example": "'name' in obj  // true or false"
+        },
+        {
+          "term": "hasOwnProperty()",
+          "english": "hasOwnProperty() method",
+          "russian": "проверяет собственное свойство (не прототипное)",
+          "example": "obj.hasOwnProperty('name');"
+        },
+        {
+          "term": "Object.keys()",
+          "english": "Object.keys()",
+          "russian": "возвращает массив ключей объекта",
+          "example": "Object.keys({ a: 1, b: 2 }); // ['a', 'b']"
+        },
+        {
+          "term": "Object.values()",
+          "english": "Object.values()",
+          "russian": "возвращает массив значений",
+          "example": "Object.values({ a: 1, b: 2 }); // [1, 2]"
+        },
+        {
+          "term": "Object.entries()",
+          "english": "Object.entries()",
+          "russian": "возвращает массив пар [ключ, значение]",
+          "example": "Object.entries({ a: 1, b: 2 }); // [['a', 1], ['b', 2]]"
+        },
+        {
+          "term": "Object.assign()",
+          "english": "Object.assign()",
+          "russian": "копирует свойства из одного объекта в другой",
+          "example": "Object.assign({}, obj1, obj2);"
+        },
+        {
+          "term": "prototype",
+          "english": "prototype",
+          "russian": "прототип (механизм наследования в JS)",
+          "example": "Array.prototype.myMethod = function() {};"
+        },
+        {
+          "term": "constructor",
+          "english": "constructor",
+          "russian": "конструктор (функция, создающая объекты через new)",
+          "example": "function User(name) {\n  this.name = name;\n}"
+        },
+        {
+          "term": "new operator",
+          "english": "new operator",
+          "russian": "создаёт экземпляр объекта через конструктор",
+          "example": "const user = new User('John');"
+        },
+        {
+          "term": "class",
+          "english": "class",
+          "russian": "класс (синтаксический сахар над прототипами)",
+          "example": "class User {\n  constructor(name) {\n    this.name = name;\n  }\n}"
+        },
+        {
+          "term": "extends",
+          "english": "extends keyword",
+          "russian": "наследование одного класса от другого",
+          "example": "class Admin extends User {}"
+        },
+        {
+          "term": "super",
+          "english": "super keyword",
+          "russian": "вызывает конструктор родителя или его методы",
+          "example": "class Admin extends User {\n  constructor(name, role) {\n    super(name);\n    this.role = role;\n  }\n}"
+        },
+        {
+          "term": "static",
+          "english": "static keyword",
+          "russian": "статическое свойство/метод класса",
+          "example": "class User {\n  static create() { return new User(); }\n}"
+        },
+        {
+          "term": "getter",
+          "english": "getter",
+          "russian": "геттер (метод для получения значения)",
+          "example": "class User {\n  get fullName() {\n    return this.first + ' ' + this.last;\n  }\n}"
+        },
+        {
+          "term": "setter",
+          "english": "setter",
+          "russian": "сеттер (метод для установки значения)",
+          "example": "class User {\n  set age(value) {\n    this._age = value;\n  }\n}"
+        },
+        {
+          "term": "instanceof",
+          "english": "instanceof operator",
+          "russian": "проверяет, принадлежит ли объект классу",
+          "example": "user instanceof User  // true"
+        }
+      ]
+    },
+    {
+      "id": "arrays",
+      "title": "Неделя 3: Массивы, строки, числа",
+      "cards": [
+        {
+          "term": "array",
+          "english": "array",
+          "russian": "массив (упорядоченный список элементов)",
+          "example": "const arr = [1, 2, 3, 4, 5];"
+        },
+        {
+          "term": "length",
+          "english": "length property",
+          "russian": "длина массива (количество элементов)",
+          "example": "arr.length  // 5"
+        },
+        {
+          "term": "push()",
+          "english": "push() method",
+          "russian": "добавляет элемент в конец массива",
+          "example": "arr.push(6);  // [1, 2, 3, 4, 5, 6]"
+        },
+        {
+          "term": "pop()",
+          "english": "pop() method",
+          "russian": "удаляет последний элемент и возвращает его",
+          "example": "arr.pop();  // removes and returns last element"
+        },
+        {
+          "term": "unshift()",
+          "english": "unshift() method",
+          "russian": "добавляет элемент в начало",
+          "example": "arr.unshift(0);  // [0, 1, 2, 3, 4, 5]"
+        },
+        {
+          "term": "shift()",
+          "english": "shift() method",
+          "russian": "удаляет первый элемент",
+          "example": "arr.shift();  // removes first element"
+        },
+        {
+          "term": "indexOf()",
+          "english": "indexOf() method",
+          "russian": "возвращает индекс первого вхождения элемента",
+          "example": "arr.indexOf(3);  // 2"
+        },
+        {
+          "term": "includes()",
+          "english": "includes() method",
+          "russian": "проверяет наличие элемента",
+          "example": "arr.includes(3);  // true"
+        },
+        {
+          "term": "concat()",
+          "english": "concat() method",
+          "russian": "объединяет массивы",
+          "example": "[1, 2].concat([3, 4]);  // [1, 2, 3, 4]"
+        },
+        {
+          "term": "slice()",
+          "english": "slice() method",
+          "russian": "возвращает копию части массива",
+          "example": "arr.slice(1, 3);  // [2, 3]"
+        },
+        {
+          "term": "splice()",
+          "english": "splice() method",
+          "russian": "изменяет содержимое массива (удаляет/добавляет)",
+          "example": "arr.splice(1, 2, 'a', 'b');  // remove 2, insert 'a', 'b'"
+        },
+        {
+          "term": "forEach()",
+          "english": "forEach() method",
+          "russian": "выполняет функцию для каждого элемента",
+          "example": "arr.forEach(item => console.log(item));"
+        },
+        {
+          "term": "map()",
+          "english": "map() method",
+          "russian": "создаёт новый массив из результатов функции",
+          "example": "arr.map(x => x * 2);  // [2, 4, 6, 8, 10]"
+        },
+        {
+          "term": "filter()",
+          "english": "filter() method",
+          "russian": "фильтрует элементы по условию",
+          "example": "arr.filter(x => x > 2);  // [3, 4, 5]"
+        },
+        {
+          "term": "reduce()",
+          "english": "reduce() method",
+          "russian": "свёртка массива к одному значению",
+          "example": "arr.reduce((sum, x) => sum + x, 0);  // 15"
+        },
+        {
+          "term": "every()",
+          "english": "every() method",
+          "russian": "проверяет, все ли элементы удовлетворяют условию",
+          "example": "arr.every(x => x > 0);  // true"
+        },
+        {
+          "term": "some()",
+          "english": "some() method",
+          "russian": "проверяет, есть ли хотя бы один подходящий",
+          "example": "arr.some(x => x > 3);  // true"
+        },
+        {
+          "term": "find()",
+          "english": "find() method",
+          "russian": "возвращает первый элемент, удовлетворяющий условию",
+          "example": "arr.find(x => x > 2);  // 3"
+        },
+        {
+          "term": "findIndex()",
+          "english": "findIndex() method",
+          "russian": "индекс первого подходящего элемента",
+          "example": "arr.findIndex(x => x > 2);  // 2"
+        },
+        {
+          "term": "sort()",
+          "english": "sort() method",
+          "russian": "сортирует массив",
+          "example": "arr.sort((a, b) => a - b);"
+        },
+        {
+          "term": "reverse()",
+          "english": "reverse() method",
+          "russian": "переворачивает порядок элементов",
+          "example": "arr.reverse();"
+        },
+        {
+          "term": "charAt()",
+          "english": "charAt() method",
+          "russian": "возвращает символ по индексу",
+          "example": "'hello'.charAt(0);  // 'h'"
+        },
+        {
+          "term": "includes() string",
+          "english": "includes() method",
+          "russian": "проверяет наличие подстроки",
+          "example": "'hello'.includes('ell');  // true"
+        },
+        {
+          "term": "slice() string",
+          "english": "slice() method",
+          "russian": "извлекает часть строки",
+          "example": "'hello'.slice(1, 4);  // 'ell'"
+        },
+        {
+          "term": "toLowerCase()",
+          "english": "toLowerCase() method",
+          "russian": "в нижний регистр",
+          "example": "'HELLO'.toLowerCase();  // 'hello'"
+        },
+        {
+          "term": "toUpperCase()",
+          "english": "toUpperCase() method",
+          "russian": "в верхний регистр",
+          "example": "'hello'.toUpperCase();  // 'HELLO'"
+        },
+        {
+          "term": "trim()",
+          "english": "trim() method",
+          "russian": "удаляет пробелы с концов",
+          "example": "'  hello  '.trim();  // 'hello'"
+        },
+        {
+          "term": "split()",
+          "english": "split() method",
+          "russian": "разбивает строку на массив по разделителю",
+          "example": "'a,b,c'.split(',');  // ['a', 'b', 'c']"
+        },
+        {
+          "term": "replace()",
+          "english": "replace() method",
+          "russian": "заменяет подстроку",
+          "example": "'hello'.replace('l', 'L');  // 'heLlo'"
+        },
+        {
+          "term": "NaN",
+          "english": "Not a Number",
+          "russian": "«не число» (результат некорректной операции)",
+          "example": "parseInt('abc');  // NaN"
+        },
+        {
+          "term": "parseInt()",
+          "english": "parseInt() function",
+          "russian": "преобразует строку в целое число",
+          "example": "parseInt('42px');  // 42"
+        },
+        {
+          "term": "parseFloat()",
+          "english": "parseFloat() function",
+          "russian": "преобразует строку в число с точкой",
+          "example": "parseFloat('3.14');  // 3.14"
+        },
+        {
+          "term": "toFixed()",
+          "english": "toFixed() method",
+          "russian": "округляет до указанного количества знаков",
+          "example": "(3.14159).toFixed(2);  // '3.14'"
+        },
+        {
+          "term": "Math.random()",
+          "english": "Math.random()",
+          "russian": "случайное число от 0 до 1",
+          "example": "Math.random();  // 0.123... (random)"
+        },
+        {
+          "term": "Math.floor()",
+          "english": "Math.floor()",
+          "russian": "округление вниз",
+          "example": "Math.floor(4.9);  // 4"
+        },
+        {
+          "term": "Math.ceil()",
+          "english": "Math.ceil()",
+          "russian": "округление вверх",
+          "example": "Math.ceil(4.1);  // 5"
+        },
+        {
+          "term": "Math.round()",
+          "english": "Math.round()",
+          "russian": "округление до ближайшего целого",
+          "example": "Math.round(4.5);  // 5"
+        },
+        {
+          "term": "Date",
+          "english": "Date object",
+          "russian": "объект для работы с датой и временем",
+          "example": "const now = new Date();"
+        },
+        {
+          "term": "getFullYear()",
+          "english": "getFullYear() method",
+          "russian": "возвращает год",
+          "example": "new Date().getFullYear();  // 2024"
+        },
+        {
+          "term": "getMonth()",
+          "english": "getMonth() method",
+          "russian": "месяц (0–11)",
+          "example": "new Date().getMonth();  // 0-11"
+        },
+        {
+          "term": "getDate()",
+          "english": "getDate() method",
+          "russian": "день месяца (1–31)",
+          "example": "new Date().getDate();  // 1-31"
+        },
+        {
+          "term": "RegExp",
+          "english": "Regular Expression",
+          "russian": "регулярное выражение",
+          "example": "const regex = /\\d+/;"
+        },
+        {
+          "term": "test()",
+          "english": "test() method",
+          "russian": "проверяет, есть ли совпадение",
+          "example": "/\\d+/.test('abc123');  // true"
+        },
+        {
+          "term": "match()",
+          "english": "match() method",
+          "russian": "ищет совпадения по регулярному выражению",
+          "example": "'abc123'.match(/\\d+/);  // ['123']"
+        }
+      ]
+    },
+    {
+      "id": "async",
+      "title": "Неделя 4: Асинхронность, ошибки, DOM",
+      "cards": [
+        {
+          "term": "try",
+          "english": "try block",
+          "russian": "блок, в котором отслеживаются ошибки",
+          "example": "try {\n  // code that may throw error\n}"
+        },
+        {
+          "term": "catch",
+          "english": "catch block",
+          "russian": "блок обработки ошибки",
+          "example": "try {\n  // ...\n} catch (error) {\n  console.log(error);\n}"
+        },
+        {
+          "term": "finally",
+          "english": "finally block",
+          "russian": "блок, выполняющийся всегда",
+          "example": "try {\n  // ...\n} finally {\n  // cleanup\n}"
+        },
+        {
+          "term": "throw",
+          "english": "throw statement",
+          "russian": "выброс исключения",
+          "example": "throw new Error('Something went wrong');"
+        },
+        {
+          "term": "Error",
+          "english": "Error object",
+          "russian": "объект ошибки с полями name, message, stack",
+          "example": "new Error('Invalid input');"
+        },
+        {
+          "term": "Promise",
+          "english": "Promise",
+          "russian": "промис (объект асинхронной операции)",
+          "example": "const p = new Promise((resolve, reject) => {\n  resolve('done');\n});"
+        },
+        {
+          "term": "then()",
+          "english": "then() method",
+          "russian": "обрабатывает успешное выполнение",
+          "example": "promise.then(result => console.log(result));"
+        },
+        {
+          "term": "catch() promise",
+          "english": "catch() method",
+          "russian": "обрабатывает ошибку промиса",
+          "example": "promise.catch(error => console.log(error));"
+        },
+        {
+          "term": "resolve()",
+          "english": "resolve() function",
+          "russian": "возвращает успешно завершённый промис",
+          "example": "Promise.resolve('done');"
+        },
+        {
+          "term": "reject()",
+          "english": "reject() function",
+          "russian": "возвращает отклонённый промис",
+          "example": "Promise.reject('error');"
+        },
+        {
+          "term": "Promise.all()",
+          "english": "Promise.all()",
+          "russian": "ждёт все промисы",
+          "example": "Promise.all([p1, p2, p3]).then(results => {});"
+        },
+        {
+          "term": "async",
+          "english": "async keyword",
+          "russian": "объявляет асинхронную функцию",
+          "example": "async function fetchData() {\n  return 'data';\n}"
+        },
+        {
+          "term": "await",
+          "english": "await operator",
+          "russian": "ждёт выполнения промиса",
+          "example": "const data = await fetch(url);"
+        },
+        {
+          "term": "event",
+          "english": "event",
+          "russian": "событие (действие пользователя или системы)",
+          "example": "button.addEventListener('click', handler);"
+        },
+        {
+          "term": "addEventListener()",
+          "english": "addEventListener() method",
+          "russian": "назначает обработчик события",
+          "example": "element.addEventListener('click', () => {});"
+        },
+        {
+          "term": "event.target",
+          "english": "target property",
+          "russian": "элемент, на котором произошло событие",
+          "example": "event.target  // element that was clicked"
+        },
+        {
+          "term": "preventDefault()",
+          "english": "preventDefault() method",
+          "russian": "отменяет действие по умолчанию",
+          "example": "event.preventDefault();"
+        },
+        {
+          "term": "stopPropagation()",
+          "english": "stopPropagation() method",
+          "russian": "предотвращает всплытие события",
+          "example": "event.stopPropagation();"
+        },
+        {
+          "term": "DOM",
+          "english": "Document Object Model",
+          "russian": "объектная модель документа",
+          "example": "// HTML structure as objects"
+        },
+        {
+          "term": "querySelector()",
+          "english": "querySelector() method",
+          "russian": "поиск первого элемента по CSS-селектору",
+          "example": "document.querySelector('.class');"
+        },
+        {
+          "term": "querySelectorAll()",
+          "english": "querySelectorAll() method",
+          "russian": "все элементы по селектору",
+          "example": "document.querySelectorAll('.class');"
+        },
+        {
+          "term": "getElementById()",
+          "english": "getElementById() method",
+          "russian": "поиск по id",
+          "example": "document.getElementById('myId');"
+        },
+        {
+          "term": "innerHTML",
+          "english": "innerHTML property",
+          "russian": "HTML-содержимое элемента",
+          "example": "element.innerHTML = '<p>Hello</p>';"
+        },
+        {
+          "term": "textContent",
+          "english": "textContent property",
+          "russian": "текстовое содержимое (без тегов)",
+          "example": "element.textContent = 'Hello';"
+        },
+        {
+          "term": "createElement()",
+          "english": "createElement() method",
+          "russian": "создаёт новый элемент",
+          "example": "const div = document.createElement('div');"
+        },
+        {
+          "term": "appendChild()",
+          "english": "appendChild() method",
+          "russian": "добавляет дочерний узел в конец",
+          "example": "parent.appendChild(child);"
+        },
+        {
+          "term": "classList",
+          "english": "classList property",
+          "russian": "коллекция классов элемента",
+          "example": "element.classList.add('active');"
+        },
+        {
+          "term": "classList.add()",
+          "english": "add() method",
+          "russian": "добавить класс",
+          "example": "element.classList.add('active');"
+        },
+        {
+          "term": "classList.remove()",
+          "english": "remove() method",
+          "russian": "удалить класс",
+          "example": "element.classList.remove('active');"
+        },
+        {
+          "term": "classList.toggle()",
+          "english": "toggle() method",
+          "russian": "переключить класс",
+          "example": "element.classList.toggle('active');"
+        },
+        {
+          "term": "setAttribute()",
+          "english": "setAttribute() method",
+          "russian": "устанавливает атрибут",
+          "example": "element.setAttribute('data-id', '123');"
+        },
+        {
+          "term": "style",
+          "english": "style property",
+          "russian": "объект для работы с инлайн-стилями",
+          "example": "element.style.color = 'red';"
+        },
+        {
+          "term": "localStorage",
+          "english": "localStorage",
+          "russian": "хранилище без срока давности",
+          "example": "localStorage.setItem('key', 'value');\nlocalStorage.getItem('key');"
+        },
+        {
+          "term": "sessionStorage",
+          "english": "sessionStorage",
+          "russian": "хранилище на время сессии",
+          "example": "sessionStorage.setItem('key', 'value');"
+        },
+        {
+          "term": "setTimeout()",
+          "english": "setTimeout() method",
+          "russian": "выполняет функцию через заданное время",
+          "example": "setTimeout(() => {\n  console.log('delayed');\n}, 1000);"
+        },
+        {
+          "term": "setInterval()",
+          "english": "setInterval() method",
+          "russian": "выполняет функцию периодически",
+          "example": "setInterval(() => {\n  console.log('tick');\n}, 1000);"
+        },
+        {
+          "term": "fetch()",
+          "english": "fetch() function",
+          "russian": "выполняет HTTP-запрос",
+          "example": "fetch('https://api.example.com/data')\n  .then(res => res.json());"
+        },
+        {
+          "term": "JSON",
+          "english": "JavaScript Object Notation",
+          "russian": "формат обмена данными",
+          "example": "JSON.stringify({ a: 1 });  // '{\"a\":1}'"
+        },
+        {
+          "term": "JSON.stringify()",
+          "english": "JSON.stringify()",
+          "russian": "преобразует объект в JSON-строку",
+          "example": "JSON.stringify({ name: 'John' });"
+        },
+        {
+          "term": "JSON.parse()",
+          "english": "JSON.parse()",
+          "russian": "преобразует JSON-строку в объект",
+          "example": "JSON.parse('{\"name\":\"John\"}');"
+        },
+        {
+          "term": "module",
+          "english": "module",
+          "russian": "модуль (отдельный файл с кодом)",
+          "example": "// file.js is a module"
+        },
+        {
+          "term": "export",
+          "english": "export keyword",
+          "russian": "экспорт переменных/функций из модуля",
+          "example": "export const name = 'John';\nexport function greet() {}"
+        },
+        {
+          "term": "import",
+          "english": "import keyword",
+          "russian": "импорт из модуля",
+          "example": "import { name, greet } from './file.js';"
+        },
+        {
+          "term": "default export",
+          "english": "default export",
+          "russian": "экспорт по умолчанию",
+          "example": "export default function() {}"
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": "Продвинутые термины",
+      "cards": [
+        {
+          "term": "API",
+          "english": "Application Programming Interface",
+          "russian": "интерфейс взаимодействия программ",
+          "example": "// REST API endpoints"
+        },
+        {
+          "term": "SPA",
+          "english": "Single Page Application",
+          "russian": "одностраничное приложение",
+          "example": "// React, Vue, Angular apps"
+        },
+        {
+          "term": "TypeScript",
+          "english": "TypeScript",
+          "russian": "надстройка над JS со статической типизацией",
+          "example": "let name: string = 'John';"
+        },
+        {
+          "term": "npm",
+          "english": "Node Package Manager",
+          "russian": "менеджер пакетов Node.js",
+          "example": "npm install lodash"
+        },
+        {
+          "term": "iterator",
+          "english": "iterator",
+          "russian": "объект с методом next()",
+          "example": "const iter = arr[Symbol.iterator]();\niter.next();  // { value: 1, done: false }"
+        },
+        {
+          "term": "generator",
+          "english": "generator",
+          "russian": "функция, которую можно приостанавливать",
+          "example": "function* gen() {\n  yield 1;\n  yield 2;\n}"
+        },
+        {
+          "term": "yield",
+          "english": "yield keyword",
+          "russian": "приостанавливает генератор и возвращает значение",
+          "example": "function* gen() {\n  yield 1;\n  yield 2;\n}"
+        },
+        {
+          "term": "Symbol",
+          "english": "Symbol",
+          "russian": "примитивный тип для уникальных идентификаторов",
+          "example": "const sym = Symbol('description');"
+        },
+        {
+          "term": "for...of",
+          "english": "for...of loop",
+          "russian": "цикл по итерируемым объектам",
+          "example": "for (const item of arr) {\n  console.log(item);\n}"
+        },
+        {
+          "term": "for...in",
+          "english": "for...in loop",
+          "russian": "цикл по перечислимым свойствам объекта",
+          "example": "for (const key in obj) {\n  console.log(key, obj[key]);\n}"
+        },
+        {
+          "term": "debounce",
+          "english": "debounce",
+          "russian": "функция вызывается только после паузы в событиях",
+          "example": "const debounced = debounce(fn, 300);"
+        },
+        {
+          "term": "throttle",
+          "english": "throttle",
+          "russian": "ограничение частоты вызова функции",
+          "example": "const throttled = throttle(fn, 100);"
+        },
+        {
+          "term": "event loop",
+          "english": "event loop",
+          "russian": "цикл событий (обработка очередей задач)",
+          "example": "// Call stack -> Event loop -> Callback queue"
+        },
+        {
+          "term": "WeakMap",
+          "english": "WeakMap",
+          "russian": "коллекция с ключами-объектами",
+          "example": "const wm = new WeakMap();\nwm.set(obj, 'value');"
+        },
+        {
+          "term": "immutability",
+          "english": "immutability",
+          "russian": "неизменяемость данных",
+          "example": "const newObj = { ...obj, key: 'new value' };"
+        },
+        {
+          "term": "currying",
+          "english": "currying",
+          "russian": "преобразование функции в последовательность функций",
+          "example": "const add = a => b => a + b;\nconst add5 = add(5);\nadd5(3);  // 8"
+        },
+        {
+          "term": "memoization",
+          "english": "memoization",
+          "russian": "кэширование результатов вызова функций",
+          "example": "const memo = fn => {\n  const cache = {};\n  return (...args) => cache[args] ??= fn(...args);\n};"
+        },
+        {
+          "term": "WebSocket",
+          "english": "WebSocket",
+          "russian": "протокол двусторонней связи",
+          "example": "const ws = new WebSocket('ws://...');"
+        },
+        {
+          "term": "Service Workers",
+          "english": "Service Workers",
+          "russian": "фоновые скрипты для кэширования",
+          "example": "// PWA offline support"
+        },
+        {
+          "term": "IndexedDB",
+          "english": "IndexedDB",
+          "russian": "клиентская база данных",
+          "example": "const db = await openDB('myDB', 1);"
+        },
+        {
+          "term": "singleton",
+          "english": "singleton",
+          "russian": "одиночка (единственный экземпляр класса)",
+          "example": "class Singleton {\n  static instance;\n  static getInstance() {\n    return this.instance ??= new Singleton();\n  }\n}"
+        },
+        {
+          "term": "factory",
+          "english": "factory function",
+          "russian": "функция, создающая объекты",
+          "example": "function createUser(name) {\n  return { name, greet() {} };\n}"
+        },
+        {
+          "term": "observer",
+          "english": "observer",
+          "russian": "наблюдатель (уведомление об изменениях)",
+          "example": "// Pub/Sub pattern"
+        },
+        {
+          "term": "MVC",
+          "english": "Model-View-Controller",
+          "russian": "модель-представление-контроллер",
+          "example": "// Architecture pattern"
+        },
+        {
+          "term": "hook",
+          "english": "hook (React)",
+          "russian": "перехватчик состояния в функциональных компонентах",
+          "example": "const [state, setState] = useState(initial);"
+        }
+      ]
+    }
+  ]
+}
