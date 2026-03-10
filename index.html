@@ -42,10 +42,13 @@
                 <span></span>
                 <span></span>
             </button>
-            <h1 class="logo">
-                <span class="logo-icon">JS</span>
-                <span class="logo-text">Anki</span>
-            </h1>
+            
+            <!-- Global Search -->
+            <div class="global-search-container">
+                <input type="text" id="globalSearch" class="global-search" placeholder="🔍 Поиск по всем карточкам..." autocomplete="off">
+                <div id="globalSearchResults" class="global-search-results"></div>
+            </div>
+            
             <div class="header-actions">
                 <button id="themeBtn" class="icon-btn" aria-label="Сменить тему">🌙</button>
                 <button id="shuffleBtn" class="icon-btn" aria-label="Перемешать">🔀</button>
@@ -75,12 +78,19 @@
                         <span id="unknownCount">На повтор: 0</span>
                     </div>
                 </div>
+                
+                <!-- Special Modes -->
+                <div class="sidebar-modes">
+                    <button id="errorsOnlyMode" class="mode-btn mode-btn-danger">
+                        <span>🔴</span> Только ошибки
+                    </button>
+                    <button id="randomMode" class="mode-btn mode-btn-primary">
+                        <span>🎲</span> Случайный режим
+                    </button>
+                </div>
+                
                 <button id="clearProgress" class="clear-btn" title="Очистить прогресс">
                     <span>🗑️ Сбросить прогресс</span>
-                </button>
-                <button id="randomMode" class="random-btn">
-                    <span class="btn-icon">🎲</span>
-                    <span>Случайный режим</span>
                 </button>
             </div>
         </nav>
@@ -97,16 +107,26 @@
                         <h2 id="currentTopic">Выберите тему</h2>
                         <span id="cardCounter" class="counter"></span>
                     </div>
-                    <button id="studyAllBtn" class="study-btn" style="display: none;">
-                        <span>▶</span> Учить все
-                    </button>
+                    <div class="topic-actions">
+                        <!-- Card Filter -->
+                        <select id="cardFilter" class="card-filter">
+                            <option value="all">Все карточки</option>
+                            <option value="unstudied">Неизученные</option>
+                            <option value="unknown">На повторение</option>
+                        </select>
+                        <button id="studyAllBtn" class="study-btn" style="display: none;">
+                            <span>▶</span> Учить
+                        </button>
+                    </div>
                 </div>
                 <div id="cardsContainer" class="cards-container">
                     <div class="welcome">
                         <div class="welcome-icon">📖</div>
                         <h3>Добро пожаловать!</h3>
-                        <p>Выберите тему из меню или запустите случайный режим для изучения JavaScript терминов</p>
-                        <button id="welcomeRandom" class="welcome-btn">🎲 Случайный режим</button>
+                        <p>Выберите тему из меню или используйте поиск для изучения JavaScript терминов</p>
+                        <div class="welcome-actions">
+                            <button id="welcomeRandom" class="welcome-btn">🎲 Случайный режим</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -118,6 +138,9 @@
                         <span class="back-icon">←</span>
                         <span class="back-text">Назад</span>
                     </button>
+                    <div class="study-modes">
+                        <button id="examMode" class="exam-mode-btn">📝 Экзамен</button>
+                    </div>
                     <div class="progress-info">
                         <span id="progressText" class="progress-text">1 / 10</span>
                         <span id="progressPercent" class="progress-percent">10%</span>
@@ -130,7 +153,10 @@
                             <div class="card-front">
                                 <div class="card-label">Термин</div>
                                 <div id="cardTerm" class="card-term"></div>
-                                <div class="card-hint">Нажмите, чтобы перевернуть</div>
+                                <div class="card-hint">
+                                    <span>Нажмите, чтобы перевернуть</span>
+                                    <span class="keyboard-hint">или Space</span>
+                                </div>
                             </div>
                             <div class="card-back">
                                 <div class="card-section">
@@ -142,8 +168,27 @@
                                     <div id="cardRussian" class="card-russian"></div>
                                 </div>
                                 <div id="codeSection" class="card-section code-section">
-                                    <div class="card-label">Пример кода</div>
+                                    <div class="code-header">
+                                        <div class="card-label">Пример кода</div>
+                                        <button id="copyCodeBtn" class="copy-code-btn" title="Копировать код">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                            </svg>
+                                            Копировать
+                                        </button>
+                                    </div>
                                     <pre><code id="cardCode" class="language-javascript"></code></pre>
+                                </div>
+                                <div class="card-footer">
+                                    <a id="mdnLink" class="mdn-link" target="_blank" rel="noopener" style="display: none;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                        Открыть на MDN
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -180,12 +225,15 @@
                 <div class="study-actions">
                     <button id="flipBtn" class="action-btn action-btn-primary">
                         <span>Перевернуть</span>
+                        <kbd class="key-hint">Space</kbd>
                     </button>
                     <button id="knowBtn" class="action-btn action-btn-success">
                         <span>✓ Знаю</span>
+                        <kbd class="key-hint">1</kbd>
                     </button>
                     <button id="dontKnowBtn" class="action-btn action-btn-danger">
                         <span>✗ Учить</span>
+                        <kbd class="key-hint">2</kbd>
                     </button>
                 </div>
             </section>

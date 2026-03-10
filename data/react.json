@@ -1,0 +1,408 @@
+{
+  "id": "react",
+  "name": "React",
+  "topics": [
+    {
+      "id": "day31_react_basics",
+      "title": "Неделя 31: React — основы",
+      "cards": [
+        {
+          "term": "JSX",
+          "english": "JSX (JavaScript XML)",
+          "russian": "Расширение синтаксиса JavaScript для описания UI-компонентов в React. Выглядит как HTML, но является JavaScript. Компилируется в вызовы React.createElement(). Позволяет писать декларативный код интерфейса.",
+          "example": "// JSX:\nconst element = <h1>Hello, {name}</h1>;\n\n// Компилируется в:\nconst element = React.createElement(\n  'h1', null, `Hello, ${name}`\n);"
+        },
+        {
+          "term": "component",
+          "english": "React component",
+          "russian": "Компонент — строительный блок React-приложения. Может быть функциональным или классовым. Принимает входные данные (props) и возвращает JSX. Компоненты переиспользуемы и композируемы.",
+          "example": "// Функциональный компонент:\nfunction App() {\n  return <div>Hello World</div>;\n}\n\n// Использование:\n<App />"
+        },
+        {
+          "term": "functional component",
+          "english": "functional component",
+          "russian": "Функциональный компонент — обычная JavaScript-функция которая возвращает JSX. Современный стандарт в React (с хуками). Проще и легче классовых компонентов. Рекомендуется для новых проектов.",
+          "example": "const Greeting = ({ name }) => {\n  return <h1>Привет, {name}!</h1>;\n};\n\n// Использование:\n<Greeting name='John' />"
+        },
+        {
+          "term": "class component",
+          "english": "class component",
+          "russian": "Классовый компонент — компонент объявленный через ES6 класс. Наследуется от React.Component. Имеет встроенное состояние и методы жизненного цикла. Сейчас используется реже из-за хуков.",
+          "example": "class Counter extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = { count: 0 };\n  }\n  render() {\n    return <div>{this.state.count}</div>;\n  }\n}"
+        },
+        {
+          "term": "props",
+          "english": "properties (props)",
+          "russian": "Props (properties) — входные данные компонента. Передаются от родителя к дочернему компоненту. Только для чтения (нельзя изменять внутри компонента). Позволяют настраивать поведение компонентов.",
+          "example": "function Welcome({ name, age }) {\n  return (\n    <div>\n      <h1>{name}</h1>\n      <p>Возраст: {age}</p>\n    </div>\n  );\n}\n\n// Передача props:\n<Welcome name='John' age={25} />"
+        },
+        {
+          "term": "state",
+          "english": "state",
+          "russian": "Состояние — внутренние данные компонента которые могут изменяться. В классовых компонентах: this.state. В функциональных: useState хук. Изменение состояния вызывает ре-рендер компонента.",
+          "example": "// В классовом компоненте:\nthis.state = { count: 0 };\n\n// В функциональном:\nconst [count, setCount] = useState(0);\n\n// Изменение вызывает ре-рендер:\nsetCount(count + 1);"
+        },
+        {
+          "term": "setState",
+          "english": "setState method",
+          "russian": "Метод для обновления состояния в классовых компонентах. Асинхронный — изменения могут быть батчированы. Принимает объект или функцию. Никогда не изменяйте this.state напрямую.",
+          "example": "// Правильно:\nthis.setState({ count: 1 });\nthis.setState(prev => ({ count: prev.count + 1 }));\n\n// Неправильно:\nthis.state.count = 1; // Не вызовет ре-рендер!"
+        },
+        {
+          "term": "render",
+          "english": "render method",
+          "russian": "Метод render() в классовых компонентах возвращает JSX для отображения. Вызывается при каждом изменении состояния или props. Должен быть чистым (без побочных эффектов).",
+          "example": "class App extends React.Component {\n  render() {\n    return (\n      <div>\n        <h1>{this.props.title}</h1>\n      </div>\n    );\n  }\n}"
+        },
+        {
+          "term": "lifecycle methods",
+          "english": "lifecycle methods",
+          "russian": "Методы жизненного цикла классовых компонентов. Позволяют выполнять код в определённые моменты: монтирование, обновление, размонтирование. В функциональных компонентах заменяются useEffect хуком.",
+          "example": "componentDidMount()     // после монтирования\ncomponentDidUpdate()    // после обновления\ncomponentWillUnmount()  // перед размонтированием\n\n// Сейчас используется useEffect вместо этого"
+        },
+        {
+          "term": "componentDidMount",
+          "english": "componentDidMount",
+          "russian": "Метод вызывается один раз после первого рендера компонента. Идеальное место для API-запросов, подписки на события, таймеров. Аналог useEffect с пустым массивом зависимостей.",
+          "example": "componentDidMount() {\n  // Загрузка данных при монтировании\n  fetch('/api/data')\n    .then(res => res.json())\n    .then(data => this.setState({ data }));\n}"
+        },
+        {
+          "term": "componentDidUpdate",
+          "english": "componentDidUpdate",
+          "russian": "Метод вызывается после каждого обновления компонента (кроме первого рендера). Получает предыдущие props и state. Полезно для реакций на изменения props или state.",
+          "example": "componentDidUpdate(prevProps, prevState) {\n  if (prevProps.userId !== this.props.userId) {\n    this.fetchUser(this.props.userId);\n  }\n}"
+        },
+        {
+          "term": "componentWillUnmount",
+          "english": "componentWillUnmount",
+          "russian": "Метод вызывается перед удалением компонента из DOM. Место для очистки: отписка от событий, отмена таймеров, закрытие соединений. Предотвращает утечки памяти.",
+          "example": "componentWillUnmount() {\n  // Очистка таймера\n  clearInterval(this.timerId);\n  \n  // Отписка от событий\n  window.removeEventListener('resize', this.handler);\n}"
+        }
+      ]
+    },
+    {
+      "id": "day32_react_hooks",
+      "title": "Неделя 32: React — хуки",
+      "cards": [
+        {
+          "term": "useState",
+          "english": "useState hook",
+          "russian": "Хук для добавления состояния в функциональный компонент. Возвращает массив из текущего значения и функции обновления. При обновлении вызывает ре-рендер компонента. Можно использовать много раз.",
+          "example": "const [count, setCount] = useState(0);\nconst [name, setName] = useState('');\nconst [user, setUser] = useState(null);\n\n// Обновление:\nsetCount(count + 1);\nsetName('John');"
+        },
+        {
+          "term": "useEffect",
+          "english": "useEffect hook",
+          "russian": "Хук для побочных эффектов в функциональных компонентах. Заменяет lifecycle методы. Выполняется после рендера. Массив зависимостей контролирует когда эффект запускается.",
+          "example": "// Запускается при каждом рендере:\nuseEffect(() => { console.log('render'); });\n\n// Только при монтировании:\nuseEffect(() => { fetchData(); }, []);\n\n// При изменении deps:\nuseEffect(() => {}, [userId]);"
+        },
+        {
+          "term": "useContext",
+          "english": "useContext hook",
+          "russian": "Хук для доступа к React Context из функционального компонента. Позволяет потреблять значение контекста без Consumer компонента. Упрощает передачу данных через дерево компонентов.",
+          "example": "const ThemeContext = React.createContext('light');\n\nfunction ThemedButton() {\n  const theme = useContext(ThemeContext);\n  return <button className={theme}>Click</button>;\n}"
+        },
+        {
+          "term": "useReducer",
+          "english": "useReducer hook",
+          "russian": "Хук для сложной логики состояния. Альтернатива useState когда состояние зависит от предыдущего. Использует reducer функцию и dispatch. Похоже на Redux но для одного компонента.",
+          "example": "function reducer(state, action) {\n  switch(action.type) {\n    case 'increment': return { count: state.count + 1 };\n    default: return state;\n  }\n}\n\nconst [state, dispatch] = useReducer(reducer, { count: 0 });\ndispatch({ type: 'increment' });"
+        },
+        {
+          "term": "useMemo",
+          "english": "useMemo hook",
+          "russian": "Хук для мемоизации вычисляемых значений. Кэширует результат функции и пересчитывает только при изменении зависимостей. Оптимизирует производительность для тяжёлых вычислений.",
+          "example": "const expensiveValue = useMemo(() => {\n  return heavyComputation(a, b);\n}, [a, b]);\n\n// Пересчитается только если a или b изменились"
+        },
+        {
+          "term": "useCallback",
+          "english": "useCallback hook",
+          "russian": "Хук для мемоизации функций. Возвращает ту же функцию пока зависимости не изменятся. Полезно для предотвращения лишних ре-рендеров дочерних компонентов и передачи функций как props.",
+          "example": "const handleClick = useCallback(() => {\n  console.log('clicked');\n}, [dependency]);\n\n// Функция не изменится пока dependency не поменяется"
+        },
+        {
+          "term": "useRef",
+          "english": "useRef hook",
+          "russian": "Хук создающий изменяемую ссылку которая сохраняется между рендерами. Не вызывает ре-рендер при изменении. Используется для доступа к DOM элементам и хранения изменяемых значений.",
+          "example": "const inputRef = useRef(null);\n\n// Доступ к DOM:\n<input ref={inputRef} />\ninputRef.current.focus();\n\n// Хранение значения без ре-рендера:\nconst countRef = useRef(0);"
+        },
+        {
+          "term": "useLayoutEffect",
+          "english": "useLayoutEffect hook",
+          "russian": "Аналог useEffect но срабатывает синхронно после всех изменений DOM, до того как браузер отрисует. Полезно для измерений DOM и синхронных изменений. Может замедлить рендеринг.",
+          "example": "useLayoutEffect(() => {\n  // Измерение DOM\n  const rect = element.getBoundingClientRect();\n  // Синхронное изменение\n  element.style.width = rect.width + 'px';\n}, [deps]);"
+        },
+        {
+          "term": "useImperativeHandle",
+          "english": "useImperativeHandle hook",
+          "russian": "Хук для кастомизации значения ref которое получает родительский компонент. Используется с forwardRef. Позволяет контролировать какие методы/свойства доступны извне.",
+          "example": "useImperativeHandle(ref, () => ({\n  focus: () => inputRef.current.focus(),\n  blur: () => inputRef.current.blur()\n}));\n\n// Родитель может вызвать childRef.current.focus()"
+        },
+        {
+          "term": "useDebugValue",
+          "english": "useDebugValue hook",
+          "russian": "Хук для отображения метки в React DevTools для кастомных хуков. Помогает отлаживать кастомные хуки показывая их внутреннее состояние. Не влияет на работу приложения.",
+          "example": "function useCustomHook(value) {\n  useDebugValue(value ? 'Has Value' : 'No Value');\n  // ... логика хука\n  return value;\n}\n\n// В DevTools будет видно метку"
+        },
+        {
+          "term": "custom hook",
+          "english": "custom hook",
+          "russian": "Пользовательский хук — функция начинающаяся с 'use' которая использует другие хуки. Позволяет переиспользовать логику между компонентами. Основа композиции в React.",
+          "example": "function useLocalStorage(key, initialValue) {\n  const [value, setValue] = useState(() => {\n    return localStorage.getItem(key) || initialValue;\n  });\n  \n  useEffect(() => {\n    localStorage.setItem(key, value);\n  }, [key, value]);\n  \n  return [value, setValue];\n}"
+        }
+      ]
+    },
+    {
+      "id": "day33_react_advanced",
+      "title": "Неделя 33: React — продвинутые хуки и API",
+      "cards": [
+        {
+          "term": "useTransition",
+          "english": "useTransition hook",
+          "russian": "Хук для отложенных обновлений в конкурентном режиме React 18. Позволяет пометить обновления как не срочные. Улучшает отзывчивость интерфейса при тяжёлых обновлениях.",
+          "example": "const [isPending, startTransition] = useTransition();\n\nstartTransition(() => {\n  // Не срочное обновление\n  setSearchQuery(input);\n});\n\nif (isPending) {\n  return <Spinner />;\n}"
+        },
+        {
+          "term": "useDeferredValue",
+          "english": "useDeferredValue hook",
+          "russian": "Хук для откладывания обновления части UI. Возвращает отложенную версию значения. Полезно для оптимизации ввода текста когда рендеринг тяжёлый. Альтернатива debounce.",
+          "example": "const deferredQuery = useDeferredValue(query);\n\n//deferredQuery обновится позже чем query\n//пока рендерится список:\n{items.filter(item => \n  item.includes(deferredQuery)\n)}"
+        },
+        {
+          "term": "useId",
+          "english": "useId hook",
+          "russian": "Хук для генерации уникальных ID которые одинаковы на сервере и клиенте. Полезно для доступности (aria-атрибуты) и связи label с input. Решает проблемы гидратации.",
+          "example": "function Form() {\n  const id = useId();\n  return (\n    <>\n      <label htmlFor={id}>Name</label>\n      <input id={id} />\n    </>\n  );\n}"
+        },
+        {
+          "term": "React.memo",
+          "english": "React.memo HOC",
+          "russian": "Компонент высшего порядка для мемоизации функциональных компонентов. Предотвращает ре-рендер если props не изменились. Аналог PureComponent для функциональных компонентов.",
+          "example": "const MyComponent = React.memo(function({ data }) {\n  return <div>{data}</div>;\n});\n\n// С кастомным сравнением:\nReact.memo(Component, (prev, next) => {\n  return prev.id === next.id;\n});"
+        },
+        {
+          "term": "forwardRef",
+          "english": "forwardRef API",
+          "russian": "Функция для передачи ref через компоненты к дочерним элементам. По умолчанию ref не передаётся функциональным компонентам. forwardRef решает эту проблему.",
+          "example": "const FancyInput = forwardRef((props, ref) => (\n  <input ref={ref} {...props} />\n));\n\n// Использование:\nconst inputRef = useRef();\n<FancyInput ref={inputRef} />"
+        },
+        {
+          "term": "Suspense",
+          "english": "Suspense component",
+          "russian": "Компонент для ожидания загрузки контента. Показывает fallback пока дочерние компоненты загружаются. Используется с lazy() для код-сплиттинга и React 18 для серверного рендеринга.",
+          "example": "<Suspense fallback={<Loading />}>\n  <LazyComponent />\n</Suspense>\n\n// Пока LazyComponent грузится,\n// показывается <Loading />"
+        },
+        {
+          "term": "lazy",
+          "english": "lazy function",
+          "russian": "Функция для ленивой загрузки компонентов. Компонент загружается только когда нужен. Используется с Suspense. Уменьшает начальный размер бандла.",
+          "example": "const LazyComponent = lazy(() => \n  import('./HeavyComponent')\n);\n\n// Компонент загрузится только\n// когда будет отрендерен"
+        },
+        {
+          "term": "StrictMode",
+          "english": "StrictMode component",
+          "russian": "Компонент для выявления потенциальных проблем в приложении. Активирует дополнительные проверки и предупреждения в development. Не рендерит видимый UI.",
+          "example": "<StrictMode>\n  <App />\n</StrictMode>\n\n// В dev режиме:\n// - Двойной вызов эффектов\n// - Предупреждения о устаревших API"
+        },
+        {
+          "term": "Error Boundary",
+          "english": "Error Boundary component",
+          "russian": "Компонент который ловит JavaScript ошибки в дочернем дереве. Показывает fallback UI вместо сломанного компонента. Только классовые компоненты могут быть Error Boundary.",
+          "example": "class ErrorBoundary extends React.Component {\n  state = { hasError: false };\n  \n  static getDerivedStateFromError() {\n    return { hasError: true };\n  }\n  \n  render() {\n    return this.state.hasError \n      ? <Fallback /> \n      : this.props.children;\n  }\n}"
+        },
+        {
+          "term": "Fragment",
+          "english": "Fragment component",
+          "russian": "Компонент для группировки элементов без добавления лишнего узла в DOM. Короткий синтаксис: <></>. Полезно когда нужно вернуть несколько элементов из компонента.",
+          "example": "// Без Fragment (невалидно):\nreturn <h1>Title</h1><p>Text</p>;\n\n// С Fragment:\nreturn (\n  <>\n    <h1>Title</h1>\n    <p>Text</p>\n  </>\n);"
+        },
+        {
+          "term": "Portal",
+          "english": "Portal",
+          "russian": "Портал для рендеринга дочерних элементов в другую часть DOM дерева. Полезно для модальных окон, тултипов, дропдаунов. Элемент остаётся в React дереве но в другом месте DOM.",
+          "example": "return ReactDOM.createPortal(\n  <Modal>\n    <p>Modal content</p>\n  </Modal>,\n  document.getElementById('modal-root')\n);"
+        },
+        {
+          "term": "Context",
+          "english": "Context API",
+          "russian": "API для передачи данных через дерево компонентов без props drilling. Создаётся через createContext(). Избегает передачи props через много уровней. Не заменяет state менеджеры для сложного состояния.",
+          "example": "const ThemeContext = createContext('light');\n\n// Предоставление:\n<ThemeContext.Provider value='dark'>\n  <App />\n</ThemeContext.Provider>\n\n// Потребление:\nconst theme = useContext(ThemeContext);"
+        },
+        {
+          "term": "Provider",
+          "english": "Provider",
+          "russian": "Компонент-поставщик контекста. Оборачивает компоненты которые должны иметь доступ к контексту. Значение передаётся через prop value. Все дети получают доступ к значению.",
+          "example": "<AuthContext.Provider value={{ user, login }}>\n  <App />\n</AuthContext.Provider>\n\n// Все компоненты внутри App\n// могут использовать useContext(AuthContext)"
+        },
+        {
+          "term": "Consumer",
+          "english": "Consumer",
+          "russian": "Компонент-потребитель контекста (устаревший паттерн). Принимает функцию как children которая получает значение контекста. Сейчас рекомендуется использовать useContext хук вместо Consumer.",
+          "example": "// Старый способ:\n<ThemeContext.Consumer>\n  {theme => <div>{theme}</div>}\n</ThemeContext.Consumer>\n\n// Новый способ:\nconst theme = useContext(ThemeContext);"
+        }
+      ]
+    },
+    {
+      "id": "day34_react_router",
+      "title": "Неделя 34: React Router",
+      "cards": [
+        {
+          "term": "React Router",
+          "english": "React Router",
+          "russian": "Библиотека маршрутизации для React приложений. Позволяет создавать SPA с навигацией без перезагрузки страницы. Синхронизирует UI с URL. Стандарт де-факто для роутинга в React.",
+          "example": "import { BrowserRouter, Routes, Route } \n  from 'react-router-dom';\n\n<BrowserRouter>\n  <Routes>\n    <Route path='/' element={<Home />} />\n  </Routes>\n</BrowserRouter>"
+        },
+        {
+          "term": "Route",
+          "english": "Route component",
+          "russian": "Компонент определяющий маршрут. Сопоставляет URL path с компонентом. В v6 используется prop element. Может быть вложенным для создания nested routes.",
+          "example": "// React Router v6:\n<Route path='/users' element={<Users />} />\n<Route path='/users/:id' element={<User />} />\n\n// Рендерится когда URL совпадает с path"
+        },
+        {
+          "term": "Link",
+          "english": "Link component",
+          "russian": "Компонент для навигации без перезагрузки страницы. Рендерит <a> тег но перехватывает клик. Предотвращает полный рефреш. Основной способ навигации в React Router.",
+          "example": "import { Link } from 'react-router-dom';\n\n<Link to='/about'>About</Link>\n<Link to={`/user/${id}`}>Profile</Link>\n\n// Не используйте <a> для внутренней навигации!"
+        },
+        {
+          "term": "NavLink",
+          "english": "NavLink component",
+          "russian": "Расширенная версия Link с возможностью стилизации активного состояния. Автоматически добавляет класс когда маршрут активен. Полезно для навигационных меню.",
+          "example": "<NavLink \n  to='/home' \n  className={({ isActive }) => \n    isActive ? 'active' : ''\n  }\n>\n  Home\n</NavLink>"
+        },
+        {
+          "term": "Switch / Routes",
+          "english": "Switch (v5) / Routes (v6)",
+          "russian": "Компонент рендерящий первый подходящий маршрут. В v5 назывался Switch, в v6 — Routes. Гарантирует что только один маршрут рендерится одновременно.",
+          "example": "// v6:\n<Routes>\n  <Route path='/' element={<Home />} />\n  <Route path='*' element={<NotFound />} />\n</Routes>\n\n// * — catch-all для 404"
+        },
+        {
+          "term": "Redirect",
+          "english": "Redirect component",
+          "russian": "Компонент для перенаправления на другой маршрут. В v6 заменён на Navigate. Полезно для редиректа авторизации, устаревших URL, canonical paths.",
+          "example": "// v5:\n<Redirect to='/login' />\n\n// v6:\n<Navigate to='/login' replace />\n\n// replace предотвращает добавление в историю"
+        },
+        {
+          "term": "useHistory / useNavigate",
+          "english": "useHistory (v5) / useNavigate (v6)",
+          "russian": "Хук для программной навигации. Позволяет перемещаться по истории из кода. В v6 useHistory заменён на useNavigate с изменённым API.",
+          "example": "// v6:\nconst navigate = useNavigate();\n\nnavigate('/home');           // перейти\nnavigate(-1);                // назад\nnavigate('/user', { \n  state: { id: 1 } \n});                          // с состоянием"
+        },
+        {
+          "term": "useParams",
+          "english": "useParams hook",
+          "russian": "Хук для получения параметров URL. Параметры определяются в path как :paramName. Возвращает объект с параметрами. Полезно для динамических маршрутов.",
+          "example": "// Route: /users/:id\nconst { id } = useParams();\n\nconsole.log(id); // значение из URL\n\n// /users/123 → id = '123'\n// /users/abc → id = 'abc'"
+        },
+        {
+          "term": "useLocation",
+          "english": "useLocation hook",
+          "russian": "Хук возвращающий объект местоположения. Содержит pathname, search, hash, state. Полезно для аналитики, условного рендеринга на основе URL.",
+          "example": "const location = useLocation();\n\nconsole.log(location.pathname); // '/users'\nconsole.log(location.search);   // '?sort=name'\nconsole.log(location.state);    // переданное состояние"
+        },
+        {
+          "term": "useRouteMatch",
+          "english": "useRouteMatch hook",
+          "russian": "Хук для проверки соответствия маршрута без рендеринга Route. В v6 заменён на matchRoutes. Полезно для условной логики на основе текущего пути.",
+          "example": "// v5:\nconst match = useRouteMatch('/users/:id');\n\nif (match) {\n  console.log(match.params.id);\n}\n\n// v6: использовать matchRoutes()"
+        }
+      ]
+    },
+    {
+      "id": "day35_redux",
+      "title": "Неделя 35: Управление состоянием (Redux)",
+      "cards": [
+        {
+          "term": "Redux",
+          "english": "Redux",
+          "russian": "Библиотека для управления глобальным состоянием приложения. Основана на Flux архитектуре. Единый store, предсказуемые изменения. Полезно для сложных приложений с общим состоянием.",
+          "example": "import { createStore } from 'redux';\n\nconst store = createStore(reducer);\nstore.dispatch({ type: 'INCREMENT' });\nstore.getState(); // текущее состояние"
+        },
+        {
+          "term": "store",
+          "english": "Redux store",
+          "russian": "Хранилище состояния всего приложения. Единственный источник правды. Содержит state, методы dispatch и subscribe. Создаётся один раз при старте приложения.",
+          "example": "const store = createStore(\n  rootReducer,\n  applyMiddleware(thunk)\n);\n\n// Доступ к состоянию:\nconst state = store.getState();"
+        },
+        {
+          "term": "action",
+          "english": "Redux action",
+          "russian": "Объект описывающий что произошло в приложении. Обязательное поле type. Опциональное поле payload с данными. Единственный способ изменить состояние в Redux.",
+          "example": "// Простое действие:\n{ type: 'INCREMENT' }\n\n// С данными:\n{\n  type: 'ADD_USER',\n  payload: { id: 1, name: 'John' }\n}"
+        },
+        {
+          "term": "action creator",
+          "english": "action creator",
+          "russian": "Функция создающая и возвращающая action объект. Упрощает создание действий. Может быть синхронным или асинхронным (с thunk). Рекомендуется использовать вместо ручного создания.",
+          "example": "const increment = () => ({\n  type: 'INCREMENT'\n});\n\nconst addUser = (user) => ({\n  type: 'ADD_USER',\n  payload: user\n});\n\n// Использование:\ndispatch(increment());"
+        },
+        {
+          "term": "reducer",
+          "english": "reducer",
+          "russian": "Чистая функция определяющая как состояние изменяется в ответ на action. Принимает (state, action) возвращает newState. Не должна мутировать state или иметь побочных эффектов.",
+          "example": "function counterReducer(state = 0, action) {\n  switch(action.type) {\n    case 'INCREMENT':\n      return state + 1;\n    case 'DECREMENT':\n      return state - 1;\n    default:\n      return state;\n  }\n}"
+        },
+        {
+          "term": "dispatch",
+          "english": "dispatch function",
+          "russian": "Функция для отправки action в store. Единственный способ изменить состояние. Вызывает reducer который возвращает новое состояние. Синхронная операция.",
+          "example": "// Отправка действия:\nstore.dispatch({ type: 'INCREMENT' });\n\n// В React с connect:\ndispatch(increment());\n\n// С хуком:\nconst dispatch = useDispatch();\ndispatch(addUser(user));"
+        },
+        {
+          "term": "selector",
+          "english": "selector",
+          "russian": "Функция для извлечения данных из store. Может вычислять производные данные. С мемоизацией (Reselect) предотвращает лишние вычисления. Рекомендуется вместо прямого доступа к state.",
+          "example": "const selectCount = state => state.count;\n\nconst selectUserById = (state, id) => \n  state.users.find(u => u.id === id);\n\n// С Reselect:\nconst selectVisibleTodos = createSelector(\n  [selectTodos, selectFilter],\n  (todos, filter) => todos.filter(...)\n);"
+        },
+        {
+          "term": "middleware",
+          "english": "middleware",
+          "russian": "Промежуточное ПО расширяющее возможности dispatch. Позволяет выполнять побочные эффекты. Примеры: redux-thunk (асинхронность), redux-saga (генераторы), redux-logger (логирование).",
+          "example": "const store = createStore(\n  reducer,\n  applyMiddleware(\n    thunk,      // async actions\n    logger,     // logging\n    saga        // side effects\n  )\n);"
+        },
+        {
+          "term": "thunk",
+          "english": "Redux Thunk",
+          "russian": "Middleware для асинхронных действий. Позволяет dispatch-ить функции вместо объектов. Функция получает dispatch и getState. Стандарт для простых асинхронных операций.",
+          "example": "const fetchData = () => async (dispatch) => {\n  dispatch({ type: 'FETCH_START' });\n  try {\n    const data = await api.get();\n    dispatch({ type: 'FETCH_SUCCESS', data });\n  } catch (e) {\n    dispatch({ type: 'FETCH_ERROR', e });\n  }\n};"
+        },
+        {
+          "term": "saga",
+          "english": "Redux Saga",
+          "russian": "Middleware на генераторах для сложных побочных эффектов. Использует generator функции. Более мощная альтернатива thunk. Позволяет отменять, дебунсить, троттлить действия.",
+          "example": "function* fetchUser(action) {\n  try {\n    const user = yield call(api.getUser, action.id);\n    yield put({ type: 'USER_LOADED', user });\n  } catch (e) {\n    yield put({ type: 'USER_ERROR', e });\n  }\n}\n\nyield takeEvery('FETCH_USER', fetchUser);"
+        },
+        {
+          "term": "Redux Toolkit",
+          "english": "Redux Toolkit",
+          "russian": "Официальный инструментарий для Redux. Упрощает настройку и использование. Включает configureStore, createSlice, createAsyncThunk. Рекомендуется для всех новых проектов на Redux.",
+          "example": "import { configureStore, createSlice } \n  from '@reduxjs/toolkit';\n\nconst store = configureStore({\n  reducer: { counter: counterSlice }\n});"
+        },
+        {
+          "term": "slice",
+          "english": "Redux slice",
+          "russian": "Срез состояния и редюсеров для одной фичи. Создаётся через createSlice. Автоматически генерирует action creators и actions. Упрощает написание Redux кода.",
+          "example": "const counterSlice = createSlice({\n  name: 'counter',\n  initialState: { value: 0 },\n  reducers: {\n    increment: state => { state.value += 1 },\n    decrement: state => { state.value -= 1 }\n  }\n});\n\nexport const { increment, decrement } = counterSlice.actions;"
+        },
+        {
+          "term": "immer",
+          "english": "Immer",
+          "russian": "Библиотека для работы с неизменяемым состоянием. Позволяет писать мутации которые превращаются в иммутабельные обновления. Используется внутри Redux Toolkit автоматически.",
+          "example": "// С Immer (внутри createSlice):\nreducers: {\n  updateUser: (state, action) => {\n    state.name = action.payload; // мутация!\n    // Immer превратит это в immutable update\n  }\n}"
+        },
+        {
+          "term": "reselect",
+          "english": "Reselect",
+          "russian": "Библиотека для создания мемоизированных селекторов. Кэширует результаты вычислений. Пересчитывает только при изменении входных данных. Улучшает производительность больших приложений.",
+          "example": "import { createSelector } from 'reselect';\n\nconst selectTodos = state => state.todos;\nconst selectFilter = state => state.filter;\n\nexport const selectVisibleTodos = createSelector(\n  [selectTodos, selectFilter],\n  (todos, filter) => todos.filter(t => t.status === filter)\n);"
+        },
+        {
+          "term": "Flux",
+          "english": "Flux",
+          "russian": "Архитектурный паттерн однонаправленного потока данных. Action → Dispatcher → Store → View. Redux — реализация Flux. Предсказуемое управление состоянием.",
+          "example": "// Поток данных:\n// 1. User action\n// 2. Action creator\n// 3. Dispatch action\n// 4. Reducer updates store\n// 5. View re-renders"
+        }
+      ]
+    }
+  ]
+}

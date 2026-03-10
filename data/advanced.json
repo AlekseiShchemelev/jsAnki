@@ -1,0 +1,1386 @@
+{
+  "id": "advanced",
+  "name": "Продвинутые темы",
+  "topics": [
+    {
+      "id": "day8_arrays_basic",
+      "title": "Неделя 8: Массивы — базовые методы",
+      "cards": [
+        {
+          "term": "array",
+          "english": "array",
+          "russian": "Массив — упорядоченный список элементов. Элементы могут быть любого типа. Индексы начинаются с 0. Один из самых используемых типов данных в JavaScript.",
+          "example": "const arr = [1, 2, 3];\nconst mixed = [1, 'two', true, null];\nconsole.log(arr[0]); // 1"
+        },
+        {
+          "term": "length",
+          "english": "length property",
+          "russian": "Свойство length возвращает количество элементов в массиве. Можно изменять для обрезки массива. Всегда на 1 больше последнего индекса.",
+          "example": "const arr = [1, 2, 3];\nconsole.log(arr.length); // 3\n\narr.length = 2; // обрезка\nconsole.log(arr); // [1, 2]"
+        },
+        {
+          "term": "push()",
+          "english": "push() method",
+          "russian": "Добавляет один или несколько элементов в конец массива. Возвращает новую длину массива. Изменяет исходный массив (мутация).",
+          "example": "const arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr); // [1, 2, 3, 4]\nconsole.log(arr.push(5)); // 5 (новая длина)"
+        },
+        {
+          "term": "pop()",
+          "english": "pop() method",
+          "russian": "Удаляет последний элемент из массива и возвращает его. Если массив пустой — возвращает undefined. Изменяет исходный массив.",
+          "example": "const arr = [1, 2, 3];\nconst last = arr.pop();\nconsole.log(last); // 3\nconsole.log(arr);  // [1, 2]"
+        },
+        {
+          "term": "unshift()",
+          "english": "unshift() method",
+          "russian": "Добавляет один или несколько элементов в начало массива. Возвращает новую длину. Все существующие элементы сдвигаются вправо.",
+          "example": "const arr = [2, 3];\narr.unshift(1);\nconsole.log(arr); // [1, 2, 3]"
+        },
+        {
+          "term": "shift()",
+          "english": "shift() method",
+          "russian": "Удаляет первый элемент из массива и возвращает его. Все остальные элементы сдвигаются влево. Изменяет исходный массив.",
+          "example": "const arr = [1, 2, 3];\nconst first = arr.shift();\nconsole.log(first); // 1\nconsole.log(arr);   // [2, 3]"
+        },
+        {
+          "term": "indexOf()",
+          "english": "indexOf() method",
+          "russian": "Возвращает индекс первого вхождения элемента в массив. Если элемент не найден — возвращает -1. Использует строгое сравнение (===).",
+          "example": "const arr = [1, 2, 3, 2];\nconsole.log(arr.indexOf(2)); // 1 (первое вхождение)\nconsole.log(arr.indexOf(5)); // -1 (не найдено)"
+        },
+        {
+          "term": "lastIndexOf()",
+          "english": "lastIndexOf() method",
+          "russian": "Возвращает индекс последнего вхождения элемента. Поиск идёт с конца массива. Возвращает -1 если элемент не найден.",
+          "example": "const arr = [1, 2, 3, 2];\nconsole.log(arr.lastIndexOf(2)); // 3 (последнее)"
+        },
+        {
+          "term": "includes()",
+          "english": "includes() method",
+          "russian": "Проверяет наличие элемента в массиве. Возвращает true если элемент найден, false если нет. Более читаемая альтернатива indexOf !== -1.",
+          "example": "const arr = [1, 2, 3];\nconsole.log(arr.includes(2)); // true\nconsole.log(arr.includes(5)); // false"
+        },
+        {
+          "term": "concat()",
+          "english": "concat() method",
+          "russian": "Объединяет два или более массива. Возвращает новый массив, не изменяя исходные. Можно передавать массивы и отдельные значения.",
+          "example": "const arr1 = [1, 2];\nconst arr2 = [3, 4];\nconst result = arr1.concat(arr2);\nconsole.log(result); // [1, 2, 3, 4]"
+        },
+        {
+          "term": "slice()",
+          "english": "slice() method",
+          "russian": "Возвращает копию части массива от start до end (не включая end). Не изменяет исходный массив. Отрицательные индексы отсчитываются с конца.",
+          "example": "const arr = [1, 2, 3, 4];\nconsole.log(arr.slice(1, 3)); // [2, 3]\nconsole.log(arr.slice(-2));   // [3, 4]"
+        },
+        {
+          "term": "splice()",
+          "english": "splice() method",
+          "russian": "Изменяет содержимое массива: удаляет, добавляет или заменяет элементы. Возвращает массив удалённых элементов. Самый мощный метод для модификации массивов.",
+          "example": "const arr = [1, 2, 3, 4];\narr.splice(1, 2, 'a', 'b');\n// удалил 2 элемента с индекса 1, вставил 'a', 'b'\nconsole.log(arr); // [1, 'a', 'b', 4]"
+        }
+      ]
+    },
+    {
+      "id": "day9_arrays_iteration",
+      "title": "Неделя 9: Массивы — итерационные методы (часть 1)",
+      "cards": [
+        {
+          "term": "forEach()",
+          "english": "forEach() method",
+          "russian": "Выполняет функцию для каждого элемента массива. Не возвращает значение (undefined). Нельзя прервать цикл (break не работает). Альтернатива for loop.",
+          "example": "[1, 2, 3].forEach((x, index) => {\n  console.log(`${index}: ${x}`);\n});\n// 0: 1, 1: 2, 2: 3"
+        },
+        {
+          "term": "map()",
+          "english": "map() method",
+          "russian": "Создаёт новый массив из результатов вызова функции для каждого элемента. Исходный массив не изменяется. Идеален для трансформации данных.",
+          "example": "const nums = [1, 2, 3];\nconst doubled = nums.map(x => x * 2);\nconsole.log(doubled); // [2, 4, 6]\nconsole.log(nums);    // [1, 2, 3] (не изменён)"
+        },
+        {
+          "term": "filter()",
+          "english": "filter() method",
+          "russian": "Создаёт новый массив с элементами, прошедшими проверку в функции-условии. Возвращает только те элементы где функция вернула true. Не изменяет исходный массив.",
+          "example": "const nums = [1, 2, 3, 4];\nconst even = nums.filter(x => x % 2 === 0);\nconsole.log(even); // [2, 4]"
+        },
+        {
+          "term": "reduce()",
+          "english": "reduce() method",
+          "russian": "Свёртка массива к одному значению. Функция-аккумулятор вызывается для каждого элемента. Вторым аргументом задаётся начальное значение аккумулятора.",
+          "example": "const nums = [1, 2, 3];\nconst sum = nums.reduce((acc, x) => acc + x, 0);\nconsole.log(sum); // 6\n\n// acc=0, x=1 → acc=1\n// acc=1, x=2 → acc=3\n// acc=3, x=3 → acc=6"
+        },
+        {
+          "term": "reduceRight()",
+          "english": "reduceRight() method",
+          "russian": "Аналогично reduce(), но обрабатывает массив справа налево (с конца к началу). Результат может отличаться если операция не коммутативна.",
+          "example": "const chars = ['a', 'b', 'c'];\nconst result = chars.reduceRight((acc, x) => acc + x);\nconsole.log(result); // 'cba'"
+        },
+        {
+          "term": "every()",
+          "english": "every() method",
+          "russian": "Проверяет, все ли элементы массива удовлетворяют условию. Возвращает true только если функция вернула true для всех элементов. Пустой массив возвращает true.",
+          "example": "const nums = [1, 2, 3];\nconsole.log(nums.every(x => x > 0)); // true\nconsole.log(nums.every(x => x > 1)); // false"
+        },
+        {
+          "term": "some()",
+          "english": "some() method",
+          "russian": "Проверяет, есть ли хотя бы один элемент, удовлетворяющий условию. Возвращает true если функция вернула true хотя бы один раз. Пустой массив возвращает false.",
+          "example": "const nums = [1, 2, 3];\nconsole.log(nums.some(x => x > 2)); // true\nconsole.log(nums.some(x => x > 5)); // false"
+        },
+        {
+          "term": "find()",
+          "english": "find() method",
+          "russian": "Возвращает первый элемент, удовлетворяющий условию. Если ничего не найдено — возвращает undefined. В отличие от filter, возвращает элемент, а не массив.",
+          "example": "const users = [\n  { id: 1, name: 'John' },\n  { id: 2, name: 'Jane' }\n];\nconst user = users.find(u => u.id === 2);\nconsole.log(user); // { id: 2, name: 'Jane' }"
+        },
+        {
+          "term": "findIndex()",
+          "english": "findIndex() method",
+          "russian": "Возвращает индекс первого элемента, удовлетворяющего условию. Если ничего не найдено — возвращает -1. Аналог find(), но возвращает индекс.",
+          "example": "const nums = [1, 2, 3, 4];\nconst index = nums.findIndex(x => x > 2);\nconsole.log(index); // 2 (элемент 3)"
+        },
+        {
+          "term": "sort()",
+          "english": "sort() method",
+          "russian": "Сортирует элементы массива на месте (изменяет исходный). По умолчанию сортирует как строки (по Unicode). Для чисел нужен компаратор (a, b) => a - b.",
+          "example": "const nums = [3, 1, 2];\nnums.sort((a, b) => a - b); // численная сортировка\nconsole.log(nums); // [1, 2, 3]\n\n// Без компаратора: [10, 2, 1] → [1, 10, 2]"
+        },
+        {
+          "term": "reverse()",
+          "english": "reverse() method",
+          "russian": "Переворачивает порядок элементов в массиве на месте. Первый становится последним и наоборот. Изменяет исходный массив.",
+          "example": "const arr = [1, 2, 3];\narr.reverse();\nconsole.log(arr); // [3, 2, 1]"
+        }
+      ]
+    },
+    {
+      "id": "day10_strings",
+      "title": "Неделя 10: Строки",
+      "cards": [
+        {
+          "term": "string",
+          "english": "string",
+          "russian": "Строка — тип данных для хранения текста. Неизменяемый (immutable) тип. Можно создавать через одинарные, двойные или обратные кавычки.",
+          "example": "const str = 'hello';\nconst str2 = \"world\";\nconst str3 = `template ${str}`;"
+        },
+        {
+          "term": "length",
+          "english": "length property",
+          "russian": "Свойство length возвращает количество символов в строке. Пробелы и специальные символы тоже считаются. Только для чтения.",
+          "example": "const str = 'hello';\nconsole.log(str.length); // 5\n\nconst empty = '';\nconsole.log(empty.length); // 0"
+        },
+        {
+          "term": "charAt()",
+          "english": "charAt() method",
+          "russian": "Возвращает символ по указанному индексу. Индексы начинаются с 0. Если индекс вне диапазона — возвращает пустую строку.",
+          "example": "const str = 'hello';\nconsole.log(str.charAt(1)); // 'e'\nconsole.log(str.charAt(10)); // ''"
+        },
+        {
+          "term": "charCodeAt()",
+          "english": "charCodeAt() method",
+          "russian": "Возвращает UTF-16 код символа по индексу. Полезно для работы с кодировками и сравнения символов.",
+          "example": "const str = 'hello';\nconsole.log(str.charCodeAt(0)); // 104 (код 'h')\nconsole.log('a'.charCodeAt(0));  // 97"
+        },
+        {
+          "term": "concat()",
+          "english": "concat() method",
+          "russian": "Объединяет строки. Возвращает новую строку, не изменяя исходные. Аналогично оператору +, но менее распространён.",
+          "example": "const str1 = 'Hello';\nconst str2 = 'World';\nconsole.log(str1.concat(' ', str2)); // 'Hello World'"
+        },
+        {
+          "term": "includes()",
+          "english": "includes() method",
+          "russian": "Проверяет наличие подстроки в строке. Возвращает true если найдено, false если нет. Можно указать позицию начала поиска.",
+          "example": "const str = 'Hello World';\nconsole.log(str.includes('World')); // true\nconsole.log(str.includes('world')); // false (регистр важен)"
+        },
+        {
+          "term": "indexOf()",
+          "english": "indexOf() method",
+          "russian": "Возвращает индекс первого вхождения подстроки. Если не найдено — возвращает -1. Можно указать позицию начала поиска.",
+          "example": "const str = 'hello';\nconsole.log(str.indexOf('l')); // 2\nconsole.log(str.indexOf('x')); // -1"
+        },
+        {
+          "term": "lastIndexOf()",
+          "english": "lastIndexOf() method",
+          "russian": "Возвращает индекс последнего вхождения подстроки. Поиск идёт с конца строки. Возвращает -1 если не найдено.",
+          "example": "const str = 'hello';\nconsole.log(str.lastIndexOf('l')); // 3"
+        },
+        {
+          "term": "slice()",
+          "english": "slice() method",
+          "russian": "Извлекает часть строки от start до end (не включая end). Не изменяет исходную строку. Отрицательные индексы отсчитываются с конца.",
+          "example": "const str = 'hello';\nconsole.log(str.slice(1, 4)); // 'ell'\nconsole.log(str.slice(-3));   // 'llo'"
+        },
+        {
+          "term": "substring()",
+          "english": "substring() method",
+          "russian": "Аналогично slice(), но не поддерживает отрицательные индексы. Если start > end, параметры меняются местами.",
+          "example": "const str = 'hello';\nconsole.log(str.substring(1, 4)); // 'ell'\nconsole.log(str.substring(4, 1)); // 'ell' (поменялись)"
+        },
+        {
+          "term": "substr()",
+          "english": "substr() method",
+          "russian": "Устаревший метод. Извлекает подстроку по начальному индексу и длине. Не рекомендуется к использованию, используйте slice() вместо него.",
+          "example": "const str = 'hello';\nconsole.log(str.substr(1, 3)); // 'ell'\n// Лучше: str.slice(1, 4)"
+        },
+        {
+          "term": "toLowerCase()",
+          "english": "toLowerCase() method",
+          "russian": "Преобразует строку к нижнему регистру. Возвращает новую строку, не изменяя исходную. Полезно для сравнения без учёта регистра.",
+          "example": "const str = 'Hello';\nconsole.log(str.toLowerCase()); // 'hello'"
+        },
+        {
+          "term": "toUpperCase()",
+          "english": "toUpperCase() method",
+          "russian": "Преобразует строку к верхнему регистру. Возвращает новую строку. Часто используется для нормализации данных перед сравнением.",
+          "example": "const str = 'hello';\nconsole.log(str.toUpperCase()); // 'HELLO'"
+        },
+        {
+          "term": "trim()",
+          "english": "trim() method",
+          "russian": "Удаляет пробелы с начала и конца строки. Не удаляет пробелы внутри строки. Полезно для обработки пользовательского ввода.",
+          "example": "const str = '  hello  ';\nconsole.log(str.trim()); // 'hello'"
+        },
+        {
+          "term": "split()",
+          "english": "split() method",
+          "russian": "Разбивает строку на массив по разделителю. Можно указать лимит количества элементов. Обратная операция к join().",
+          "example": "const str = 'a,b,c';\nconst arr = str.split(',');\nconsole.log(arr); // ['a', 'b', 'c']"
+        },
+        {
+          "term": "replace()",
+          "english": "replace() method",
+          "russian": "Заменяет первое вхождение подстроки на новую. Возвращает новую строку. Для замены всех вхождений используйте replaceAll() или RegExp с флагом g.",
+          "example": "const str = 'hello';\nconsole.log(str.replace('l', 'x')); // 'hexlo'"
+        },
+        {
+          "term": "replaceAll()",
+          "english": "replaceAll() method",
+          "russian": "Заменяет все вхождения подстроки (ES2021). Более удобная альтернатива replace() с RegExp. Возвращает новую строку.",
+          "example": "const str = 'hello';\nconsole.log(str.replaceAll('l', 'x')); // 'hexxo'"
+        }
+      ]
+    },
+    {
+      "id": "day11_numbers_math",
+      "title": "Неделя 11: Числа и математические функции",
+      "cards": [
+        {
+          "term": "number",
+          "english": "number",
+          "russian": "Числовой тип данных в JavaScript. Включает целые числа и числа с плавающей точкой. Все числа хранятся как 64-битные float (IEEE 754).",
+          "example": "const int = 42;\nconst float = 3.14;\nconst negative = -10;\nconst infinity = Infinity;"
+        },
+        {
+          "term": "NaN",
+          "english": "Not a Number",
+          "russian": "Специальное значение «не число». Возвращается при некорректных математических операциях. NaN !== NaN (всегда false). Проверяйте через Number.isNaN().",
+          "example": "console.log(parseInt('abc')); // NaN\nconsole.log(NaN === NaN); // false\nconsole.log(Number.isNaN(NaN)); // true"
+        },
+        {
+          "term": "Infinity",
+          "english": "Infinity",
+          "russian": "Специальное значение бесконечности. Возвращается при делении на 0 или переполнении. Есть также -Infinity для отрицательной бесконечности.",
+          "example": "console.log(1 / 0);  // Infinity\nconsole.log(-1 / 0); // -Infinity\nconsole.log(Infinity > 1000000); // true"
+        },
+        {
+          "term": "isNaN()",
+          "english": "isNaN() function",
+          "russian": "Проверяет, является ли значение NaN. Сначала пытается преобразовать значение к числу. Для строгой проверки используйте Number.isNaN().",
+          "example": "console.log(isNaN(NaN));      // true\nconsole.log(isNaN('hello'));  // true (преобразуется в NaN)\nconsole.log(Number.isNaN('hello')); // false"
+        },
+        {
+          "term": "isFinite()",
+          "english": "isFinite() function",
+          "russian": "Проверяет, является ли значение конечным числом (не Infinity и не NaN). Сначала преобразует значение к числу. Используйте Number.isFinite() для строгой проверки.",
+          "example": "console.log(isFinite(42));      // true\nconsole.log(isFinite(Infinity)); // false\nconsole.log(isFinite('42'));    // true (преобразуется)"
+        },
+        {
+          "term": "parseInt()",
+          "english": "parseInt() function",
+          "russian": "Преобразует строку в целое число. Останавливается на первом нечисловом символе. Можно указать систему счисления (радиус) вторым аргументом.",
+          "example": "console.log(parseInt('42px'));   // 42\nconsole.log(parseInt('10', 2));  // 2 (двоичная)\nconsole.log(parseInt('3.14'));   // 3"
+        },
+        {
+          "term": "parseFloat()",
+          "english": "parseFloat() function",
+          "russian": "Преобразует строку в число с плавающей точкой. Аналогично parseInt(), но сохраняет дробную часть. Останавливается на первом нечисловом символе.",
+          "example": "console.log(parseFloat('3.14'));  // 3.14\nconsole.log(parseFloat('3.14px')); // 3.14\nconsole.log(parseFloat('abc'));    // NaN"
+        },
+        {
+          "term": "toFixed()",
+          "english": "toFixed() method",
+          "russian": "Округляет число до указанного количества знаков после запятой. Возвращает СТРОКУ, а не число. Полезно для форматирования денег.",
+          "example": "const num = 3.14159;\nconsole.log(num.toFixed(2)); // '3.14' (строка!)\nconsole.log(num.toFixed(0)); // '3'"
+        },
+        {
+          "term": "toPrecision()",
+          "english": "toPrecision() method",
+          "russian": "Возвращает строку с числом заданной общей длины (включая цифры до и после запятой). Может использовать экспоненциальную запись для больших чисел.",
+          "example": "const num = 123.456;\nconsole.log(num.toPrecision(4)); // '123.5'\nconsole.log(num.toPrecision(2)); // '1.2e+2'"
+        },
+        {
+          "term": "Math",
+          "english": "Math object",
+          "russian": "Встроенный объект с математическими константами и функциями. Не является конструктором — нельзя создать new Math(). Все методы статические.",
+          "example": "console.log(Math.PI);        // 3.14159...\nconsole.log(Math.E);         // 2.718...\nconsole.log(Math.sqrt(16));  // 4"
+        },
+        {
+          "term": "Math.random()",
+          "english": "Math.random()",
+          "russian": "Возвращает псевдослучайное число от 0 (включительно) до 1 (не включительно). Для целых чисел нужно округлять и масштабировать.",
+          "example": "console.log(Math.random()); // 0.123...\n\n// Случайное целое от 1 до 10:\nconst rand = Math.floor(Math.random() * 10) + 1;"
+        },
+        {
+          "term": "Math.floor()",
+          "english": "Math.floor()",
+          "russian": "Округляет число вниз до ближайшего целого. Всегда округляет в сторону меньшего значения. Полезно для получения целой части.",
+          "example": "console.log(Math.floor(3.9));  // 3\nconsole.log(Math.floor(-3.1)); // -4"
+        },
+        {
+          "term": "Math.ceil()",
+          "english": "Math.ceil()",
+          "russian": "Округляет число вверх до ближайшего целого. Всегда округляет в сторону большего значения. Противоположность floor().",
+          "example": "console.log(Math.ceil(3.1));  // 4\nconsole.log(Math.ceil(-3.9)); // -3"
+        },
+        {
+          "term": "Math.round()",
+          "english": "Math.round()",
+          "russian": "Округляет число до ближайшего целого. .5 округляется вверх. Стандартное математическое округление.",
+          "example": "console.log(Math.round(3.4)); // 3\nconsole.log(Math.round(3.5)); // 4\nconsole.log(Math.round(3.6)); // 4"
+        },
+        {
+          "term": "Math.max()",
+          "english": "Math.max()",
+          "russian": "Возвращает наибольшее из переданных чисел. Можно передать любое количество аргументов. Для массива используйте spread оператор.",
+          "example": "console.log(Math.max(1, 5, 2)); // 5\n\nconst arr = [1, 5, 2];\nconsole.log(Math.max(...arr)); // 5"
+        },
+        {
+          "term": "Math.min()",
+          "english": "Math.min()",
+          "russian": "Возвращает наименьшее из переданных чисел. Аналогично max(), но ищет минимум. Можно передать любое количество аргументов.",
+          "example": "console.log(Math.min(1, 5, 2)); // 1\n\nconst arr = [1, 5, 2];\nconsole.log(Math.min(...arr)); // 1"
+        },
+        {
+          "term": "Math.abs()",
+          "english": "Math.abs()",
+          "russian": "Возвращает модуль (абсолютное значение) числа. Отрицательные числа становятся положительными. Положительные остаются без изменений.",
+          "example": "console.log(Math.abs(-5));  // 5\nconsole.log(Math.abs(5));   // 5\nconsole.log(Math.abs(0));   // 0"
+        },
+        {
+          "term": "Math.pow()",
+          "english": "Math.pow()",
+          "russian": "Возводит число в степень. Первый аргумент — основание, второй — показатель. Современная альтернатива — оператор **.",
+          "example": "console.log(Math.pow(2, 3)); // 8\nconsole.log(2 ** 3);        // 8 (современный синтаксис)"
+        }
+      ]
+    },
+    {
+      "id": "day12_date",
+      "title": "Неделя 12: Дата и время",
+      "cards": [
+        {
+          "term": "Date",
+          "english": "Date object",
+          "russian": "Объект Date используется для работы с датой и временем в JavaScript. Позволяет создавать, изменять и форматировать даты. Хранит количество миллисекунд, прошедших с 1 января 1970 года (Unix epoch).",
+          "example": "const now = new Date();\nconsole.log(now); // текущая дата и время\n\nconst specific = new Date(2024, 0, 1); // 1 января 2024"
+        },
+        {
+          "term": "new Date()",
+          "english": "new Date()",
+          "russian": "Конструктор Date без аргументов создаёт объект с текущей датой и временем. Можно передавать год, месяц, день, часы, минуты, секунды и миллисекунды для создания конкретной даты.",
+          "example": "const now = new Date(); // сейчас\nconst custom = new Date(2024, 5, 15, 10, 30); // 15 июня 2024, 10:30"
+        },
+        {
+          "term": "getFullYear()",
+          "english": "getFullYear() method",
+          "russian": "Метод возвращает год из объекта Date в виде четырёхзначного числа (например, 2024). Полезен для отображения года пользователю или вычисления возраста.",
+          "example": "const date = new Date();\nconsole.log(date.getFullYear()); // 2024"
+        },
+        {
+          "term": "getMonth()",
+          "english": "getMonth() method",
+          "russian": "Возвращает месяц от 0 до 11 (0 = январь, 11 = декабрь). Это частая ошибка новичков — нужно прибавлять 1 для человеческого формата. Используйте для отображения месяца.",
+          "example": "const date = new Date();\nconsole.log(date.getMonth()); // 0-11\nconsole.log(date.getMonth() + 1); // 1-12 (для людей)"
+        },
+        {
+          "term": "getDate()",
+          "english": "getDate() method",
+          "russian": "Возвращает день месяца от 1 до 31. Не путать с getDay() который возвращает день недели. Используется для отображения числа месяца.",
+          "example": "const date = new Date();\nconsole.log(date.getDate()); // 1-31"
+        },
+        {
+          "term": "getDay()",
+          "english": "getDay() method",
+          "russian": "Возвращает день недели от 0 до 6 (0 = воскресенье, 6 = суббота). Полезно для определения выходных дней или отображения названия дня недели.",
+          "example": "const date = new Date();\nconsole.log(date.getDay()); // 0-6\nconst days = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];\nconsole.log(days[date.getDay()]); // название дня"
+        },
+        {
+          "term": "getHours()",
+          "english": "getHours() method",
+          "russian": "Возвращает часы от 0 до 23 в местном часовом поясе. Используется для отображения времени или проверки времени суток (утро/день/вечер).",
+          "example": "const date = new Date();\nconsole.log(date.getHours()); // 0-23"
+        },
+        {
+          "term": "getMinutes()",
+          "english": "getMinutes() method",
+          "russian": "Возвращает минуты от 0 до 59. Вместе с getHours() используется для формирования полного времени. Полезно для таймеров и отображения времени.",
+          "example": "const date = new Date();\nconsole.log(date.getMinutes()); // 0-59"
+        },
+        {
+          "term": "getSeconds()",
+          "english": "getSeconds() method",
+          "russian": "Возвращает секунды от 0 до 59. Используется для точного измерения времени, секундомеров и синхронизации процессов.",
+          "example": "const date = new Date();\nconsole.log(date.getSeconds()); // 0-59"
+        },
+        {
+          "term": "getMilliseconds()",
+          "english": "getMilliseconds() method",
+          "russian": "Возвращает миллисекунды от 0 до 999. Нужно для высокоточных измерений времени. Часто используется в производительности и анимациях.",
+          "example": "const date = new Date();\nconsole.log(date.getMilliseconds()); // 0-999"
+        },
+        {
+          "term": "getTime()",
+          "english": "getTime() method",
+          "russian": "Возвращает количество миллисекунд с 1 января 1970 года (Unix timestamp). Полезно для сравнения дат, вычисления разницы во времени и хранения дат в базе данных.",
+          "example": "const date = new Date();\nconsole.log(date.getTime()); // 1704067200000\n\n// Разница между датами:\nconst diff = date2.getTime() - date1.getTime();"
+        },
+        {
+          "term": "setFullYear()",
+          "english": "setFullYear() method",
+          "russian": "Устанавливает год для объекта Date. Изменяет исходный объект. Можно также устанавливать месяц и день дополнительными параметрами.",
+          "example": "const date = new Date();\ndate.setFullYear(2025);\nconsole.log(date.getFullYear()); // 2025"
+        },
+        {
+          "term": "toISOString()",
+          "english": "toISOString() method",
+          "russian": "Возвращает строку в формате ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ). Стандартный формат для передачи дат между сервером и клиентом. Всегда в UTC.",
+          "example": "const date = new Date();\nconsole.log(date.toISOString()); // '2024-01-15T10:30:00.000Z'"
+        },
+        {
+          "term": "toLocaleDateString()",
+          "english": "toLocaleDateString() method",
+          "russian": "Возвращает дату в формате локали пользователя. Удобно для отображения дат в интерфейсе. Можно указать локаль и опции форматирования.",
+          "example": "const date = new Date();\nconsole.log(date.toLocaleDateString('ru-RU')); // '15.01.2024'\nconsole.log(date.toLocaleDateString('en-US')); // '1/15/2024'"
+        }
+      ]
+    },
+    {
+      "id": "day13_regex",
+      "title": "Неделя 13: Регулярные выражения",
+      "cards": [
+        {
+          "term": "RegExp",
+          "english": "Regular Expression",
+          "russian": "Регулярное выражение — это шаблон для поиска и манипуляции текстом. Создаётся через литерал /pattern/ или конструктор new RegExp(). Мощный инструмент для валидации и поиска.",
+          "example": "const pattern = /abc/;\nconst pattern2 = new RegExp('abc');\nconsole.log(pattern.test('123abc')); // true"
+        },
+        {
+          "term": "pattern",
+          "english": "pattern",
+          "russian": "Шаблон регулярного выражения описывает, что искать в тексте. Использует специальные символы: \\d (цифры), \\w (слова), \\s (пробелы), . (любой символ).",
+          "example": "/\\d+/;        // одна или более цифр\n/\\w+@\\w+\\.\\w+/; // email шаблон\n/^hello$/;      // точно 'hello'"
+        },
+        {
+          "term": "flags",
+          "english": "flags",
+          "russian": "Флаги модифицируют поведение регулярного выражения. g (глобальный поиск), i (игнорировать регистр), m (многострочный). Указываются после закрывающей косой черты.",
+          "example": "/abc/g;    // найти все вхождения\n/abc/i;    // игнорировать регистр\n/abc/gi;   // оба флага вместе"
+        },
+        {
+          "term": "test()",
+          "english": "test() method",
+          "russian": "Метод test() проверяет, есть ли совпадение в строке. Возвращает true если найдено, false если нет. Самый быстрый способ простой проверки.",
+          "example": "/\\d+/.test('abc123'); // true\n/\\d+/.test('abc');    // false"
+        },
+        {
+          "term": "exec()",
+          "english": "exec() method",
+          "russian": "Метод exec() выполняет поиск и возвращает массив с деталями совпадения. Первый элемент — найденная строка, далее — захваченные группы. null если не найдено.",
+          "example": "const result = /(\\d+)-(\\d+)/.exec('12-34');\nconsole.log(result); // ['12-34', '12', '34']"
+        },
+        {
+          "term": "match()",
+          "english": "match() method (строковый)",
+          "russian": "Метод строки match() ищет совпадения по регулярному выражению. С флагом g возвращает массив всех совпадений, без g — массив с деталями первого совпадения.",
+          "example": "'abc123'.match(/\\d+/);    // ['123']\n'abc123'.match(/\\d+/g);  // ['123']"
+        },
+        {
+          "term": "matchAll()",
+          "english": "matchAll() method",
+          "russian": "Метод matchAll() возвращает итератор всех совпадений с группами. Современная альтернатива match() с флагом g. Нужно преобразовать в массив через spread или Array.from().",
+          "example": "const matches = [...'a1b2'.matchAll(/\\d/g)];\nconsole.log(matches); // [['1'], ['2']]"
+        },
+        {
+          "term": "search()",
+          "english": "search() method",
+          "russian": "Метод search() возвращает индекс первого совпадения или -1 если не найдено. Работает быстрее match() когда нужен только индекс. Не поддерживает флаг g.",
+          "example": "'abc123'.search(/\\d/); // 3\n'abc'.search(/\\d/);    // -1"
+        },
+        {
+          "term": "replace() с regex",
+          "english": "replace() with regex",
+          "russian": "Метод replace() с регулярным выражением заменяет совпадения. С флагом g заменяет все вхождения. Можно использовать $1, $2 для ссылок на группы захвата.",
+          "example": "'a1b2'.replace(/\\d/g, 'X'); // 'aXbX'\n'12-34'.replace(/(\\d+)-(\\d+)/, '$2-$1'); // '34-12'"
+        },
+        {
+          "term": "split() с regex",
+          "english": "split() with regex",
+          "russian": "Метод split() с регулярным выражением разбивает строку по сложному разделителю. Полезно когда разделитель не фиксированный (пробелы, запятые, точки).",
+          "example": "'a1b2c'.split(/\\d/);      // ['a', 'b', 'c']\n'one, two; three'.split(/[,;]\\s*/); // ['one', 'two', 'three']"
+        },
+        {
+          "term": "character classes",
+          "english": "character classes",
+          "russian": "Символьные классы определяют категории символов: \\d (цифра), \\w (слово), \\s (пробел), \\D (не цифра), \\W (не слово), \\S (не пробел). Экономят время при написании шаблонов.",
+          "example": "/\\d+/;    // цифры: 0-9\n/\\w+/;    // слова: a-z, A-Z, 0-9, _\n/\\s+/;    // пробелы: пробел, табуляция, новая строка"
+        },
+        {
+          "term": "quantifiers",
+          "english": "quantifiers",
+          "russian": "Квантификаторы указывают количество повторений: * (0 или больше), + (1 или больше), ? (0 или 1), {n} (точно n), {n,} (n или больше), {n,m} (от n до m).",
+          "example": "/a*/;     // '', 'a', 'aa', 'aaa'...\n/a+/;     // 'a', 'aa', 'aaa'...\n/a?/;     // '', 'a'\n/a{2,4}/; // 'aa', 'aaa', 'aaaa'"
+        },
+        {
+          "term": "groups",
+          "english": "capturing groups",
+          "russian": "Захватывающие группы (…) позволяют извлекать части совпадения. Нумеруются слева направо. Доступны через массив результата или $1, $2 в replace().",
+          "example": "/(\\d{2})-(\\d{2})/.exec('12-34');\n// ['12-34', '12', '34']\n// Группа 1: '12', Группа 2: '34'"
+        }
+      ]
+    },
+    {
+      "id": "day14_errors",
+      "title": "Неделя 14: Обработка ошибок",
+      "cards": [
+        {
+          "term": "error",
+          "english": "error",
+          "russian": "Ошибка — это объект, который создаётся когда что-то идёт не так в программе. Содержит информацию о проблеме: имя, сообщение, стек вызовов. Позволяет обрабатывать исключения gracefully.",
+          "example": "const err = new Error('Something went wrong');\nconsole.log(err.message); // 'Something went wrong'\nconsole.log(err.stack);   // стек вызовов"
+        },
+        {
+          "term": "exception",
+          "english": "exception",
+          "russian": "Исключение — это ошибка, возникающая во время выполнения программы. Может быть поймана через try/catch. Прерывает нормальный поток выполнения если не обработана.",
+          "example": "try {\n  throw new Exception('Error');\n} catch (e) {\n  console.log('Поймано:', e.message);\n}"
+        },
+        {
+          "term": "try",
+          "english": "try block",
+          "russian": "Блок try содержит код, в котором могут возникнуть ошибки. Если ошибка происходит, выполнение переходит в блок catch. Обязателен для обработки исключений.",
+          "example": "try {\n  riskyOperation();\n  // Если ошибка — переходим в catch\n} catch (err) {\n  console.log(err);\n}"
+        },
+        {
+          "term": "catch",
+          "english": "catch block",
+          "russian": "Блок catch выполняется только если в try произошла ошибка. Получает объект ошибки как параметр. Позволяет обработать ошибку и продолжить выполнение программы.",
+          "example": "try {\n  JSON.parse('invalid');\n} catch (err) {\n  console.log('Ошибка парсинга:', err.message);\n}"
+        },
+        {
+          "term": "finally",
+          "english": "finally block",
+          "russian": "Блок finally выполняется всегда, независимо от того, была ли ошибка. Полезен для очистки ресурсов (закрытие файлов, соединений). Выполняется после try/catch.",
+          "example": "try {\n  openFile();\n} catch (err) {\n  console.log(err);\n} finally {\n  closeFile(); // выполнится всегда\n}"
+        },
+        {
+          "term": "throw",
+          "english": "throw statement",
+          "russian": "Оператор throw создаёт и выбрасывает исключение. Можно выбрасывать любые значения, но рекомендуется объекты Error. Прерывает выполнение текущего кода.",
+          "example": "function divide(a, b) {\n  if (b === 0) {\n    throw new Error('Деление на ноль');\n  }\n  return a / b;\n}"
+        },
+        {
+          "term": "Error object",
+          "english": "Error object",
+          "russian": "Объект Error — базовый тип ошибки в JavaScript. Имеет свойства name (имя ошибки), message (описание), stack (стек вызовов). Все другие типы ошибок наследуются от него.",
+          "example": "const err = new Error('Message');\nconsole.log(err.name);    // 'Error'\nconsole.log(err.message); // 'Message'\nconsole.log(err.stack);   // стек"
+        },
+        {
+          "term": "TypeError",
+          "english": "TypeError",
+          "russian": "Ошибка типа возникает когда значение не того типа. Например, вызов метода у null/undefined или неправильный тип аргумента. Частая ошибка в JavaScript.",
+          "example": "null.foo(); // TypeError: Cannot read property 'foo' of null\n(5).toFixed('a'); // TypeError"
+        },
+        {
+          "term": "ReferenceError",
+          "english": "ReferenceError",
+          "russian": "Ошибка ссылки возникает когда используется необъявленная переменная. Часто случается при опечатках в именах переменных или использовании до объявления (для let/const).",
+          "example": "console.log(x); // ReferenceError: x is not defined\n// let x = 5;"
+        },
+        {
+          "term": "SyntaxError",
+          "english": "SyntaxError",
+          "russian": "Синтаксическая ошибка возникает при нарушении правил синтаксиса JavaScript. Обычно обнаруживается до выполнения кода. Частая причина — незакрытые скобки, кавычки.",
+          "example": "eval('foo bar'); // SyntaxError\nJSON.parse('{invalid}'); // SyntaxError"
+        },
+        {
+          "term": "RangeError",
+          "english": "RangeError",
+          "russian": "Ошибка диапазона возникает когда значение вне допустимого диапазона. Например, отрицательная длина массива или слишком глубокая рекурсия.",
+          "example": "new Array(-1); // RangeError: Invalid array length\nfunction recurse() { recurse(); }\nrecurse(); // RangeError: Maximum call stack size exceeded"
+        },
+        {
+          "term": "custom error",
+          "english": "custom error",
+          "russian": "Пользовательская ошибка создаётся через наследование от Error. Позволяет создавать специфичные типы ошибок для вашего приложения. Упрощает обработку разных типов ошибок.",
+          "example": "class ValidationError extends Error {\n  constructor(message) {\n    super(message);\n    this.name = 'ValidationError';\n  }\n}\nthrow new ValidationError('Invalid email');"
+        }
+      ]
+    },
+    {
+      "id": "day15_promises_basics",
+      "title": "Неделя 15: Промисы — основы",
+      "cards": [
+        {
+          "term": "Promise",
+          "english": "Promise",
+          "russian": "Промис — это объект, представляющий результат асинхронной операции. Может быть в одном из трёх состояний: pending (ожидание), fulfilled (успех), rejected (ошибка). Основа современного асинхронного кода.",
+          "example": "const promise = new Promise((resolve, reject) => {\n  setTimeout(() => resolve('Done'), 1000);\n});\npromise.then(result => console.log(result));"
+        },
+        {
+          "term": "pending",
+          "english": "pending",
+          "russian": "Состояние ожидания — начальное состояние промиса. Означает что асинхронная операция ещё не завершена. Промис остаётся в этом состоянии пока не будет вызван resolve или reject.",
+          "example": "const p = new Promise(() => {});\n// p находится в состоянии pending\n// пока не вызван resolve или reject"
+        },
+        {
+          "term": "fulfilled",
+          "english": "fulfilled",
+          "russian": "Состояние выполнен успешно — промис завершён с результатом. Вызывается через resolve(). Все обработчики then() получают результат. Промис больше не может изменить состояние.",
+          "example": "Promise.resolve('success')\n  .then(result => console.log(result)); // 'success'"
+        },
+        {
+          "term": "rejected",
+          "english": "rejected",
+          "russian": "Состояние отклонено — промис завершён с ошибкой. Вызывается через reject(). Обработчики catch() получают ошибку. Важно всегда обрабатывать rejected промисы.",
+          "example": "Promise.reject('error')\n  .catch(err => console.log(err)); // 'error'"
+        },
+        {
+          "term": "settled",
+          "english": "settled",
+          "russian": "Состояние завершённости — промис завершён (успешно или с ошибкой). Означает что операция больше не pending. finally() выполняется когда промис settled.",
+          "example": "promise.finally(() => {\n  // выполнится когда промис settled\n  // независимо от успеха или ошибки\n});"
+        },
+        {
+          "term": "then()",
+          "english": "then() method",
+          "russian": "Метод then() обрабатывает успешное выполнение промиса. Принимает функцию-колбэк которая получает результат. Можно цепочкой вызывать несколько then(). Возвращает новый промис.",
+          "example": "fetch('/api')\n  .then(response => response.json())\n  .then(data => console.log(data));"
+        },
+        {
+          "term": "catch()",
+          "english": "catch() method",
+          "russian": "Метод catch() обрабатывает ошибки в промисе. Аналогичен then(null, errorHandler). Ловит ошибки из всей цепочки then() выше. Рекомендуется всегда добавлять catch().",
+          "example": "fetch('/api')\n  .then(response => response.json())\n  .catch(err => console.error('Ошибка:', err));"
+        },
+        {
+          "term": "finally()",
+          "english": "finally() method",
+          "russian": "Метод finally() выполняется после завершения промиса (успех или ошибка). Не получает аргументов. Полезен для очистки: скрытия лоадеров, освобождения ресурсов.",
+          "example": "fetch('/api')\n  .then(data => showData(data))\n  .catch(err => showError(err))\n  .finally(() => hideLoader());"
+        },
+        {
+          "term": "resolve()",
+          "english": "resolve() function",
+          "russian": "Функция resolve() завершает промис успешно с переданным значением. Статический метод Promise.resolve() создаёт уже разрешённый промис. Используется внутри конструктора Promise.",
+          "example": "new Promise((resolve) => {\n  resolve('success');\n});\n\n// Или коротко:\nPromise.resolve('success');"
+        },
+        {
+          "term": "reject()",
+          "english": "reject() function",
+          "russian": "Функция reject() завершает промис с ошибкой. Статический метод Promise.reject() создаёт отклонённый промис. Используется когда асинхронная операция не удалась.",
+          "example": "new Promise((resolve, reject) => {\n  if (error) reject('Failed');\n});\n\n// Или коротко:\nPromise.reject('Failed');"
+        },
+        {
+          "term": "Promise.all()",
+          "english": "Promise.all()",
+          "russian": "Метод all() ждёт выполнения всех промисов в массиве. Возвращает массив результатов в том же порядке. Если один промис упадёт — упадёт весь all(). Полезно для параллельных запросов.",
+          "example": "Promise.all([fetch('/api1'), fetch('/api2')])\n  .then(([res1, res2]) => {\n    // оба запроса успешны\n  })\n  .catch(err => {\n    // любой запрос упал\n  });"
+        },
+        {
+          "term": "Promise.allSettled()",
+          "english": "Promise.allSettled()",
+          "russian": "Метод allSettled() ждёт завершения всех промисов независимо от результата. Возвращает массив объектов со статусом и результатом/ошибкой. Полезно когда нужно знать результат каждого.",
+          "example": "Promise.allSettled([p1, p2, p3])\n  .then(results => {\n    results.forEach(r => {\n      console.log(r.status, r.value || r.reason);\n    });\n  });"
+        },
+        {
+          "term": "Promise.race()",
+          "english": "Promise.race()",
+          "russian": "Метод race() возвращает результат первого завершившегося промиса (успех или ошибка). Остальные промисы игнорируются. Полезно для таймаутов и конкуренции запросов.",
+          "example": "Promise.race([fetch('/fast'), fetch('/slow')])\n  .then(first => console.log('Первый:', first));"
+        },
+        {
+          "term": "Promise.any()",
+          "english": "Promise.any()",
+          "russian": "Метод any() возвращает результат первого успешного промиса. Если все промисы упадут — выбросит AggregateError. Полезно когда достаточно одного успешного результата из нескольких.",
+          "example": "Promise.any([fetch('/mirror1'), fetch('/mirror2')])\n  .then(first => console.log('Успех:', first));"
+        }
+      ]
+    },
+    {
+      "id": "day16_async_await",
+      "title": "Неделя 16: Async/await",
+      "cards": [
+        {
+          "term": "async",
+          "english": "async keyword",
+          "russian": "Ключевое слово async объявляет асинхронную функцию. Такая функция всегда возвращает промис. Позволяет использовать await внутри. Делает асинхронный код более читаемым.",
+          "example": "async function fetchData() {\n  return 'data'; // автоматически в Promise\n}\nfetchData().then(console.log);"
+        },
+        {
+          "term": "await",
+          "english": "await operator",
+          "russian": "Оператор await приостанавливает выполнение async-функции до завершения промиса. Можно использовать только внутри async-функций. Делает код похожим на синхронный.",
+          "example": "async function getData() {\n  const response = await fetch('/api');\n  const data = await response.json();\n  return data;\n}"
+        },
+        {
+          "term": "async function",
+          "english": "async function",
+          "russian": "Асинхронная функция может быть объявлена через async function или async () =>. Всегда возвращает промис. Позволяет использовать await для ожидания других промисов.",
+          "example": "const getData = async () => {\n  const res = await fetch('/api');\n  return res.json();\n};"
+        },
+        {
+          "term": "try/catch с await",
+          "english": "try/catch with await",
+          "russian": "Обработка ошибок в async-функциях через try/catch. await может выбросить ошибку если промис rejected. Рекомендуется оборачивать await в try/catch для надёжности.",
+          "example": "async function fetchData() {\n  try {\n    const res = await fetch('/api');\n    return await res.json();\n  } catch (err) {\n    console.error('Ошибка:', err);\n  }\n}"
+        },
+        {
+          "term": "top-level await",
+          "english": "top-level await",
+          "russian": "Возможность использовать await на верхнем уровне модуля (ES2022). Работает только в ES-модулях. Позволяет избежать обёртывания в async-функцию для инициализации.",
+          "example": "// В модуле (.mjs или type=\"module\")\nconst data = await fetch('/api');\nconst json = await data.json();\nexport default json;"
+        },
+        {
+          "term": "sequential execution",
+          "english": "sequential execution",
+          "russian": "Последовательное выполнение — промисы выполняются один за другим. Каждый await ждёт завершения предыдущего. Медленнее но проще для зависимых операций.",
+          "example": "async function sequential() {\n  await task1(); // ждём завершения\n  await task2(); // потом начинаем\n  await task3();\n}"
+        },
+        {
+          "term": "parallel execution",
+          "english": "parallel execution",
+          "russian": "Параллельное выполнение — промисы запускаются одновременно через Promise.all(). Быстрее для независимых операций. Все результаты доступны после завершения всех.",
+          "example": "async function parallel() {\n  const [r1, r2, r3] = await Promise.all([\n    task1(), task2(), task3()\n  ]);\n}"
+        }
+      ]
+    },
+    {
+      "id": "day17_events",
+      "title": "Неделя 17: События",
+      "cards": [
+        {
+          "term": "event",
+          "english": "event",
+          "russian": "Событие — это действие или происшествие в браузере: клик, нажатие клавиши, загрузка страницы. JavaScript может реагировать на события через обработчики. Основа интерактивности веб-страниц.",
+          "example": "click, keydown, load, submit, mouseover\n// События генерируются браузером\n// при действиях пользователя"
+        },
+        {
+          "term": "event handler",
+          "english": "event handler",
+          "russian": "Обработчик события — функция которая вызывается при наступлении события. Может быть назначена через свойство элемента (onclick) или addEventListener. Получает объект события как параметр.",
+          "example": "btn.onclick = function(e) {\n  console.log('Клик!', e);\n};"
+        },
+        {
+          "term": "event listener",
+          "english": "event listener",
+          "russian": "Слушатель события — функция, зарегистрированная через addEventListener(). Позволяет добавлять несколько обработчиков на одно событие. Более гибкий способ чем onclick.",
+          "example": "btn.addEventListener('click', handler);\n// Можно добавить несколько:\nbtn.addEventListener('click', handler2);"
+        },
+        {
+          "term": "addEventListener()",
+          "english": "addEventListener() method",
+          "russian": "Метод addEventListener() регистрирует обработчик события на элементе. Принимает тип события, функцию и опции. Рекомендуется вместо onclick для лучшего контроля.",
+          "example": "element.addEventListener('click', (e) => {\n  console.log('Clicked:', e.target);\n}, { once: true }); // выполнится один раз"
+        },
+        {
+          "term": "removeEventListener()",
+          "english": "removeEventListener() method",
+          "russian": "Метод removeEventListener() удаляет ранее зарегистрированный обработчик. Нужна та же функция-ссылка что и при добавлении. Важно для очистки и предотвращения утечек памяти.",
+          "example": "function handler(e) { console.log(e); }\nelement.addEventListener('click', handler);\n// Позже:\nelement.removeEventListener('click', handler);"
+        },
+        {
+          "term": "event object",
+          "english": "event object",
+          "russian": "Объект события передаётся в обработчик как первый параметр. Содержит информацию о событии: тип, целевой элемент, координаты, клавиши. Разные события имеют разные свойства.",
+          "example": "element.addEventListener('click', (e) => {\n  console.log(e.type);      // 'click'\n  console.log(e.target);    // элемент\n  console.log(e.clientX);   // координаты\n});"
+        },
+        {
+          "term": "target",
+          "english": "target property",
+          "russian": "Свойство target указывает на элемент, на котором произошло событие. Не путать с currentTarget. Полезно для делегирования событий когда обработчик на родителе.",
+          "example": "list.addEventListener('click', (e) => {\n  console.log(e.target); // конкретный li\n});"
+        },
+        {
+          "term": "currentTarget",
+          "english": "currentTarget property",
+          "russian": "Свойство currentTarget указывает на элемент, к которому привязан обработчик. Может отличаться от target при всплытии. Всегда равен элементу с addEventListener.",
+          "example": "list.addEventListener('click', (e) => {\n  console.log(e.currentTarget); // list\n  console.log(e.target);        // может быть li внутри\n});"
+        },
+        {
+          "term": "preventDefault()",
+          "english": "preventDefault() method",
+          "russian": "Метод preventDefault() отменяет стандартное поведение браузера. Например, предотвращает отправку формы или переход по ссылке. Не останавливает всплытие события.",
+          "example": "form.addEventListener('submit', (e) => {\n  e.preventDefault(); // форма не отправится\n  // своя логика отправки\n});"
+        },
+        {
+          "term": "stopPropagation()",
+          "english": "stopPropagation() method",
+          "russian": "Метод stopPropagation() останавливает всплытие события. Событие не дойдёт до родительских элементов. Полезно когда нужно обработать событие только на целевом элементе.",
+          "example": "child.addEventListener('click', (e) => {\n  e.stopPropagation();\n  // родитель не получит клик\n});"
+        },
+        {
+          "term": "event bubbling",
+          "english": "event bubbling",
+          "russian": "Всплытие события — механизм когда событие сначала обрабатывается на целевом элементе, затем поднимается вверх по DOM-дереву. Позволяет использовать делегирование событий.",
+          "example": "click на li → всплывает к ul → к body → к document\n// Можно перехватить на любом уровне"
+        },
+        {
+          "term": "event capturing",
+          "english": "event capturing",
+          "russian": "Погружение события — фаза когда событие идёт от document к целевому элементу. По умолчанию обработчики регистрируются на фазу всплытия. Можно использовать { capture: true } для погружения.",
+          "example": "element.addEventListener('click', handler, {\n  capture: true // фаза погружения\n});"
+        },
+        {
+          "term": "event delegation",
+          "english": "event delegation",
+          "russian": "Делегирование событий — техника когда обработчик вешается на родителя вместо множества дочерних элементов. Использует всплытие. Экономит память и работает для динамических элементов.",
+          "example": "list.addEventListener('click', (e) => {\n  if (e.target.tagName === 'LI') {\n    console.log('LI clicked:', e.target);\n  }\n});"
+        },
+        {
+          "term": "click",
+          "english": "click event",
+          "russian": "Событие click происходит при клике мышью по элементу. Одно из самых используемых событий. Срабатывает после mousedown и mouseup на одном элементе.",
+          "example": "btn.addEventListener('click', () => {\n  console.log('Button clicked!');\n});\n\n// Программный клик:\nbtn.click();"
+        },
+        {
+          "term": "mouseover, mouseout",
+          "english": "mouseover/mouseout",
+          "russian": "События mouseover и mouseout срабатывают при наведении и уходе мыши с элемента. mouseover всплывает, mouseenter — нет. Полезно для hover-эффектов.",
+          "example": "element.addEventListener('mouseover', () => {\n  element.style.background = 'yellow';\n});\nelement.addEventListener('mouseout', () => {\n  element.style.background = '';\n});"
+        },
+        {
+          "term": "keydown, keyup",
+          "english": "keydown/keyup",
+          "russian": "События keydown (нажатие) и keyup (отпускание) клавиш. Срабатывают на window или фокусном элементе. Позволяют отслеживать ввод с клавиатуры для игр и горячих клавиш.",
+          "example": "window.addEventListener('keydown', (e) => {\n  console.log('Клавиша:', e.key);\n  if (e.key === 'Enter') { /* ... */ }\n});"
+        },
+        {
+          "term": "submit",
+          "english": "submit event",
+          "russian": "Событие submit происходит при отправке формы. Срабатывает только на элементе form. Позволяет валидировать данные перед отправкой. Нужно preventDefault() для AJAX-отправки.",
+          "example": "form.addEventListener('submit', (e) => {\n  e.preventDefault();\n  const data = new FormData(form);\n  // отправка через fetch\n});"
+        }
+      ]
+    },
+    {
+      "id": "day24_advanced_abbr",
+      "title": "Неделя 24: Продвинутые аббревиатуры и термины",
+      "cards": [
+        {
+          "term": "API",
+          "english": "Application Programming Interface",
+          "russian": "Интерфейс программирования приложений — набор правил для взаимодействия программ. Позволяет разным системам обмениваться данными. Веб-API доступны через HTTP.",
+          "example": "// Пример вызова API:\nfetch('https://api.github.com/users/octocat')\n  .then(res => res.json())\n  .then(data => console.log(data));"
+        },
+        {
+          "term": "CDN",
+          "english": "Content Delivery Network",
+          "russian": "Сеть доставки контента — распределённая сеть серверов для быстрой загрузки ресурсов. Кэширует статические файлы ближе к пользователю. Ускоряет загрузку сайтов.",
+          "example": "<!-- Подключение библиотеки через CDN -->\n<script src=\"https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js\"></script>"
+        },
+        {
+          "term": "SPA",
+          "english": "Single Page Application",
+          "russian": "Одностраничное приложение — веб-приложение загружающее одну HTML-страницу. Навигация происходит без перезагрузки через JavaScript. Примеры: React, Vue, Angular приложения.",
+          "example": "// SPA не перезагружает страницу:\n// Вместо этого обновляет DOM:\nrouter.navigate('/about');\n// Контент меняется динамически"
+        },
+        {
+          "term": "SSR",
+          "english": "Server-Side Rendering",
+          "russian": "Рендеринг на сервере — генерация HTML на сервере перед отправкой клиенту. Улучшает SEO и начальную загрузку. Используется в Next.js, Nuxt.js.",
+          "example": "// Next.js автоматически делает SSR:\n// Страница рендерится на сервере\n// и отправляется готовый HTML клиенту"
+        },
+        {
+          "term": "CSR",
+          "english": "Client-Side Rendering",
+          "russian": "Рендеринг на клиенте — генерация HTML в браузере через JavaScript. Пустой HTML загружается сначала, потом контент. Используется в create-react-app по умолчанию.",
+          "example": "// CSR: сначала пустой HTML\n// Потом JS загружается и рендерит:\n<div id=\"root\"></div>\n// React заполняет root контентом"
+        },
+        {
+          "term": "JWT",
+          "english": "JSON Web Token",
+          "russian": "Токен для аутентификации содержащий данные в формате JSON. Подписывается криптографически для безопасности. Состоит из трёх частей: header, payload, signature.",
+          "example": "// Структура JWT:\n// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\n// .eyJzdWIiOiIxMjM0NTY3ODkwIn0\n// .SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        },
+        {
+          "term": "OAuth",
+          "english": "Open Authorization",
+          "russian": "Протокол авторизации позволяющий приложениям получать ограниченный доступ к аккаунтам пользователей. Используется для входа через Google, Facebook, GitHub. Безопасная альтернатива передачи пароля.",
+          "example": "// Вход через OAuth:\n// 1. Пользователь нажимает \"Login with Google\"\n// 2. Перенаправляется на Google\n// 3. После подтверждения возвращается с токеном"
+        },
+        {
+          "term": "WebSocket",
+          "english": "WebSocket",
+          "russian": "Протокол двусторонней связи между клиентом и сервером. Позволяет серверу отправлять данные клиенту без запроса. Идеален для чатов, уведомлений, real-time приложений.",
+          "example": "const ws = new WebSocket('ws://localhost:8080');\nws.onmessage = (event) => {\n  console.log('Сообщение:', event.data);\n};\nws.send('Hello Server!');"
+        },
+        {
+          "term": "GraphQL",
+          "english": "GraphQL",
+          "russian": "Язык запросов к API разработанный Facebook. Позволяет клиенту запрашивать только нужные данные. Альтернатива REST с одним endpoint. Типизированная система.",
+          "example": "// GraphQL запрос:\nquery {\n  user(id: 1) {\n    name\n    email\n    posts { title }\n  }\n}\n// Получим только указанные поля"
+        },
+        {
+          "term": "Babel",
+          "english": "Babel",
+          "russian": "Транспилятор преобразующий современный JavaScript в код совместимый со старыми браузерами. Позволяет использовать новые синтаксические возможности. Необходим для поддержки IE11 и старых браузеров.",
+          "example": "// .babelrc конфигурация:\n{\n  \"presets\": [\"@babel/preset-env\"]\n}\n// Преобразует ES6+ в ES5"
+        },
+        {
+          "term": "Webpack",
+          "english": "Webpack",
+          "russian": "Сборщик модулей объединяющий JavaScript, CSS, изображения в оптимизированные файлы. Поддерживает code splitting, tree shaking. Стандарт индустрии для сложных проектов.",
+          "example": "// webpack.config.js:\nmodule.exports = {\n  entry: './src/index.js',\n  output: {\n    filename: 'bundle.js'\n  }\n};"
+        },
+        {
+          "term": "npm",
+          "english": "Node Package Manager",
+          "russian": "Менеджер пакетов для Node.js. Позволяет устанавливать, обновлять и управлять зависимостями проекта. Имеет крупнейшую экосистему пакетов. Устанавливается вместе с Node.js.",
+          "example": "npm install package-name      // установить\nnpm install --save-dev package  // для разработки\nnpm run start                   // запустить скрипт\nnpm update                      // обновить"
+        },
+        {
+          "term": "yarn",
+          "english": "Yarn",
+          "russian": "Альтернативный менеджер пакетов от Facebook. Быстрее npm, имеет lock-файл по умолчанию. Совместим с npm пакетами. Сейчас менее популярен из-за улучшений в npm.",
+          "example": "yarn add package-name        // установить\nyarn add --dev package         // для разработки\nyarn start                     // запустить\nyarn upgrade                   // обновить"
+        },
+        {
+          "term": "ESLint",
+          "english": "ESLint",
+          "russian": "Инструмент для статического анализа кода JavaScript. Находит ошибки, проблемы со стилем, потенциальные баги. Настраиваемые правила. Интегрируется в редакторы кода.",
+          "example": "// .eslintrc.js:\nmodule.exports = {\n  rules: {\n    'no-unused-vars': 'error',\n    'semi': ['error', 'always']\n  }\n};"
+        },
+        {
+          "term": "Prettier",
+          "english": "Prettier",
+          "russian": "Форматировщик кода автоматически приводящий код к единому стилю. Поддерживает JavaScript, TypeScript, CSS, HTML. Работает в паре с ESLint. Устраняет споры о стиле кода.",
+          "example": "// .prettierrc:\n{\n  \"semi\": true,\n  \"singleQuote\": true,\n  \"tabWidth\": 2,\n  \"printWidth\": 80\n}"
+        },
+        {
+          "term": "TypeScript",
+          "english": "TypeScript",
+          "russian": "Типизированное надмножество JavaScript от Microsoft. Добавляет статическую типизацию, интерфейсы, дженерики. Компилируется в обычный JavaScript. Улучшает IDE-поддержку и надёжность кода.",
+          "example": "// TypeScript:\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n\n// Компиляция:\ntsc file.ts // → file.js"
+        },
+        {
+          "term": "JSX",
+          "english": "JavaScript XML",
+          "russian": "Расширение синтаксиса JavaScript для описания UI компонентов в React. Выглядит как HTML но является JavaScript. Компилируется в React.createElement() вызовы.",
+          "example": "// JSX:\nconst element = <h1>Hello, {name}</h1>;\n\n// Компилируется в:\nconst element = React.createElement(\n  'h1', null, `Hello, ${name}`\n);"
+        },
+        {
+          "term": "Virtual DOM",
+          "english": "Virtual DOM",
+          "russian": "Виртуальная модель DOM используемая в React. Легковесная копия реального DOM в памяти. Позволяет эффективно вычислять минимальные изменения. Ускоряет обновление интерфейса.",
+          "example": "// React использует Virtual DOM:\n// 1. Изменение состояния\n// 2. Создаётся новый Virtual DOM\n// 3. Сравнивается с предыдущим (diffing)\n// 4. Обновляется только изменившееся в реальном DOM"
+        }
+      ]
+    },
+    {
+      "id": "day25_generators_iterators",
+      "title": "Неделя 25: Генераторы, итераторы, символы",
+      "cards": [
+        {
+          "term": "iterator",
+          "english": "iterator",
+          "russian": "Объект с методом next() возвращающим элементы последовательности по одному. Имеет протокол { value, done }. Позволяет перебирать объекты в циклах for...of.",
+          "example": "const arr = [1, 2, 3];\nconst iterator = arr[Symbol.iterator]();\nconsole.log(iterator.next()); // {value: 1, done: false}\nconsole.log(iterator.next()); // {value: 2, done: false}"
+        },
+        {
+          "term": "iterable",
+          "english": "iterable",
+          "russian": "Объект который можно перебирать в цикле for...of. Должен иметь метод [Symbol.iterator]. Массивы, строки, Map, Set — итерируемые по умолчанию.",
+          "example": "// Итерируемые объекты:\nfor (let x of [1, 2, 3]) {}      // массив\nfor (let c of 'hello') {}        // строка\nfor (let [k, v] of map) {}       // Map"
+        },
+        {
+          "term": "next()",
+          "english": "next() method",
+          "russian": "Метод итератора возвращающий объект { value, done }. value — текущее значение, done — true если итерация завершена. Вызывается для получения следующего элемента.",
+          "example": "const iter = [1, 2][Symbol.iterator]();\nconsole.log(iter.next()); // {value: 1, done: false}\nconsole.log(iter.next()); // {value: 2, done: false}\nconsole.log(iter.next()); // {value: undefined, done: true}"
+        },
+        {
+          "term": "generator",
+          "english": "generator",
+          "russian": "Специальная функция которую можно приостанавливать и возобновлять. Объявляется через function*. Возвращает генератор-объект с методами next(), throw(), return().",
+          "example": "function* gen() {\n  yield 1;\n  yield 2;\n  yield 3;\n}\nconst g = gen();\nconsole.log(g.next().value); // 1"
+        },
+        {
+          "term": "yield",
+          "english": "yield keyword",
+          "russian": "Ключевое слово приостанавливающее генератор и возвращающее значение. При следующем next() выполнение продолжается с этого места. Может получать значения извне.",
+          "example": "function* counter() {\n  let i = 0;\n  while (true) {\n    yield i++;\n  }\n}\nconst c = counter();\nc.next().value; // 0\nc.next().value; // 1"
+        },
+        {
+          "term": "yield*",
+          "english": "yield* expression",
+          "russian": "Делегирует выполнение другому генератору или итерируемому объекту. Позволяет комбинировать генераторы. Упрощает код при работе с вложенными последовательностями.",
+          "example": "function* gen1() {\n  yield 1;\n  yield 2;\n}\nfunction* gen2() {\n  yield* gen1(); // делегирование\n  yield 3;\n}\n[...gen2()]; // [1, 2, 3]"
+        },
+        {
+          "term": "Symbol",
+          "english": "Symbol",
+          "russian": "Примитивный тип для создания уникальных идентификаторов. Каждый Symbol уникален даже с одинаковым описанием. Используется для скрытых свойств объектов.",
+          "example": "const sym1 = Symbol('id');\nconst sym2 = Symbol('id');\nconsole.log(sym1 === sym2); // false\n\nconst obj = { [sym1]: 'value' };"
+        },
+        {
+          "term": "Symbol.iterator",
+          "english": "Symbol.iterator",
+          "russian": "Известный символ указывающий на метод по умолчанию для итерации. Объекты с этим символом можно перебирать в for...of. Массивы имеют его по умолчанию.",
+          "example": "const arr = [1, 2, 3];\nconsole.log(arr[Symbol.iterator]); // функция\n\n// Сделать объект итерируемым:\nconst obj = {\n  [Symbol.iterator]() {\n    return { next: () => ({value: 1, done: true}) };\n  }\n};"
+        },
+        {
+          "term": "for...of",
+          "english": "for...of loop",
+          "russian": "Цикл для перебора итерируемых объектов (массивы, строки, Map, Set). Работает со значениями. Не работает с обычными объектами. Современная альтернатива forEach.",
+          "example": "for (let value of [1, 2, 3]) {\n  console.log(value); // 1, 2, 3\n}\n\nfor (let char of 'hello') {\n  console.log(char); // h, e, l, l, o\n}"
+        },
+        {
+          "term": "for...in",
+          "english": "for...in loop",
+          "russian": "Цикл для перебора перечислимых свойств объекта. Работает с ключами, а не значениями. Включает свойства из прототипа. Не рекомендуется для массивов.",
+          "example": "const obj = { a: 1, b: 2 };\nfor (let key in obj) {\n  console.log(key, obj[key]);\n}\n\n// Для массивов лучше for...of:\nfor (let val of arr) {}"
+        }
+      ]
+    },
+    {
+      "id": "day26_timers_debounce",
+      "title": "Неделя 26: Таймеры, debounce, throttle",
+      "cards": [
+        {
+          "term": "debounce",
+          "english": "debounce",
+          "russian": "Техника при которой функция вызывается только после паузы в событиях. Полезно для поиска (поиск после остановки ввода), ресайза окна. Уменьшает количество вызовов.",
+          "example": "function debounce(fn, delay) {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}\nconst search = debounce(query => fetch('/api?q=' + query), 300);"
+        },
+        {
+          "term": "throttle",
+          "english": "throttle",
+          "russian": "Ограничение частоты вызова функции. Функция вызывается не чаще чем раз в указанный интервал. Полезно для скролла, перемещения мыши. Гарантирует регулярные вызовы.",
+          "example": "function throttle(fn, limit) {\n  let inThrottle;\n  return (...args) => {\n    if (!inThrottle) {\n      fn(...args);\n      inThrottle = true;\n      setTimeout(() => inThrottle = false, limit);\n    }\n  };\n}\nwindow.addEventListener('scroll', throttle(handleScroll, 100));"
+        },
+        {
+          "term": "setImmediate()",
+          "english": "setImmediate() (Node.js)",
+          "russian": "Выполняет код асинхронно но как можно скорее в Node.js. Выполняется после текущего цикла событий. Аналог setTimeout(fn, 0) но более предсказуемый.",
+          "example": "// Только в Node.js:\nsetImmediate(() => {\n  console.log('Выполнится сразу после текущего цикла');\n});"
+        },
+        {
+          "term": "process.nextTick()",
+          "english": "process.nextTick() (Node.js)",
+          "russian": "Откладывает выполнение на следующий тик цикла событий в Node.js. Выполняется перед любыми другими асинхронными операциями. Быстрее чем Promise.then().",
+          "example": "// Только в Node.js:\nprocess.nextTick(() => {\n  console.log('Выполнится перед промисами');\n});\nPromise.resolve().then(() => {\n  console.log('Выполнится после nextTick');\n});"
+        },
+        {
+          "term": "microtask",
+          "english": "microtask",
+          "russian": "Микрозадача — задача с высоким приоритетом в цикле событий. Промисы (.then, .catch), queueMicrotask. Выполняются перед макрозадачами. Важны для предсказуемости кода.",
+          "example": "Promise.resolve().then(() => {\n  console.log('Микрозадача');\n});\n\nqueueMicrotask(() => {\n  console.log('Тоже микрозадача');\n});"
+        },
+        {
+          "term": "macrotask",
+          "english": "macrotask",
+          "russian": "Макрозадача — задача с обычным приоритетом в цикле событий. setTimeout, setInterval, I/O операции, UI рендеринг. Выполняются после всех микрозадач.",
+          "example": "setTimeout(() => {\n  console.log('Макрозадача');\n}, 0);\n\n// Выполнится после всех микрозадач"
+        },
+        {
+          "term": "event loop",
+          "english": "event loop",
+          "russian": "Цикл событий — механизм обработки асинхронных операций в JavaScript. Постоянно проверяет очереди задач. Выполняет микрозадачи перед макрозадачами. Основа асинхронности JS.",
+          "example": "// Порядок выполнения:\n// 1. Синхронный код\n// 2. Все микрозадачи (промисы)\n// 3. Макрозадачи (setTimeout)\n// 4. Повторить"
+        },
+        {
+          "term": "callback queue",
+          "english": "callback queue",
+          "russian": "Очередь колбэков (task queue) — очередь для макрозадач. Содержит колбэки от setTimeout, DOM событий, I/O. Задачи из очереди выполняются когда стек пуст.",
+          "example": "setTimeout(() => {\n  // Этот колбэк попадает в callback queue\n  console.log('Из очереди');\n}, 0);"
+        },
+        {
+          "term": "stack",
+          "english": "call stack",
+          "russian": "Стек вызовов — структура данных отслеживающая выполнение функций. LIFO (последний пришёл — первый ушёл). Переполнение вызывает 'Maximum call stack size exceeded'.",
+          "example": "function a() { b(); }\nfunction b() { c(); }\nfunction c() { console.log('Hello'); }\na();\n\n// Стек: a → b → c → (пусто)"
+        }
+      ]
+    },
+    {
+      "id": "day27_memory_performance",
+      "title": "Неделя 27: Память и производительность",
+      "cards": [
+        {
+          "term": "memory leak",
+          "english": "memory leak",
+          "russian": "Утечка памяти — ситуация когда память не освобождается хотя больше не нужна. В JavaScript чаще всего из-за забытых таймеров, event listeners, глобальных переменных. Приводит к замедлению приложения.",
+          "example": "// Утечка:\nsetInterval(() => {\n  // Выполняется вечно\n}, 1000);\n\n// Исправление:\nconst id = setInterval(...);\nclearInterval(id); // когда не нужно"
+        },
+        {
+          "term": "garbage collection",
+          "english": "garbage collection",
+          "russian": "Сборка мусора — автоматическое управление памятью в JavaScript. Освобождает память от объектов которые больше не используются. Происходит автоматически, но можно влиять.",
+          "example": "let obj = { data: 'large' };\nobj = null; // Теперь объект может быть собран\n// GC освободит память автоматически"
+        },
+        {
+          "term": "reference",
+          "english": "reference",
+          "russian": "Ссылка на объект в памяти. Переменные объектов хранят ссылку, не сам объект. Несколько переменных могут ссылаться на один объект. Важно для понимания мутаций.",
+          "example": "const obj1 = { a: 1 };\nconst obj2 = obj1; // ссылка на тот же объект\nobj2.a = 2;\nconsole.log(obj1.a); // 2 (изменился!)"
+        },
+        {
+          "term": "weak reference",
+          "english": "weak reference",
+          "russian": "Слабая ссылка — ссылка которая не препятствует сборке мусора. Если на объект есть только слабые ссылки, он будет удалён. Используется в WeakMap и WeakSet.",
+          "example": "// WeakMap использует слабые ссылки:\nconst wm = new WeakMap();\nlet obj = {};\nwm.set(obj, 'data');\nobj = null; // Объект будет собран GC"
+        },
+        {
+          "term": "WeakMap",
+          "english": "WeakMap",
+          "russian": "Коллекция с ключами-объектами которые могут быть собраны сборщиком мусора. Ключи — только объекты. Не итерируемая. Полезно для привязки данных к объектам без утечек.",
+          "example": "const wm = new WeakMap();\nconst obj = {};\nwm.set(obj, { private: 'data' });\nconsole.log(wm.get(obj)); // { private: 'data' }"
+        },
+        {
+          "term": "WeakSet",
+          "english": "WeakSet",
+          "russian": "Аналогично WeakMap но для множеств. Хранит только объекты со слабыми ссылками. Не итерируемый. Полезно для отслеживания объектов без предотвращения GC.",
+          "example": "const ws = new WeakSet();\nconst obj = {};\nws.add(obj);\nconsole.log(ws.has(obj)); // true"
+        },
+        {
+          "term": "performance",
+          "english": "performance API",
+          "russian": "API для измерения производительности браузера. Предоставляет timing данные о загрузке страницы, выполнении кода. Полезно для профилирования и оптимизации.",
+          "example": "console.log(performance.now()); // высокоточное время\nperformance.mark('start');\n// ... код ...\nperformance.measure('duration', 'start');"
+        },
+        {
+          "term": "console.time()",
+          "english": "console.time()",
+          "russian": "Запускает таймер с указанным именем для измерения производительности. Полезно для быстрого профилирования кода. Нужно вызвать console.timeEnd() для остановки.",
+          "example": "console.time('operation');\n// ... код для измерения ...\nconsole.timeEnd('operation');\n// Выведет: operation: 12.345ms"
+        },
+        {
+          "term": "console.timeEnd()",
+          "english": "console.timeEnd()",
+          "russian": "Останавливает таймер запущенный через console.time() и выводит прошедшее время. Должно использоваться то же имя что и при запуске. Удобно для отладки производительности.",
+          "example": "console.time('fetch');\nfetch('/api').then(() => {\n  console.timeEnd('fetch');\n  // Выведет: fetch: 156.789ms\n});"
+        },
+        {
+          "term": "debugger",
+          "english": "debugger statement",
+          "russian": "Оператор устанавливающий точку остановки в коде. Работает только когда открыты инструменты разработчика. Альтернатива console.log для отладки. Позволяет инспектировать состояние.",
+          "example": "function calculate(x, y) {\n  debugger; // остановка здесь\n  return x + y;\n}\n// В DevTools можно inspect переменные"
+        }
+      ]
+    },
+    {
+      "id": "day28_functional_programming",
+      "title": "Неделя 28: Функциональное программирование в JS",
+      "cards": [
+        {
+          "term": "immutability",
+          "english": "immutability",
+          "russian": "Неизменяемость данных — принцип при котором данные не изменяются после создания. Вместо изменения создаётся новая копия. Предотвращает побочные эффекты. Основа функционального программирования.",
+          "example": "// Изменяемо (плохо):\narr.push(4);\n\n// Неизменяемо (хорошо):\nconst newArr = [...arr, 4];\n\n// Или:\nconst frozen = Object.freeze({ a: 1 });"
+        },
+        {
+          "term": "side effect",
+          "english": "side effect",
+          "russian": "Побочный эффект — изменение внешнего состояния за пределами функции. Ввод/вывод, изменение глобальных переменных, DOM манипуляции. Чистые функции не имеют побочных эффектов.",
+          "example": "// Побочный эффект:\nlet count = 0;\nfunction increment() { count++; }\n\n// Без побочного эффекта:\nfunction add(a, b) { return a + b; }"
+        },
+        {
+          "term": "currying",
+          "english": "currying",
+          "russian": "Каррирование — преобразование функции с несколькими аргументами в последовательность функций с одним аргументом. Позволяет частичное применение. Упрощает композицию функций.",
+          "example": "// Обычная функция:\nfunction add(a, b) { return a + b; }\n\n// Каррированная:\nconst add = a => b => a + b;\nadd(2)(3); // 5\nconst add5 = add(5); // частичное применение"
+        },
+        {
+          "term": "composition",
+          "english": "function composition",
+          "russian": "Композиция функций — объединение нескольких функций в одну. Результат одной функции передаётся в другую. Позволяет строить сложную логику из простых функций.",
+          "example": "const compose = (f, g) => x => f(g(x));\nconst double = x => x * 2;\nconst increment = x => x + 1;\nconst doubleThenIncrement = compose(increment, double);\ndoubleThenIncrement(5); // 11"
+        },
+        {
+          "term": "pipe",
+          "english": "pipe",
+          "russian": "Последовательное применение функций слева направо. Противоположность compose. Делает код более читаемым. Данные проходят через цепочку функций.",
+          "example": "const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);\nconst transform = pipe(\n  x => x + 1,\n  x => x * 2,\n  x => x - 3\n);\ntransform(5); // 9"
+        },
+        {
+          "term": "compose",
+          "english": "compose",
+          "russian": "Последовательное применение функций справа налево. Первая применённая функция — последняя в списке. Математическая композиция f(g(x)).",
+          "example": "const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);\nconst transform = compose(\n  x => x - 3,\n  x => x * 2,\n  x => x + 1\n);\ntransform(5); // 9"
+        },
+        {
+          "term": "monad",
+          "english": "monad",
+          "russian": "Монада — структура данных для организации вычислений с контекстом. Позволяет цепочку операций. Promise — пример монады в JavaScript. Упрощает работу с побочными эффектами.",
+          "example": "// Promise как монада:\nPromise.resolve(5)\n  .then(x => x * 2)  // цепочка\n  .then(x => x + 1)\n  .catch(err => {}); // обработка ошибок"
+        },
+        {
+          "term": "functor",
+          "english": "functor",
+          "russian": "Функтор — объект реализующий метод map. Позволяет применять функцию к значению внутри контекста. Array — простейший функтор в JavaScript.",
+          "example": "// Array как функтор:\n[1, 2, 3].map(x => x * 2); // [2, 4, 6]\n\n// Promise тоже функтор:\nPromise.resolve(5).then(x => x * 2);"
+        },
+        {
+          "term": "flatMap()",
+          "english": "flatMap() method",
+          "russian": "Комбинация map и flatten для массивов. Сначала применяет функцию, затем flattens результат на один уровень. Удобнее чем map + flat отдельно.",
+          "example": "const arr = [1, 2, 3];\narr.flatMap(x => [x, x * 2]);\n// [1, 2, 2, 4, 3, 6]\n\n// Вместо:\narr.map(x => [x, x*2]).flat();"
+        }
+      ]
+    },
+    {
+      "id": "day29_web_apis",
+      "title": "Неделя 29: Web APIs (дополнительно)",
+      "cards": [
+        {
+          "term": "Geolocation",
+          "english": "Geolocation API",
+          "russian": "API для определения географического местоположения пользователя. Требует разрешения пользователя. Возвращает широту, долготу, точность. Используется в картах, погодных приложениях.",
+          "example": "navigator.geolocation.getCurrentPosition(\n  (pos) => console.log(pos.coords.latitude),\n  (err) => console.error(err)\n);"
+        },
+        {
+          "term": "Canvas",
+          "english": "Canvas API",
+          "russian": "API для рисования 2D-графики через JavaScript. Элемент <canvas> предоставляет холст. Контекст '2d' даёт методы рисования. Используется для игр, графиков, обработки изображений.",
+          "example": "const canvas = document.querySelector('canvas');\nconst ctx = canvas.getContext('2d');\nctx.fillStyle = 'red';\nctx.fillRect(10, 10, 100, 100);"
+        },
+        {
+          "term": "WebGL",
+          "english": "WebGL",
+          "russian": "API для 3D-графики в браузере. Основан на OpenGL ES. Работает через canvas с контекстом 'webgl'. Требует больше кода чем Canvas. Библиотеки: Three.js, Babylon.js.",
+          "example": "const canvas = document.querySelector('canvas');\nconst gl = canvas.getContext('webgl');\n// WebGL требует больше кода для рендеринга"
+        },
+        {
+          "term": "Web Workers",
+          "english": "Web Workers",
+          "russian": "Многопоточность в браузере — запуск кода в фоновом потоке. Не блокирует основной поток UI. Полезно для тяжёлых вычислений. Общение через postMessage.",
+          "example": "// main.js:\nconst worker = new Worker('worker.js');\nworker.postMessage({ data });\nworker.onmessage = (e) => console.log(e.data);\n\n// worker.js:\nonmessage = (e) => postMessage(result);"
+        },
+        {
+          "term": "Service Workers",
+          "english": "Service Workers",
+          "russian": "Фоновые скрипты работающие отдельно от веб-страницы. Кэшируют ресурсы для офлайн работы. Используются для PWA, push-уведомлений. Работают как прокси между приложением и сетью.",
+          "example": "// Регистрация:\nnavigator.serviceWorker.register('/sw.js');\n\n// В sw.js:\nself.addEventListener('fetch', (event) => {\n  event.respondWith(caches.match(event.request));\n});"
+        },
+        {
+          "term": "IndexedDB",
+          "english": "IndexedDB",
+          "russian": "Клиентская база данных для хранения больших объёмов структурированных данных. Асинхронный API. Поддерживает индексы, транзакции. Вместимость значительно больше localStorage.",
+          "example": "const request = indexedDB.open('MyDB', 1);\nrequest.onupgradeneeded = (e) => {\n  const db = e.target.result;\n  db.createObjectStore('users', { keyPath: 'id' });\n};"
+        },
+        {
+          "term": "File API",
+          "english": "File API",
+          "russian": "API для работы с файлами в браузере. Позволяет читать файлы выбранные пользователем через <input type=\"file\">. FileReader для чтения содержимого. Не даёт доступ к файловой системе.",
+          "example": "input.addEventListener('change', (e) => {\n  const file = e.target.files[0];\n  const reader = new FileReader();\n  reader.onload = () => console.log(reader.result);\n  reader.readAsText(file);\n});"
+        },
+        {
+          "term": "Drag and Drop",
+          "english": "Drag and Drop API",
+          "russian": "API для перетаскивания элементов. События: dragstart, dragover, drop. Требует preventDefault() на dragover. Используется для сортировки, загрузки файлов.",
+          "example": "element.addEventListener('dragover', (e) => {\n  e.preventDefault(); // обязательно!\n});\nelement.addEventListener('drop', (e) => {\n  e.preventDefault();\n  console.log(e.dataTransfer.files);\n});"
+        },
+        {
+          "term": "History API",
+          "english": "History API",
+          "russian": "API для управления историей браузера без перезагрузки. Методы pushState, replaceState. Критически важен для SPA-роутинга. Позволяет менять URL без загрузки новой страницы.",
+          "example": "// Добавить запись в историю:\nhistory.pushState({ page: 1 }, '', '/page1');\n\n// Заменить текущую:\nhistory.replaceState({ page: 2 }, '', '/page2');\n\n// Слушать навигацию:\nwindow.addEventListener('popstate', handler);"
+        },
+        {
+          "term": "URL",
+          "english": "URL API",
+          "russian": "API для парсинга и работы с URL. Конструктор URL создаёт объект из строки. Свойства: protocol, hostname, pathname, searchParams. Упрощает манипуляции с URL.",
+          "example": "const url = new URL('https://example.com/path?q=test');\nconsole.log(url.hostname); // 'example.com'\nconsole.log(url.searchParams.get('q')); // 'test'\nurl.searchParams.append('new', 'value');"
+        }
+      ]
+    },
+    {
+      "id": "day30_patterns",
+      "title": "Неделя 30: Полезные паттерны и идиомы",
+      "cards": [
+        {
+          "term": "singleton",
+          "english": "singleton",
+          "russian": "Паттерн Одиночка — гарантирует единственный экземпляр класса. Полезно для конфигурации, логгеров, подключений к БД. Реализуется через статическое свойство.",
+          "example": "class Singleton {\n  static instance;\n  static getInstance() {\n    if (!this.instance) {\n      this.instance = new Singleton();\n    }\n    return this.instance;\n  }\n}"
+        },
+        {
+          "term": "factory",
+          "english": "factory function",
+          "russian": "Функция-фабрика создающая объекты. Инкапсулирует логику создания. Позволяет создавать разные типы объектов через один интерфейс. Альтернатива конструкторам.",
+          "example": "function createUser(name, role) {\n  return {\n    name,\n    role,\n    greet() { console.log(`Hi, I'm ${name}`); }\n  };\n}\nconst user = createUser('John', 'admin');"
+        },
+        {
+          "term": "module pattern",
+          "english": "module pattern",
+          "russian": "Модульный паттерн — инкапсуляция через замыкание. Приватные переменные внутри IIFE, публичный API через return. До ES6 модулей был основным способом организации кода.",
+          "example": "const Counter = (function() {\n  let count = 0; // приватное\n  return {\n    increment: () => ++count,\n    getCount: () => count\n  };\n})();\nCounter.increment();"
+        },
+        {
+          "term": "revealing module pattern",
+          "english": "revealing module pattern",
+          "russian": "Разновидность модульного паттерна где все методы объявляются внутри, а в return только ссылки на них. Улучшает читаемость. Все приватные функции видны в одном месте.",
+          "example": "const Module = (function() {\n  function privateFn() {}\n  function publicFn() { privateFn(); }\n  return { publicFn }; // 'раскрываем' только публичное\n})();\nModule.publicFn();"
+        },
+        {
+          "term": "observer",
+          "english": "observer",
+          "russian": "Паттерн Наблюдатель — один объект уведомляет других об изменениях. Основа event listeners. Слабая связь между объектами. Широко используется в фронтенд-фреймворках.",
+          "example": "class Subject {\n  constructor() { this.observers = []; }\n  subscribe(fn) { this.observers.push(fn); }\n  notify(data) { this.observers.forEach(fn => fn(data)); }\n}\nconst sub = new Subject();\nsub.subscribe(data => console.log(data));"
+        },
+        {
+          "term": "pub/sub",
+          "english": "Publish/Subscribe",
+          "russian": "Издатель-подписчик — паттерн слабой связи. Издатели публикуют события, подписчики реагируют. Не знают друг о друге. EventEmitter в Node.js реализует этот паттерн.",
+          "example": "const emitter = new EventEmitter();\nemitter.on('event', handler);\nemitter.emit('event', data);\n\n// Подписчик не знает кто опубликовал"
+        },
+        {
+          "term": "MVC",
+          "english": "Model-View-Controller",
+          "russian": "Архитектурный паттерн разделения на Модель (данные), Представление (UI), Контроллер (логика). Популярен в бэкенд-фреймворках. Разделяет ответственность между компонентами.",
+          "example": "// Model: данные и бизнес-логика\n// View: отображение данных\n// Controller: обработка ввода, обновление Model\n\n// Пример: Express + EJS"
+        },
+        {
+          "term": "MVVM",
+          "english": "Model-View-ViewModel",
+          "russian": "Паттерн для фронтенда с двусторонним binding. ViewModel связывает Model и View. Автоматическая синхронизация данных и UI. Используется в Vue.js, Knockout.",
+          "example": "// Vue.js использует MVVM:\n// data (Model) ↔ ViewModel ↔ template (View)\n// Изменение data автоматически обновляет View"
+        },
+        {
+          "term": "HOC",
+          "english": "Higher-Order Component (React)",
+          "russian": "Компонент высшего порядка в React — функция принимающая компонент и возвращающая новый компонент. Для переиспользования логики. Сейчас заменяется хуками.",
+          "example": "function withLogging(WrappedComponent) {\n  return function(props) {\n    console.log('Rendering', WrappedComponent.name);\n    return <WrappedComponent {...props} />;\n  };\n}"
+        },
+        {
+          "term": "render prop",
+          "english": "render prop (React)",
+          "russian": "Паттерн в React где компонент принимает функцию как prop и вызывает её для рендеринга. Для переиспользования логики. Альтернатива HOC до появления хуков.",
+          "example": "<DataProvider render={data => (\n  <h1>{data.title}</h1>\n)} />\n\n// DataProvider вызывает render(data)"
+        },
+        {
+          "term": "hook",
+          "english": "hook (React)",
+          "russian": "Хук — функция для использования состояния и lifecycle в функциональных компонентах React. Начинаются с use. Позволяют переиспользовать логику между компонентами.",
+          "example": "function Counter() {\n  const [count, setCount] = useState(0);\n  useEffect(() => {\n    document.title = count;\n  }, [count]);\n  return <button onClick={() => setCount(count+1)}>{count}</button>;\n}"
+        },
+        {
+          "term": "memoization",
+          "english": "memoization",
+          "russian": "Кэширование результатов вызова функций. При одинаковых аргументах возвращается кэшированный результат. Ускоряет тяжёлые вычисления. В React: useMemo, React.memo.",
+          "example": "function memoize(fn) {\n  const cache = {};\n  return (...args) => {\n    const key = JSON.stringify(args);\n    if (cache[key]) return cache[key];\n    return cache[key] = fn(...args);\n  };\n}"
+        }
+      ]
+    }
+  ]
+}

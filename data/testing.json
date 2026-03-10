@@ -1,0 +1,624 @@
+{
+  "id": "testing",
+  "name": "Тестирование и DevOps",
+  "topics": [
+    {
+      "id": "day40_testing",
+      "title": "Неделя 40: Тестирование (Jest, Mocha)",
+      "cards": [
+        {
+          "term": "jest",
+          "english": "Jest",
+          "russian": "Фреймворк тестирования от Facebook. Zero-config настройка. Включает runner, assertions, mocks, coverage. Стандарт для React приложений. Быстрый параллельный запуск тестов.",
+          "example": "// test.js\ntest('adds 1 + 2', () => {\n  expect(sum(1, 2)).toBe(3);\n});\n\n// Запуск:\nnpm test\njest --coverage"
+        },
+        {
+          "term": "Mocha",
+          "english": "Mocha",
+          "russian": "Гибкий фреймворк тестирования для Node.js и браузера. Требует дополнительные библиотеки для assertions (Chai) и mocks. Более настраиваемый чем Jest. Популярен в Node.js сообществе.",
+          "example": "// test.js\ndescribe('Array', () => {\n  it('should return length', () => {\n    expect([1,2,3].length).to.equal(3);\n  });\n});\n\n// Запуск:\nmocha test.js"
+        },
+        {
+          "term": "Chai",
+          "english": "Chai",
+          "russian": "Библиотека утверждений (assertions) для Node.js и браузера. Работает с Mocha. Три стиля: expect, should, assert. Гибкий и выразительный синтаксис проверок.",
+          "example": "const { expect } = require('chai');\n\nexpect(value).to.equal(42);\nexpect(array).to.have.length(3);\nexpect(obj).to.have.property('name');\nexpect(fn).to.throw(Error);"
+        },
+        {
+          "term": "Jasmine",
+          "english": "Jasmine",
+          "russian": "Фреймворк тестирования с встроенными assertions. Не требует дополнительных библиотек. BDD стиль. Популярен в Angular сообществе. Работает в браузере и Node.js.",
+          "example": "describe('Calculator', () => {\n  it('adds numbers', () => {\n    expect(add(1, 2)).toEqual(3);\n  });\n});\n\n// Запуск:\njasmine init\njasmine"
+        },
+        {
+          "term": "test case",
+          "english": "test case",
+          "russian": "Тест-кейс — отдельный тест проверяющий одно поведение. Определяется через it() или test(). Должен быть атомарным и независимым. Описывает ожидаемый результат.",
+          "example": "test('should return true for valid email', () => {\n  expect(isValidEmail('test@example.com'))\n    .toBe(true);\n});\n\n// Один тест = одно утверждение\n// о поведении"
+        },
+        {
+          "term": "test suite",
+          "english": "test suite",
+          "russian": "Набор тестов объединённых по функциональности. Определяется через describe(). Группирует связанные test case. Помогает организовать тесты логически.",
+          "example": "describe('UserService', () => {\n  describe('createUser', () => {\n    it('should create user', () => {});\n    it('should validate email', () => {});\n  });\n  \n  describe('deleteUser', () => {\n    it('should remove user', () => {});\n  });\n});"
+        },
+        {
+          "term": "assertion",
+          "english": "assertion",
+          "russian": "Утверждение — проверка что значение соответствует ожидаемому. Основано на сравнении actual vs expected. При неудаче тест падает с ошибкой. Ядро любого теста.",
+          "example": "// Jest:\nexpect(result).toBe(42);\n\n// Chai:\nassert.equal(result, 42);\n\n// Node.js:\nassert.strictEqual(result, 42);"
+        },
+        {
+          "term": "expect",
+          "english": "expect",
+          "russian": "Стиль assertions используемый в Jest и Chai. Цепочный синтаксис для читаемости. expect(value).matcher(expected). Выразительный и понятный формат проверок.",
+          "example": "expect(count).toBe(0);\nexpect(users).toHaveLength(5);\nexpect(data).toHaveProperty('id');\nexpect(fn).toHaveBeenCalled();\nexpect(response).toMatchObject({ status: 200 });"
+        },
+        {
+          "term": "describe",
+          "english": "describe",
+          "russian": "Функция для группировки тестов в блоки. Создаёт test suite. Принимает название и callback с тестами. Может быть вложенным для иерархии.",
+          "example": "describe('Authentication', () => {\n  describe('Login', () => {\n    it('should login with valid credentials', () => {});\n    it('should reject invalid credentials', () => {});\n  });\n});"
+        },
+        {
+          "term": "it / test",
+          "english": "it / test",
+          "russian": "Функции для определения отдельного теста. Взаимозаменяемы в Jest. it читается как описание поведения. test более явный. Оба принимают название и callback.",
+          "example": "it('should return sum of two numbers', () => {\n  expect(add(2, 3)).toBe(5);\n});\n\ntest('calculates correctly', () => {\n  expect(calculate()).toEqual(42);\n});"
+        },
+        {
+          "term": "beforeEach / afterEach",
+          "english": "beforeEach / afterEach",
+          "russian": "Хуки выполняемые до/после каждого теста в suite. Используются для setup и cleanup. Гарантируют чистое состояние между тестами. Предотвращают взаимовлияние тестов.",
+          "example": "describe('tests', () => {\n  beforeEach(() => {\n    // Подготовка перед каждым тестом\n    database.clear();\n  });\n  \n  afterEach(() => {\n    // Очистка после каждого\n    jest.clearAllMocks();\n  });\n  \n  it('test 1', () => {});\n  it('test 2', () => {});\n});"
+        },
+        {
+          "term": "beforeAll / afterAll",
+          "english": "beforeAll / afterAll",
+          "russian": "Хуки выполняемые один раз до/после всех тестов в suite. Для дорогой инициализации которая не должна повторяться. Экономят время когда setup медленный.",
+          "example": "describe('expensive tests', () => {\n  let server;\n  \n  beforeAll(async () => {\n    server = await startServer();\n  });\n  \n  afterAll(async () => {\n    await server.stop();\n  });\n  \n  it('test 1', () => {});\n  it('test 2', () => {});\n});"
+        },
+        {
+          "term": "mock",
+          "english": "mock",
+          "russian": "Имитация функции или модуля для тестирования. Изолирует тестируемый код от зависимостей. Позволяет контролировать поведение зависимостей. Создаётся через jest.fn().",
+          "example": "const mockFn = jest.fn();\nmockFn.mockReturnValue(42);\nmockFn.mockImplementation(x => x * 2);\n\n// Использование:\nmodule.apiCall = mockFn;\n\n// Проверка:\nexpect(mockFn).toHaveBeenCalled();\nexpect(mockFn).toHaveBeenCalledWith('arg');"
+        },
+        {
+          "term": "spy",
+          "english": "spy",
+          "russian": "Шпион — обёртка вокруг существующей функции которая записывает вызовы. Позволяет проверить что функция была вызвана не изменяя её поведение. jest.spyOn() создаёт spy.",
+          "example": "const spy = jest.spyOn(console, 'log');\n\nmyFunction();\n\nexpect(spy).toHaveBeenCalledWith('hello');\n\n// Восстановить:\nspy.mockRestore();"
+        },
+        {
+          "term": "stub",
+          "english": "stub",
+          "russian": "Заглушка — функция с предопределённым поведением. Заменяет реальную реализацию во время теста. Возвращает фиксированные значения. Упрощает тестирование зависимостей.",
+          "example": "// Sinon.js:\nconst stub = sinon.stub(obj, 'method');\nstub.returns(42);\nstub.throws(new Error('fail'));\n\n// Jest:\njest.spyOn(obj, 'method')\n  .mockImplementation(() => 42);"
+        },
+        {
+          "term": "snapshot testing",
+          "english": "snapshot testing",
+          "russian": "Тестирование снимками — сравнение результата с сохранённым снимком. Полезно для UI компонентов. Автоматически обнаруживает изменения. Требует ручного обновления при легитимных изменениях.",
+          "example": "test('renders correctly', () => {\n  const tree = renderer.create(<App />).toJSON();\n  expect(tree).toMatchSnapshot();\n});\n\n// Обновить снимки:\njest -u"
+        },
+        {
+          "term": "unit test",
+          "english": "unit test",
+          "russian": "Модульное тестирование — тестирование отдельных функций/методов в изоляции. Быстрые, дешёвые тесты. Не зависят от внешних систем. Основа пирамиды тестирования.",
+          "example": "test('add function', () => {\n  expect(add(1, 2)).toBe(3);\n  expect(add(-1, 1)).toBe(0);\n});\n\n// Тестируем одну функцию\n// без внешних зависимостей"
+        },
+        {
+          "term": "integration test",
+          "english": "integration test",
+          "russian": "Интеграционное тестирование — проверка взаимодействия между модулями. Тестирует несколько компонентов вместе. Медленнее unit тестов. Обнаруживает проблемы интеграции.",
+          "example": "test('API endpoint', async () => {\n  const response = await request(app)\n    .get('/users')\n    .expect(200);\n  \n  expect(response.body).toHaveLength(5);\n});\n\n// Тест API + БД вместе"
+        },
+        {
+          "term": "end-to-end test (E2E)",
+          "english": "E2E test",
+          "russian": "Сквозное тестирование — тестирование полного потока приложения. Имитирует действия пользователя. Медленные но самые надёжные. Проверяет всю систему в сборе.",
+          "example": "// Cypress:\ncy.visit('/login');\ncy.get('#email').type('user@test.com');\ncy.get('#password').type('pass');\ncy.get('button').click();\ncy.url().should('include', '/dashboard');"
+        },
+        {
+          "term": "Cypress",
+          "english": "Cypress",
+          "russian": "Фреймворк E2E-тестирования для веба. Работает в браузере. Отличная отладка и time-travel debugging. Автоматические ожидания. Популярен для тестирования React/Vue приложений.",
+          "example": "// cypress/integration/app.spec.js\ndescribe('App', () => {\n  it('loads', () => {\n    cy.visit('/');\n    cy.contains('Welcome');\n  });\n});\n\n// Запуск:\nnpx cypress open"
+        },
+        {
+          "term": "Puppeteer",
+          "english": "Puppeteer",
+          "russian": "Библиотека для управления Chrome/Chromium через DevTools Protocol. Разработана Google. Используется для скрейпинга, скриншотов, тестирования. Headless режим по умолчанию.",
+          "example": "const puppeteer = require('puppeteer');\n\nconst browser = await puppeteer.launch();\nconst page = await browser.newPage();\nawait page.goto('https://example.com');\nawait page.screenshot({ path: 'screen.png' });\nawait browser.close();"
+        },
+        {
+          "term": "Playwright",
+          "english": "Playwright",
+          "russian": "Библиотека для автоматизации браузеров от Microsoft. Поддерживает Chromium, Firefox, WebKit. Кросс-браузерное тестирование. Современная альтернатива Puppeteer и Selenium.",
+          "example": "const { chromium } = require('playwright');\n\nconst browser = await chromium.launch();\nconst page = await browser.newPage();\nawait page.goto('https://example.com');\nawait page.screenshot({ path: 'screen.png' });\nawait browser.close();"
+        }
+      ]
+    },
+    {
+      "id": "day41_build_tools",
+      "title": "Неделя 41: Инструменты сборки и форматирования",
+      "cards": [
+        {
+          "term": "Webpack",
+          "english": "Webpack",
+          "russian": "Сборщик модулей для JavaScript приложений. Объединяет все зависимости в бандлы. Поддерживает code splitting, tree shaking, loaders, plugins. Стандарт индустрии для сложных проектов.",
+          "example": "// webpack.config.js\nmodule.exports = {\n  entry: './src/index.js',\n  output: {\n    filename: 'bundle.js',\n    path: __dirname + '/dist'\n  },\n  module: {\n    rules: [{ test: /\\.js$/, use: 'babel-loader' }]\n  }\n};"
+        },
+        {
+          "term": "entry",
+          "english": "entry",
+          "russian": "Точка входа — файл с которого Webpack начинает сборку. Обычно index.js или main.js. Отсюда строится граф зависимостей. Может быть несколько entry points для code splitting.",
+          "example": "// Один entry:\nentry: './src/index.js'\n\n// Несколько entry:\nentry: {\n  app: './src/app.js',\n  admin: './src/admin.js'\n}\n\n// Каждый создаст отдельный бандл"
+        },
+        {
+          "term": "output",
+          "english": "output",
+          "russian": "Конфигурация выходных файлов. Определяет имя файла и директорию для бандлов. path должен быть абсолютным. filename может использовать placeholders для хешей.",
+          "example": "output: {\n  filename: 'bundle.[contenthash].js',\n  path: path.resolve(__dirname, 'dist'),\n  clean: true // очищать перед сборкой\n}\n\n// [contenthash] меняется при изменении контента"
+        },
+        {
+          "term": "loader",
+          "english": "loader",
+          "russian": "Загрузчик трансформирует файлы перед добавлением в бандл. Позволяет импортировать не-JS файлы: CSS, изображения, TypeScript. Каждый loader — отдельный пакет.",
+          "example": "module: {\n  rules: [\n    { test: /\\.js$/, use: 'babel-loader' },\n    { test: /\\.ts$/, use: 'ts-loader' },\n    { test: /\\.css$/, use: ['style-loader', 'css-loader'] },\n    { test: /\\.png$/, use: 'file-loader' }\n  ]\n}"
+        },
+        {
+          "term": "plugin",
+          "english": "plugin",
+          "russian": "Плагин выполняет более широкие задачи чем loader. Оптимизация бандлов, генерация HTML, очистка директорий. Используется через plugins массив в конфиге.",
+          "example": "plugins: [\n  new HtmlWebpackPlugin({\n    template: './src/index.html'\n  }),\n  new CleanWebpackPlugin(),\n  new webpack.DefinePlugin({\n    'process.env.NODE_ENV': '\"production\"'\n  })\n]"
+        },
+        {
+          "term": "bundle",
+          "english": "bundle",
+          "russian": "Собранный файл содержащий весь код приложения и зависимости. Результат работы Webpack. Может быть один или несколько файлов. Оптимизируется для браузера.",
+          "example": "// После сборки:\ndist/\n  ├── bundle.js      // основной код\n  ├── bundle.css     // стили\n  └── index.html     // HTML с подключением\n\n// Размер зависит от зависимостей"
+        },
+        {
+          "term": "chunk",
+          "english": "chunk",
+          "russian": "Часть кода в бандле. Webpack разделяет код на chunks для оптимизации. Vendor chunk — зависимости. App chunk — ваш код. Async chunks — лениво загружаемые.",
+          "example": "dist/\n  ├── main.[hash].js      // app chunk\n  ├── vendor.[hash].js    // зависимости\n  └── async.[hash].js     // lazy loaded\n\n// Разделение улучшает кэширование"
+        },
+        {
+          "term": "code splitting",
+          "english": "code splitting",
+          "russian": "Разделение кода на несколько бандлов. Уменьшает начальную загрузку. Загружает код по требованию. Реализуется через dynamic import() или entry points.",
+          "example": "// Dynamic import:\nconst module = await import('./heavy-module');\n\n// Webpack создаст отдельный chunk\n// который загрузится только когда нужен\n\n// Route-based splitting:\nconst LazyPage = lazy(() => import('./Page'));"
+        },
+        {
+          "term": "tree shaking",
+          "english": "tree shaking",
+          "russian": "Удаление мёртвого (неиспользуемого) кода из бандла. Работает только с ES-модулями (import/export). Уменьшает размер бандла. Требует production режима.",
+          "example": "// В ES-модулях:\nimport { used } from './utils';\n// unused не включится в бандл\n\n// В package.json:\n\"sideEffects\": false\n// Помогает tree shaking"
+        },
+        {
+          "term": "Babel",
+          "english": "Babel",
+          "russian": "Транспилятор преобразующий современный JavaScript в код совместимый со старыми браузерами. Позволяет использовать новые синтаксические возможности. Необходим для поддержки старых браузеров.",
+          "example": "// .babelrc\n{\n  \"presets\": [\n    [\"@babel/preset-env\", {\n      \"targets\": \"> 0.25%, not dead\"\n    }]\n  ]\n}\n\n// Преобразует ES6+ → ES5"
+        },
+        {
+          "term": "preset",
+          "english": "Babel preset",
+          "russian": "Набор плагинов Babel для определённой цели. preset-env автоматически определяет нужные трансформации. preset-react для JSX. preset-typescript для TypeScript.",
+          "example": "// Установка:\nnpm install --save-dev @babel/preset-env\n\n// Конфиг:\n{\n  \"presets\": [\n    \"@babel/preset-env\",\n    \"@babel/preset-react\"\n  ]\n}"
+        },
+        {
+          "term": "polyfill",
+          "english": "polyfill",
+          "russian": "Код который добавляет поддержку новых функций в старые браузеры. Babel трансформирует синтаксис, polyfill добавляет отсутствующие API. Например: Promise, Array methods.",
+          "example": "// В entry файле:\nimport 'core-js/stable';\nimport 'regenerator-runtime/runtime';\n\n// Или через Babel:\n{\n  \"useBuiltIns\": \"usage\",\n  \"corejs\": 3\n}"
+        },
+        {
+          "term": "core-js",
+          "english": "core-js",
+          "russian": "Библиотека полифиллов для JavaScript. Предоставляет реализации современных API для старых браузеров. Интегрируется с Babel. Важно для поддержки IE11 и старых версий.",
+          "example": "// Полный импорт:\nimport 'core-js';\n\n// Только нужное:\nimport 'core-js/features/array/includes';\nimport 'core-js/features/promise';\n\n// С Babel автоматически"
+        },
+        {
+          "term": "regenerator-runtime",
+          "english": "regenerator-runtime",
+          "russian": "Рантайм для генераторов и async/await. Требуется когда Babel трансформирует эти конструкции. Маленькая библиотека (~7KB). Добавляется автоматически с core-js.",
+          "example": "// Babel добавляет автоматически:\nimport 'regenerator-runtime/runtime';\n\n// Нужно для:\nasync function foo() {}\nfunction* gen() {}"
+        },
+        {
+          "term": "PostCSS",
+          "english": "PostCSS",
+          "russian": "Инструмент для трансформации CSS через JavaScript плагины. Автопрефиксы, минификация, CSS-модули. Аналог Babel для CSS. Работает с Webpack через loader.",
+          "example": "// postcss.config.js\nmodule.exports = {\n  plugins: [\n    require('autoprefixer'),\n    require('cssnano')\n  ]\n};\n\n// В Webpack:\n{ loader: 'postcss-loader' }"
+        },
+        {
+          "term": "CSS Modules",
+          "english": "CSS Modules",
+          "russian": "CSS с локальной областью видимости. Классы изолируются по модулям. Предотвращает конфликты имён. Автоматически генерирует уникальные имена классов.",
+          "example": "// style.module.css\n.title { color: red; }\n\n// component.js\nimport styles from './style.module.css';\n\n<div className={styles.title}>\n  // class=\"title_hash123\"\n</div>"
+        },
+        {
+          "term": "Sass / SCSS",
+          "english": "Sass/SCSS",
+          "russian": "Препроцессор CSS с расширенным синтаксисом. Переменные, вложенность, миксины, функции. Компилируется в обычный CSS. Упрощает поддержку больших стилей.",
+          "example": "// SCSS:\n$primary: #333;\n\n.button {\n  background: $primary;\n  &:hover {\n    opacity: 0.8;\n  }\n}\n\n// Нужен sass-loader для Webpack"
+        },
+        {
+          "term": "ESLint",
+          "english": "ESLint",
+          "russian": "Инструмент статического анализа кода JavaScript. Находит ошибки, проблемы со стилем, потенциальные баги. Настраиваемые правила. Интегрируется в редакторы и CI.",
+          "example": "// .eslintrc.js\nmodule.exports = {\n  extends: ['eslint:recommended'],\n  rules: {\n    'no-unused-vars': 'error',\n    'semi': ['error', 'always']\n  }\n};\n\n// Запуск:\nnpx eslint src/"
+        },
+        {
+          "term": "Prettier",
+          "english": "Prettier",
+          "russian": "Форматировщик кода автоматически приводящий код к единому стилю. Поддерживает JS, TS, CSS, HTML. Работает в паре с ESLint. Устраняет споры о стиле кода в команде.",
+          "example": "// .prettierrc\n{\n  \"semi\": true,\n  \"singleQuote\": true,\n  \"tabWidth\": 2,\n  \"printWidth\": 80,\n  \"trailingComma\": \"es5\"\n}\n\n// Запуск:\nnpx prettier --write src/"
+        }
+      ]
+    },
+    {
+      "id": "day43_security_auth_cicd",
+      "title": "Неделя 43: Безопасность, аутентификация, CI/CD",
+      "cards": [
+        {
+          "term": "JWT",
+          "english": "JSON Web Token",
+          "russian": "JWT — это стандартный способ безопасной передачи данных между сторонами в виде токена. Часто используется для аутентификации: сервер подписывает токен, клиент отправляет его в заголовках. Позволяет серверу не хранить состояние сессии (stateless).",
+          "example": "const token = jwt.sign({ userId: 1 }, 'secret');\n// Клиент отправляет:\n// Authorization: Bearer <token>"
+        },
+        {
+          "term": "OAuth",
+          "english": "OAuth",
+          "russian": "OAuth — это открытый стандарт делегирования доступа. Позволяет пользователям предоставлять доступ к своим данным на одном сайте другому сайту без передачи пароля. Например, вход через Google или Facebook.",
+          "example": "// Пользователь нажимает \"Login with Google\"\n// Происходит редирект на Google\n// После подтверждения — возврат с токеном доступа"
+        },
+        {
+          "term": "OAuth2",
+          "english": "OAuth2",
+          "russian": "OAuth2 — вторая версия протокола OAuth. Более безопасная и гибкая. Поддерживает разные типы грантов (authorization code, implicit, client credentials). Стандарт для современной авторизации в API.",
+          "example": "// Flow авторизации:\n// 1. Запрос кода\n// 2. Обмен кода на токен\n// 3. Использование токена для API"
+        },
+        {
+          "term": "Passport.js",
+          "english": "Passport.js",
+          "russian": "Библиотека аутентификации для Node.js. Поддерживает множество стратегий: локальная, OAuth, JWT, LDAP. Упрощает интеграцию входа через соцсети и управление сессиями в Express приложениях.",
+          "example": "passport.use(new JwtStrategy(opts, (payload, done) => {\n  User.findById(payload.id, (err, user) => done(err, user));\n}));"
+        },
+        {
+          "term": "bcrypt",
+          "english": "bcrypt",
+          "russian": "Библиотека для хеширования паролей. Никогда не храните пароли в открытом виде! bcrypt добавляет «соль» (salt) и делает много раундов хеширования для защиты от перебора.",
+          "example": "const hash = await bcrypt.hash(password, 10);\n// Проверка:\nconst match = await bcrypt.compare(password, hash);"
+        },
+        {
+          "term": "helmet",
+          "english": "helmet",
+          "russian": "Middleware для Express который устанавливает безопасные HTTP-заголовки. Защищает от известных веб-уязвимостей: XSS, sniffing, clickjacking. Рекомендуется использовать в каждом продакшен приложении.",
+          "example": "const helmet = require('helmet');\napp.use(helmet());\n// Добавляет заголовки:\n// X-Content-Type-Options: nosniff\n// X-Frame-Options: DENY"
+        },
+        {
+          "term": "CORS",
+          "english": "CORS",
+          "russian": "Cross-Origin Resource Sharing — механизм безопасности браузера. Запрещает запросы с одного домена на другой без явного разрешения сервера. Настраивается через заголовки Access-Control-Allow-Origin.",
+          "example": "const cors = require('cors');\napp.use(cors({\n  origin: 'https://myfrontend.com'\n}));\n// Без этого браузер заблокирует запрос"
+        },
+        {
+          "term": "XSS",
+          "english": "XSS (Cross-Site Scripting)",
+          "russian": "Уязвимость позволяющая внедрить вредоносный JavaScript код на страницу. Происходит когда пользовательский ввод отображается без экранирования. Защита: санитизация ввода, Content Security Policy.",
+          "example": "// Опасно:\n<div>${userInput}</div>\n\n// Безопасно (экранирование):\n<div>${escape(userInput)}</div>"
+        },
+        {
+          "term": "CSRF",
+          "english": "CSRF (Cross-Site Request Forgery)",
+          "russian": "Атака когда злоумышленник заставляет пользователя выполнить нежелательное действие на сайте где он авторизован. Защита: CSRF-токены в формах, проверка заголовка Origin, SameSite куки.",
+          "example": "// В форме:\n<input type=\"hidden\" name=\"_csrf\" value=\"token\">\n\n// Сервер проверяет токен\n// перед обработкой POST запроса"
+        },
+        {
+          "term": "SQL injection",
+          "english": "SQL injection",
+          "russian": "Внедрение вредоносного SQL-кода через пользовательский ввод. Может привести к удалению данных или доступу к базе. Защита: параметризированные запросы, ORM, валидация ввода.",
+          "example": "// Опасно:\n`SELECT * FROM users WHERE id = ${id}`\n\n// Безопасно (параметры):\ndb.query('SELECT * FROM users WHERE id = ?', [id]);"
+        },
+        {
+          "term": "HTTPS",
+          "english": "HTTPS",
+          "russian": "Безопасная версия HTTP протокола. Данные шифруются через SSL/TLS перед отправкой. Обязательно для любых сайтов работающих с личными данными. Браузеры помечают HTTP сайты как небезопасные.",
+          "example": "// Сервер требует HTTPS:\nif (!req.secure) {\n  return res.redirect('https://' + req.headers.host + req.url);\n}"
+        },
+        {
+          "term": "SSL/TLS",
+          "english": "SSL/TLS",
+          "russian": "Криптографические протоколы обеспечивающие безопасную связь. SSL устарел, сейчас используется TLS. Сертификаты выдаются удостоверяющими центрами (Let's Encrypt бесплатно).",
+          "example": "const https = require('https');\nconst options = {\n  key: fs.readFileSync('key.pem'),\n  cert: fs.readFileSync('cert.pem')\n};"
+        },
+        {
+          "term": "CI/CD",
+          "english": "CI/CD",
+          "russian": "Continuous Integration / Continuous Delivery. Практика автоматической сборки, тестирования и развертывания кода. Ускоряет доставку обновлений и снижает количество ошибок в продакшене.",
+          "example": "// Пайплайн:\n// 1. Push в Git\n// 2. Запуск тестов (CI)\n// 3. Сборка\n// 4. Деплой на сервер (CD)"
+        },
+        {
+          "term": "GitHub Actions",
+          "english": "GitHub Actions",
+          "russian": "Сервис автоматизации workflows прямо в репозитории GitHub. Позволяет создавать CI/CD пайплайны через YAML файлы. Интегрируется с экосистемой GitHub (issues, PR, packages).",
+          "example": "# .github/workflows/main.yml\nname: CI\non: [push]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v2\n      - run: npm test"
+        },
+        {
+          "term": "GitLab CI",
+          "english": "GitLab CI",
+          "russian": "Встроенная система непрерывной интеграции в GitLab. Конфигурируется через .gitlab-ci.yml. Предоставляет раннеры для выполнения задач. Мощная альтернатива Jenkins для проектов на GitLab.",
+          "example": "# .gitlab-ci.yml\nstages:\n  - test\n  - deploy\ntest:\n  script:\n    - npm test"
+        },
+        {
+          "term": "Jenkins",
+          "english": "Jenkins",
+          "russian": "Опенсорс сервер автоматизации. Один из самых популярных инструментов CI/CD. Имеет тысячи плагинов. Требует отдельной установки и настройки в отличие от облачных решений.",
+          "example": "// Jenkinsfile\ndeclarative {\n  agent any\n  stages {\n    stage('Build') {\n      steps { sh 'npm install' }\n    }\n  }\n}"
+        },
+        {
+          "term": "deploy",
+          "english": "deploy",
+          "russian": "Развертывание приложения на сервере. Процесс выкладки кода в продакшен среду. Может быть ручным или автоматическим через CI/CD. Включает установку зависимостей, миграции БД, перезапуск сервиса.",
+          "example": "npm run build\nnpm run migrate\npm2 restart app\n// Или автоматически через GitHub Actions"
+        },
+        {
+          "term": "environment",
+          "english": "environment",
+          "russian": "Окружение выполнения приложения. Обычно разделяют на: development (разработка), staging (тестирование), production (продакшен). Позволяет использовать разные конфиги для разных стадий.",
+          "example": "NODE_ENV=development npm start\nNODE_ENV=production npm start\n\n// В коде:\nif (process.env.NODE_ENV === 'production') { ... }"
+        },
+        {
+          "term": "dotenv",
+          "english": "dotenv",
+          "russian": "Библиотека загружающая переменные окружения из файла .env. Позволяет хранить секреты (пароли, ключи) отдельно от кода. Файл .env никогда не должен попадать в git репозиторий.",
+          "example": "// .env:\nDB_PASSWORD=secret123\nAPI_KEY=xyz\n\n// В коде:\nrequire('dotenv').config();\nconsole.log(process.env.DB_PASSWORD);"
+        }
+      ]
+    },
+    {
+      "id": "day44_microservices_docker_advanced",
+      "title": "Неделя 44: Микросервисы, Docker, продвинутые темы",
+      "cards": [
+        {
+          "term": "microservices",
+          "english": "microservices",
+          "russian": "Архитектурный стиль где приложение состоит из мелких независимых сервисов. Каждый сервис отвечает за свою бизнес-функцию. Упрощает масштабирование и развертывание, но усложняет управление.",
+          "example": "// Сервисы:\n// - Auth Service\n// - User Service\n// - Order Service\n// - Payment Service\n// Общаются через HTTP или消息队列"
+        },
+        {
+          "term": "monolith",
+          "english": "monolith",
+          "russian": "Монолитная архитектура — всё приложение в одном кодебазе и процессе. Проще в разработке на старте, но сложнее масштабировать и поддерживать при росте. Противоположность микросервисам.",
+          "example": "// Один большой проект:\n// - Все модели вместе\n// - Один сервер\n// - Одна база данных\n// Легко начать, сложно масштабировать"
+        },
+        {
+          "term": "API gateway",
+          "english": "API gateway",
+          "russian": "Единая точка входа для всех клиентских запросов в микросервисной архитектуре. Маршрутизирует запросы к нужным сервисам. Занимается аутентификацией, лимитированием, кэшированием.",
+          "example": "// Клиент → API Gateway → [Сервисы]\n// Gateway проверяет токен\n// Gateway балансирует нагрузку\n// Примеры: Kong, Nginx, AWS API Gateway"
+        },
+        {
+          "term": "service discovery",
+          "english": "service discovery",
+          "russian": "Механизм автоматического обнаружения сервисов в сети. Сервисы регистрируются при запуске и находят друг друга без жестких IP адресов. Критически важно для динамических микросервисов.",
+          "example": "// Сервис регистрируется:\n// Consul, etcd, Eureka\n\n// Запрос:\n// GET http://user-service/users\n// DNS резолвит актуальный IP"
+        },
+        {
+          "term": "load balancer",
+          "english": "load balancer",
+          "russian": "Балансировщик нагрузки распределяет входящий трафик между несколькими серверами. Предотвращает перегрузку отдельных узлов. Повышает доступность и отказоустойчивость приложения.",
+          "example": "// Запросы распределяются:\n// Request 1 → Server A\n// Request 2 → Server B\n// Request 3 → Server A\n// Примеры: Nginx, HAProxy, AWS ELB"
+        },
+        {
+          "term": "message queue",
+          "english": "message queue",
+          "russian": "Очередь сообщений для асинхронной коммуникации между сервисами. Отправитель не ждет ответа получателя. Позволяет сглаживать пиковые нагрузки и гарантировать доставку.",
+          "example": "// Сервис A → Queue → Сервис B\n// Сервис B обрабатывает когда готов\n// Примеры: RabbitMQ, Kafka, AWS SQS"
+        },
+        {
+          "term": "RabbitMQ",
+          "english": "RabbitMQ",
+          "russian": "Популярный брокер сообщений с открытым исходным кодом. Реализует протокол AMQP. Поддерживает различные паттерны очередей (fanout, direct, topic). Надежная доставка сообщений.",
+          "example": "const ch = await channel.assertQueue('jobs');\nchannel.sendToQueue('jobs', Buffer.from('task'));\n// Consumer получает и обрабатывает"
+        },
+        {
+          "term": "Kafka",
+          "english": "Kafka",
+          "russian": "Платформа потоковой передачи событий от Apache. Высокая пропускная способность. Хранит сообщения дольше чем очереди. Используется для логов, аналитики, event sourcing.",
+          "example": "// Producer отправляет события:\nproducer.send({ topic: 'logs', messages: [...] });\n\n// Consumer читает поток:\nconsumer.run({ eachMessage: async ({ message }) => {} });"
+        },
+        {
+          "term": "WebSocket",
+          "english": "WebSocket",
+          "russian": "Протокол двусторонней связи поверх TCP. Позволяет серверу отправлять данные клиенту без запроса. Идеален для чатов, уведомлений, онлайн игр. Соединение постоянное.",
+          "example": "const ws = new WebSocket('ws://localhost:8080');\nws.onmessage = (event) => {\n  console.log('Новое сообщение:', event.data);\n};"
+        },
+        {
+          "term": "Server-Sent Events (SSE)",
+          "english": "Server-Sent Events",
+          "russian": "Технология позволяющая серверу отправлять обновления клиенту через HTTP. Односторонняя связь (сервер → клиент). Проще чем WebSocket, но не подходит для отправки данных клиентом.",
+          "example": "// Сервер:\nres.setHeader('Content-Type', 'text/event-stream');\nres.write('data: update\\n\\n');\n\n// Клиент:\nconst evt = new EventSource('/stream');"
+        },
+        {
+          "term": "Docker",
+          "english": "Docker",
+          "russian": "Платформа контейнеризации приложений. Упаковывает код со всеми зависимостями в контейнер. Гарантирует одинаковое поведение на любой машине. Упрощает деплой и масштабирование.",
+          "example": "// Запуск контейнера:\ndocker run -p 3000:3000 my-app\n\n// Контейнер изолирован\n// от основной системы"
+        },
+        {
+          "term": "container",
+          "english": "container",
+          "russian": "Изолированная среда выполнения приложения. Легковесная альтернатива виртуальным машинам. Запускается быстро, потребляет меньше ресурсов. Содержит приложение и его зависимости.",
+          "example": "// Контейнер включает:\n// - Код приложения\n// - Node.js runtime\n// - Библиотеки\n// - Конфигурация\n// Запускается командой docker run"
+        },
+        {
+          "term": "image",
+          "english": "Docker image",
+          "russian": "Шаблон для создания контейнеров. Содержит файловую систему и метаданные. Неизменяемый (immutable). Образы хранятся в реестрах (Docker Hub, GitHub Packages).",
+          "example": "// Скачать образ:\ndocker pull node:18\n\n// Создать свой образ:\ndocker build -t my-app .\n\n// Образ → Контейнер (экземпляр)"
+        },
+        {
+          "term": "Dockerfile",
+          "english": "Dockerfile",
+          "russian": "Текстовый файл с инструкциями для сборки Docker образа. Определяет базовый образ, копирует файлы, устанавливает зависимости, запускает приложение. Стандарт для контейнеризации.",
+          "example": "FROM node:18\nWORKDIR /app\nCOPY package*.json ./\nRUN npm install\nCOPY . .\nEXPOSE 3000\nCMD [\"node\", \"server.js\"]"
+        },
+        {
+          "term": "docker-compose",
+          "english": "docker-compose",
+          "russian": "Инструмент для запуска многоконтейнерных приложений. Описывает сервисы, сети, тома в YAML файле. Позволяет одной командой поднять всё окружение (app + db + cache).",
+          "example": "# docker-compose.yml\nversion: '3'\nservices:\n  app:\n    build: .\n  db:\n    image: postgres\n\n// Запуск:\ndocker-compose up"
+        },
+        {
+          "term": "PM2",
+          "english": "PM2",
+          "russian": "Менеджер процессов для Node.js в продакшене. Автоматически перезапускает приложение при падении. Имеет встроенный балансировщик нагрузки. Логи и мониторинг из коробки.",
+          "example": "pm2 start app.js\npm2 restart app\npm2 logs\npm2 monit\n// Работает как демон в фоне"
+        },
+        {
+          "term": "Nodemon",
+          "english": "Nodemon",
+          "russian": "Утилита для разработки которая автоматически перезапускает Node.js приложение при изменении файлов. Не используется в продакшене. Значительно ускоряет процесс разработки.",
+          "example": "// Вместо:\nnode app.js\n\n// Используйте:\nnodemon app.js\n\n// При сохранении файла — рестарт"
+        },
+        {
+          "term": "forever",
+          "english": "forever",
+          "russian": "Простая утилита для обеспечения непрерывной работы Node.js скрипта. Перезапускает при ошибках. Устаревшая альтернатива PM2. Подходит для простых скриптов.",
+          "example": "forever start app.js\nforever stop app.js\nforever list\n// Менее функционален чем PM2"
+        },
+        {
+          "term": "cluster",
+          "english": "cluster module",
+          "russian": "Встроенный модуль Node.js для создания дочерних процессов (workers). Позволяет использовать все ядра CPU. Node.js однопоточный, cluster обходит это ограничение.",
+          "example": "const cluster = require('cluster');\nif (cluster.isMaster) {\n  cluster.fork(); // создать worker\n} else {\n  // код сервера\n}"
+        },
+        {
+          "term": "worker threads",
+          "english": "worker threads",
+          "russian": "Модуль для параллельных вычислений внутри одного процесса. Позволяет выполнять тяжелые задачи не блокируя event loop. Лучше чем cluster для CPU-intensive задач.",
+          "example": "const { Worker } = require('worker_threads');\nconst worker = new Worker(__filename);\nworker.on('message', (result) => {\n  console.log(result);\n});"
+        },
+        {
+          "term": "debugging",
+          "english": "debugging",
+          "russian": "Процесс поиска и исправления ошибок в коде. В Node.js можно использовать встроенный инспектор или подключаться через Chrome DevTools. Debugger позволяет ставить breakpoints.",
+          "example": "node inspect app.js\n// Или в Chrome:\n// node --inspect app.js\n// Открыть chrome://inspect"
+        },
+        {
+          "term": "profiling",
+          "english": "profiling",
+          "russian": "Анализ производительности приложения. Позволяет найти узкие места (bottlenecks). Node.js имеет встроенный профайлер. Генерирует файлы .log которые можно анализировать.",
+          "example": "node --prof app.js\nnode --prof-process isolate-*.log\n// Покажет какие функции\n// потребляют больше всего CPU"
+        },
+        {
+          "term": "memory leak",
+          "english": "memory leak",
+          "russian": "Ситуация когда память не освобождается хотя больше не нужна. В Node.js часто из-за глобальных переменных, забытых таймеров, closures. Приводит к падению приложения со временем.",
+          "example": "// Причина:\nlet cache = [];\nsetInterval(() => cache.push(data), 1000);\n\n// Решение:\n// Ограничить размер кэша\n// Очищать вовремя"
+        },
+        {
+          "term": "heap snapshot",
+          "english": "heap snapshot",
+          "russian": "Снимок памяти в конкретный момент времени. Позволяет анализировать какие объекты занимают память. Используется для поиска утечек памяти. Можно сделать через Chrome DevTools.",
+          "example": "// В Chrome DevTools:\n// Memory tab → Take Heap Snapshot\n// Сравнить снимки\n// Найти растущие объекты"
+        },
+        {
+          "term": "garbage collection",
+          "english": "garbage collection",
+          "russian": "Автоматическое управление памятью в JavaScript. Сборщик мусора освобождает память от объектов которые больше не используются. Можно форсировать через флаг --expose-gc (для тестов).",
+          "example": "node --expose-gc\n> global.gc();\n\n// В продакшене\n// GC работает автоматически\n// Вмешиваться не рекомендуется"
+        },
+        {
+          "term": "stack trace",
+          "english": "stack trace",
+          "russian": "Стек вызовов функций в момент ошибки. Показывает путь выполнения кода. Критически важен для отладки. В Node.js выводится при uncaught exceptions.",
+          "example": "Error: Something wrong\n    at func2 (app.js:10)\n    at func1 (app.js:5)\n    at Object.<anonymous> (app.js:1)\n// Читайте снизу вверх"
+        },
+        {
+          "term": "linting",
+          "english": "linting",
+          "russian": "Статический анализ кода для поиска ошибок и проблем со стилем. Выполняется до запуска кода. Помогает поддерживать единый стандарт в команде. Пример: ESLint.",
+          "example": "// .eslintrc.js\nmodule.exports = {\n  rules: {\n    'no-unused-vars': 'error'\n  }\n};\n\n// Запуск:\nnpm run lint"
+        },
+        {
+          "term": "formatting",
+          "english": "code formatting",
+          "russian": "Автоматическое приведение кода к единому стилю. Устраняет споры о отступах, кавычках, точках с запятой. Пример: Prettier. Работает в паре с линтером.",
+          "example": "// .prettierrc\n{\n  \"semi\": true,\n  \"singleQuote\": true\n}\n\n// Запуск:\nnpm run format\n// Или в редакторе: Format on Save"
+        },
+        {
+          "term": "pre-commit hook",
+          "english": "pre-commit hook",
+          "russian": "Скрипт который выполняется перед коммитом в Git. Позволяет запустить тесты, линтер, форматирование автоматически. Предотвращает попадание плохого кода в репозиторий.",
+          "example": "# .git/hooks/pre-commit\nnpm run lint\nnpm run test\n\n// Если ошибка — коммит отменен\n// Автоматизируется через Husky"
+        },
+        {
+          "term": "Husky",
+          "english": "Husky",
+          "russian": "Инструмент для управления Git хуками. Упрощает настройку pre-commit, pre-push хуков. Интегрируется с package.json. Позволяет запускать скрипты автоматически при действиях с Git.",
+          "example": "// package.json:\n\"husky\": {\n  \"hooks\": {\n    \"pre-commit\": \"npm test\"\n  }\n}\n\n// Установка:\nnpx husky install"
+        },
+        {
+          "term": "lint-staged",
+          "english": "lint-staged",
+          "russian": "Запуск линтеров только на измененных файлах (staged). Ускоряет pre-commit хуки. Не проверяет весь проект, только то что готовится к коммиту. Работает в паре с Husky.",
+          "example": "// package.json:\n\"lint-staged\": {\n  \"*.js\": [\"eslint --fix\", \"git add\"]\n}\n\n// В pre-commit:\nnpx lint-staged"
+        },
+        {
+          "term": "SemVer",
+          "english": "Semantic Versioning",
+          "russian": "Семантическое версионирование — стандарт нумерации версий (MAJOR.MINOR.PATCH). Позволяет понять совместимость по номеру версии. Используется в npm пакетах.",
+          "example": "1.2.3\n// 1 — Major (breaking changes)\n// 2 — Minor (new features)\n// 3 — Patch (bug fixes)"
+        },
+        {
+          "term": "major version",
+          "english": "major version",
+          "russian": "Первая цифра в SemVer. Увеличивается при несовместимых изменениях API. Требует внимательного обновления зависимостей. Может сломать существующий код.",
+          "example": "1.0.0 → 2.0.0\n// Удалены методы\n// Изменены сигнатуры\n// Требуется рефакторинг кода"
+        },
+        {
+          "term": "minor version",
+          "english": "minor version",
+          "russian": "Вторая цифра в SemVer. Увеличивается при добавлении новой функциональности обратно совместимым способом. Безопасно для обновления. Не ломает существующий код.",
+          "example": "1.0.0 → 1.1.0\n// Новые функции\n// Старые работают\n// Можно обновлять смело"
+        },
+        {
+          "term": "patch version",
+          "english": "patch version",
+          "russian": "Третья цифра в SemVer. Увеличивается при исправлении багов обратно совместимым способом. Рекомендуется обновлять регулярно для безопасности и стабильности.",
+          "example": "1.0.0 → 1.0.1\n// Исправление ошибок\n// Без новых функций\n// Безопасно всегда"
+        },
+        {
+          "term": "lock file",
+          "english": "lock file",
+          "russian": "Файл фиксирующий точные версии установленных зависимостей (package-lock.json, yarn.lock). Гарантирует одинаковую сборку на всех машинах. Обязательно коммить в Git.",
+          "example": "// package-lock.json:\n\"express\": {\n  \"version\": \"4.18.2\",\n  \"resolved\": \"...\"\n}\n\n// Не удаляйте вручную!"
+        },
+        {
+          "term": "peer dependencies",
+          "english": "peer dependencies",
+          "russian": "Зависимости которые должны быть установлены родительским проектом. Часто используются в плагинах. Не устанавливаются автоматически. Требуют ручной установки пользователем.",
+          "example": "// В package.json плагина:\n\"peerDependencies\": {\n  \"react\": \"^18.0.0\"\n}\n\n// Пользователь должен\n// установить react сам"
+        },
+        {
+          "term": "bundled dependencies",
+          "english": "bundled dependencies",
+          "russian": "Зависимости которые упаковываются вместе с пакетом при публикации. Используются редко. Позволяют включать зависимости в tarball пакета. Аналог bundledDependencies.",
+          "example": "// package.json:\n\"bundledDependencies\": [\n  \"my-private-lib\"\n]\n\n// Включится в npm pack\n// Для специфичных случаев"
+        },
+        {
+          "term": "optional dependencies",
+          "english": "optional dependencies",
+          "russian": "Зависимости которые желательны но не обязательны. Если установка неудачна — npm не падает с ошибкой. Используются для платформенно-специфичных пакетов.",
+          "example": "// package.json:\n\"optionalDependencies\": {\n  \"fsevents\": \"^2.3.0\"\n}\n\n// Работает только на macOS\n// На других ОС игнорируется"
+        }
+      ]
+    }
+  ]
+}

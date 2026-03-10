@@ -1,0 +1,534 @@
+{
+  "id": "fundamentals",
+  "name": "Основы JavaScript",
+  "topics": [
+    {
+      "id": "day1_types_and_variables",
+      "title": "Неделя 1: Типы данных и переменные",
+      "cards": [
+        {
+          "term": "variable",
+          "english": "variable",
+          "russian": "Переменная — это именованное хранилище данных в памяти компьютера. Представьте её как коробку с подписью, в которую можно положить значение и позже достать его по имени. В JavaScript переменные объявляются через let, const или var.",
+          "example": "let name = 'John';\n// Создали переменную 'name' и положили в неё строку 'John'\nconsole.log(name); // Выведет: John"
+        },
+        {
+          "term": "value",
+          "english": "value",
+          "russian": "Значение — это конкретные данные, которые хранятся в переменной. Это может быть число, текст, логическое значение или любой другой тип данных. Значение можно менять (если переменная не const).",
+          "example": "const age = 25;\n// Значение 25 хранится в переменной age\n// const означает, что значение нельзя изменить"
+        },
+        {
+          "term": "data type",
+          "english": "data type",
+          "russian": "Тип данных определяет, какая информация хранится в переменной и какие операции можно с ней выполнять. JavaScript имеет динамическую типизацию — тип определяется автоматически при присваивании значения.",
+          "example": "typeof 'hello'; // 'string'\ntypeof 42; // 'number'\ntypeof true; // 'boolean'"
+        },
+        {
+          "term": "number",
+          "english": "number",
+          "russian": "Числовой тип данных для хранения целых чисел и чисел с плавающей точкой (дробных). В JavaScript нет отдельного типа для целых и дробных чисел — все они number.",
+          "example": "const pi = 3.14;\nconst integer = 42;\nconst negative = -10;\nconst infinity = Infinity;"
+        },
+        {
+          "term": "string",
+          "english": "string",
+          "russian": "Строковый тип данных для хранения текста. Строки заключаются в одинарные (''), двойные (\"\") или обратные (``) кавычки. Обратные кавычки позволяют использовать многострочный текст и интерполяцию.",
+          "example": "const text = 'Hello World';\nconst name = \"John\";\nconst greeting = `Привет, ${name}!`;"
+        },
+        {
+          "term": "boolean",
+          "english": "boolean",
+          "russian": "Логический тип данных, который может иметь только два значения: true (истина) или false (ложь). Используется в условных конструкциях и для проверки условий.",
+          "example": "const isActive = true;\nconst isCompleted = false;\nconst hasPermission = age >= 18; // true или false"
+        },
+        {
+          "term": "null",
+          "english": "null",
+          "russian": "Специальное значение, означающее «ничего» или «пустое значение». Используется когда переменная должна существовать, но пока не имеет значения. Это явное указание на отсутствие данных.",
+          "example": "let user = null;\n// Пользователь существует, но данных о нём пока нет\nconsole.log(user); // null"
+        },
+        {
+          "term": "undefined",
+          "english": "undefined",
+          "russian": "Значение, которое присваивается переменной автоматически, когда она объявлена, но ей не присвоено значение. Также возвращается когда свойство объекта не существует или функция ничего не возвращает.",
+          "example": "let x;\nconsole.log(x); // undefined\n\nconst obj = {};\nconsole.log(obj.missing); // undefined"
+        },
+        {
+          "term": "object",
+          "english": "object",
+          "russian": "Объект — это коллекция свойств (пар ключ-значение). Это основной способ группировки связанных данных в JavaScript. Почти всё в JavaScript является объектом, включая массивы и функции.",
+          "example": "const person = {\n  name: 'John',\n  age: 30,\n  isStudent: false\n};\nconsole.log(person.name); // 'John'"
+        },
+        {
+          "term": "symbol",
+          "english": "symbol",
+          "russian": "Уникальный идентификатор, добавленный в ES6. Каждый Symbol уникален, даже если создан с одинаковым описанием. Используется для создания скрытых свойств объектов.",
+          "example": "const id = Symbol('id');\nconst id2 = Symbol('id');\nconsole.log(id === id2); // false (всегда уникальны)"
+        },
+        {
+          "term": "typeof",
+          "english": "typeof operator",
+          "russian": "Оператор для определения типа данных значения. Возвращает строку с названием типа. Полезен для отладки и проверки типов во время выполнения программы.",
+          "example": "typeof 42; // 'number'\ntypeof 'hello'; // 'string'\ntypeof true; // 'boolean'\ntypeof undefined; // 'undefined'\ntypeof null; // 'object' (историческая ошибка JS)"
+        },
+        {
+          "term": "literal",
+          "english": "literal",
+          "russian": "Литерал — это явно заданное значение в коде, записанное напрямую. Например, число 42, строка 'hello', или объект { }. Литералы не вычисляются, они уже являются готовыми значениями.",
+          "example": "const str = 'hello';  // строковый литерал\nconst num = 42;       // числовой литерал\nconst arr = [1, 2];   // массивный литерал\nconst obj = { };      // объектный литерал"
+        }
+      ]
+    },
+    {
+      "id": "day2_variables_and_operators",
+      "title": "Неделя 2: Объявление переменных и операторы",
+      "cards": [
+        {
+          "term": "var",
+          "english": "var keyword",
+          "russian": "Устаревшее ключевое слово для объявления переменных. Имеет функциональную область видимости (не блочную) и подвержено поднятию (hoisting). В современном коде рекомендуется использовать let или const вместо var.",
+          "example": "var x = 10;\n// Работает, но не рекомендуется\n// var имеет проблемы с областью видимости\nfunction test() {\n  if (true) {\n    var y = 5; // y виден во всей функции\n  }\n}"
+        },
+        {
+          "term": "let",
+          "english": "let keyword",
+          "russian": "Современный способ объявления переменных с блочной областью видимости. Переменную можно изменять после объявления. Видна только внутри блока { }, где объявлена.",
+          "example": "let count = 0;\ncount = 1; // Можно изменить\n\nif (true) {\n  let blockVar = 'visible';\n}\n// blockVar здесь не видна"
+        },
+        {
+          "term": "const",
+          "english": "const keyword",
+          "russian": "Объявление константы — переменной, значение которой нельзя изменить после присваивания. Важно: для объектов и массивов нельзя переназначить переменную, но можно изменять их содержимое.",
+          "example": "const PI = 3.14;\n// PI = 3.15; // Ошибка!\n\nconst arr = [1, 2];\narr.push(3); // Можно (меняем содержимое)\n// arr = [4, 5]; // Ошибка! (нельзя переназначить)"
+        },
+        {
+          "term": "assignment",
+          "english": "assignment",
+          "russian": "Оператор присваивания (=) используется для записи значения в переменную. Важно не путать с оператором сравнения (== или ===). Справа вычисляется значение, слева — куда его записать.",
+          "example": "let x = 5;      // Присваивание\nlet y = x + 3;  // y = 8\nlet z = y * 2;  // z = 16"
+        },
+        {
+          "term": "operator",
+          "english": "operator",
+          "russian": "Оператор — это символ или ключевое слово, которое выполняет операцию над одним или несколькими значениями (операндами). Например: +, -, *, /, =, === и другие.",
+          "example": "5 + 3;    // + оператор сложения\n10 - 4;   // - оператор вычитания\nx = 5;    // = оператор присваивания\na === b;  // === оператор сравнения"
+        },
+        {
+          "term": "arithmetic operators",
+          "english": "arithmetic operators",
+          "russian": "Арифметические операторы для математических вычислений: + (сложение), - (вычитание), * (умножение), / (деление), % (остаток от деления), ** (возведение в степень).",
+          "example": "10 + 5;   // 15\n10 - 5;   // 5\n10 * 5;   // 50\n10 / 5;   // 2\n10 % 3;   // 1 (остаток)\n2 ** 3;   // 8 (2 в степени 3)"
+        },
+        {
+          "term": "increment",
+          "english": "increment",
+          "russian": "Оператор инкремента (++) увеличивает значение переменной на 1. Бывает префиксный (++x — сначала увеличит, потом вернёт) и постфиксный (x++ — сначала вернёт, потом увеличит).",
+          "example": "let i = 0;\ni++;      // i = 1\n++i;      // i = 2\n\nlet j = 5;\nconsole.log(j++); // 5 (потом j = 6)\nconsole.log(++j); // 7 (сначала j = 7)"
+        },
+        {
+          "term": "decrement",
+          "english": "decrement",
+          "russian": "Оператор декремента (--) уменьшает значение переменной на 1. Аналогично инкременту, бывает префиксный и постфиксный с той же логикой работы.",
+          "example": "let i = 5;\ni--;      // i = 4\n--i;      // i = 3\n\nlet j = 10;\nconsole.log(j--); // 10 (потом j = 9)\nconsole.log(--j); // 8 (сначала j = 8)"
+        },
+        {
+          "term": "comparison operators",
+          "english": "comparison operators",
+          "russian": "Операторы сравнения возвращают true или false. == (нестрогое, с приведением типов), === (строгое, без приведения), !=, !==, >, <, >=, <=. Всегда используйте === для предсказуемости.",
+          "example": "5 == '5';   // true (приведение типов)\n5 === '5';  // false (строгое сравнение)\n5 > 3;      // true\n5 <= 5;     // true\n5 !== 3;    // true"
+        },
+        {
+          "term": "logical operators",
+          "english": "logical operators",
+          "russian": "Логические операторы для работы с булевыми значениями: && (И — оба должны быть true), || (ИЛИ — хотя бы один true), ! (НЕ — инвертирует значение). Используются для сложных условий.",
+          "example": "true && false;  // false\ntrue || false;  // true\n!true;          // false\n\nage >= 18 && hasLicense;  // оба условия\nisMember || isGuest;      // одно из условий"
+        },
+        {
+          "term": "ternary operator",
+          "english": "ternary operator",
+          "russian": "Тернарный оператор — сокращённая форма if-else. Состоит из трёх частей: условие ? значениеЕслиИстина : значениеЕслиЛожь. Удобен для простых условных присваиваний.",
+          "example": "const age = 20;\nconst result = age >= 18 ? 'adult' : 'minor';\n// result = 'adult'\n\nconst greeting = isLoggedIn ? 'Welcome back!' : 'Please login';"
+        }
+      ]
+    },
+    {
+      "id": "day3_conditionals_loops",
+      "title": "Неделя 3: Условные конструкции и циклы",
+      "cards": [
+        {
+          "term": "if statement",
+          "english": "if statement",
+          "russian": "Условный оператор для выполнения кода только когда условие истинно. Если условие ложно, код внутри блока if пропускается. Основа принятия решений в программах.",
+          "example": "const x = 10;\nif (x > 0) {\n  console.log('Положительное число');\n}\n// Выведет: Положительное число"
+        },
+        {
+          "term": "else",
+          "english": "else",
+          "russian": "Блок else выполняется когда условие в if ложно. Позволяет указать альтернативный код. else всегда идёт после if и не имеет собственного условия.",
+          "example": "const age = 15;\nif (age >= 18) {\n  console.log('Доступ разрешён');\n} else {\n  console.log('Доступ запрещён');\n}"
+        },
+        {
+          "term": "else if",
+          "english": "else if",
+          "russian": "Позволяет проверить несколько условий по порядку. Выполняется первый блок, условие которого истинно. Можно использовать множество else if подряд перед финальным else.",
+          "example": "const score = 85;\nif (score >= 90) {\n  console.log('A');\n} else if (score >= 80) {\n  console.log('B');\n} else if (score >= 70) {\n  console.log('C');\n} else {\n  console.log('F');\n}"
+        },
+        {
+          "term": "switch",
+          "english": "switch statement",
+          "russian": "Оператор множественного выбора для проверки переменной на несколько возможных значений. Альтернатива цепочке if-else-if. Удобно когда много вариантов одного значения.",
+          "example": "const day = 2;\nswitch(day) {\n  case 1: console.log('Понедельник'); break;\n  case 2: console.log('Вторник'); break;\n  default: console.log('Другой день');\n}"
+        },
+        {
+          "term": "case",
+          "english": "case",
+          "russian": "Вариант значения в switch. Когда значение переменной совпадает с case, выполняется код после него. Обязательно нужен break, иначе выполнение продолжится в следующий case.",
+          "example": "switch(color) {\n  case 'red':\n    console.log('Стоп');\n    break;\n  case 'green':\n    console.log('Иди');\n    break;\n}"
+        },
+        {
+          "term": "default",
+          "english": "default",
+          "russian": "Блок по умолчанию в switch. Выполняется когда ни одно из условий case не совпало. Аналог else в конструкции if-else. Не обязателен, но рекомендуется для обработки неожиданных значений.",
+          "example": "switch(option) {\n  case 1: doSomething(); break;\n  case 2: doOther(); break;\n  default:\n    console.log('Неверный выбор');\n}"
+        },
+        {
+          "term": "break",
+          "english": "break",
+          "russian": "Прерывает выполнение цикла или switch. В switch предотвращает «проваливание» в следующий case. В цикле полностью останавливает выполнение и выходит из цикла.",
+          "example": "// В switch:\nswitch(x) {\n  case 1: break; // выход из switch\n}\n\n// В цикле:\nfor (let i = 0; i < 10; i++) {\n  if (i === 5) break; // остановка при i = 5\n}"
+        },
+        {
+          "term": "continue",
+          "english": "continue",
+          "russian": "Пропускает оставшуюся часть текущей итерации цикла и переходит к следующей. В отличие от break, не выходит из цикла полностью, а только пропускает один проход.",
+          "example": "for (let i = 0; i < 5; i++) {\n  if (i === 2) continue; // пропускаем i = 2\n  console.log(i); // 0, 1, 3, 4\n}"
+        },
+        {
+          "term": "for loop",
+          "english": "for loop",
+          "russian": "Цикл со счётчиком для выполнения кода определённое количество раз. Состоит из трёх частей: инициализация, условие, изменение счётчика. Идеален когда известно количество итераций.",
+          "example": "for (let i = 0; i < 5; i++) {\n  console.log(`Итерация ${i}`);\n}\n// Выведет 0, 1, 2, 3, 4"
+        },
+        {
+          "term": "while loop",
+          "english": "while loop",
+          "russian": "Цикл с предусловием — проверяет условие перед каждой итерацией. Выполняется пока условие истинно. Может не выполниться ни разу если условие сразу ложно.",
+          "example": "let i = 0;\nwhile (i < 5) {\n  console.log(i);\n  i++;\n}\n// Выведет 0, 1, 2, 3, 4"
+        },
+        {
+          "term": "do...while loop",
+          "english": "do...while loop",
+          "russian": "Цикл с постусловием — выполняет код хотя бы один раз, затем проверяет условие. Отличается от while тем, что условие проверяется после выполнения тела цикла.",
+          "example": "let i = 0;\ndo {\n  console.log(i);\n  i++;\n} while (i < 5);\n// Выполнится минимум 1 раз"
+        },
+        {
+          "term": "infinite loop",
+          "english": "infinite loop",
+          "russian": "Бесконечный цикл — цикл, условие которого никогда не становится ложным. Обычно это ошибка, но иногда используется намеренно (например, в серверах). Может «завесить» программу.",
+          "example": "// ОШИБКА — никогда не остановится:\nwhile (true) {\n  console.log('Бесконечно...');\n}\n\n// Правильно — с условием выхода:\nwhile (true) {\n  if (condition) break;\n}"
+        }
+      ]
+    },
+    {
+      "id": "day4_functions_basics",
+      "title": "Неделя 4: Функции — объявление и вызов",
+      "cards": [
+        {
+          "term": "function",
+          "english": "function",
+          "russian": "Функция — именованный блок кода, который выполняет определённую задачу. Позволяет переиспользовать код, избегая дублирования. Функцию можно вызывать многократно из разных мест программы.",
+          "example": "function greet(name) {\n  return 'Hello, ' + name;\n}\nconsole.log(greet('John')); // 'Hello, John'\nconsole.log(greet('Anna')); // 'Hello, Anna'"
+        },
+        {
+          "term": "function declaration",
+          "english": "function declaration",
+          "russian": "Объявление функции через ключевое слово function. Такие функции «поднимаются» (hoisting) — их можно вызывать до объявления в коде. Имеют имя и область видимости.",
+          "example": "// Можно вызвать до объявления:\nsayHello();\n\nfunction sayHello() {\n  console.log('Привет!');\n}"
+        },
+        {
+          "term": "function expression",
+          "english": "function expression",
+          "russian": "Функция, присвоенная переменной. Не подвержена поднятию — нельзя вызвать до объявления. Может быть анонимной или именованной. Позволяет передавать функции как значения.",
+          "example": "// Нельзя вызвать до этой строки:\nconst sayHello = function() {\n  console.log('Привет!');\n};\nsayHello();"
+        },
+        {
+          "term": "arrow function",
+          "english": "arrow function",
+          "russian": "Стрелочная функция — современный синтаксис ES6. Короче записывается, не имеет своего this (берёт из внешней области). Идеальна для коротких функций и колбэков.",
+          "example": "const add = (a, b) => a + b;\nconsole.log(add(2, 3)); // 5\n\n// С одним параметром скобки не нужны:\nconst double = x => x * 2;"
+        },
+        {
+          "term": "parameter",
+          "english": "parameter",
+          "russian": "Параметр — переменная, объявленная в определении функции. Получает значение при вызове функции. Функция может иметь ноль, один или множество параметров.",
+          "example": "function greet(name, age) {\n  // name и age — параметры\n  console.log(`${name}, ${age} лет`);\n}\ngreet('John', 25); // 'John' и 25 — аргументы"
+        },
+        {
+          "term": "argument",
+          "english": "argument",
+          "russian": "Аргумент — конкретное значение, передаваемое в функцию при вызове. Аргументы присваиваются параметрам в порядке следования. Количество аргументов может отличаться от параметров.",
+          "example": "function add(a, b) {\n  return a + b;\n}\nadd(5, 3); // 5 и 3 — аргументы\n// a = 5, b = 3"
+        },
+        {
+          "term": "return",
+          "english": "return statement",
+          "russian": "Оператор return завершает выполнение функции и возвращает значение вызывающему коду. Если return без значения — возвращается undefined. Код после return не выполняется.",
+          "example": "function multiply(a, b) {\n  return a * b; // возвращает результат\n  console.log('Не выполнится');\n}\nconst result = multiply(2, 3); // result = 6"
+        },
+        {
+          "term": "callback",
+          "english": "callback function",
+          "russian": "Функция обратного вызова — функция, которая передаётся как аргумент в другую функцию и вызывается внутри неё. Основа асинхронного программирования в JavaScript.",
+          "example": "setTimeout(() => {\n  console.log('Выполнено через 1 сек');\n}, 1000);\n\n// Или с именованной функцией:\nfunction onComplete() { console.log('Готово'); }\nsetTimeout(onComplete, 1000);"
+        },
+        {
+          "term": "anonymous function",
+          "english": "anonymous function",
+          "russian": "Анонимная функция — функция без имени. Часто используется как колбэк или для одноразового использования. Не может быть вызвана по имени, только через переменную или сразу.",
+          "example": "btn.addEventListener('click', function() {\n  console.log('Клик!');\n});\n\n// Или стрелочная:\nbtn.addEventListener('click', () => {\n  console.log('Клик!');\n});"
+        },
+        {
+          "term": "recursion",
+          "english": "recursion",
+          "russian": "Рекурсия — когда функция вызывает саму себя. Должна иметь условие остановки (базовый случай), иначе будет бесконечный цикл. Полезно для работы с деревьями, вложенными структурами.",
+          "example": "function factorial(n) {\n  if (n <= 1) return 1; // базовый случай\n  return n * factorial(n - 1); // рекурсивный вызов\n}\nconsole.log(factorial(5)); // 120"
+        },
+        {
+          "term": "IIFE",
+          "english": "Immediately Invoked Function Expression",
+          "russian": "Немедленно вызываемое функциональное выражение — функция, которая выполняется сразу после создания. Использовалось для создания изолированной области видимости до появления let/const.",
+          "example": "(function() {\n  const private = 'secret';\n  console.log('Выполнено сразу');\n})();\n// private недоступна снаружи"
+        },
+        {
+          "term": "scope",
+          "english": "scope",
+          "russian": "Область видимости определяет, где в коде доступна переменная. Бывает глобальная (везде), локальная (внутри функции), блочная (внутри { }). let/const имеют блочную область, var — функциональную.",
+          "example": "let global = 'везде';\n\nfunction foo() {\n  let local = 'только в функции';\n  if (true) {\n    let block = 'только в блоке';\n  }\n  // block здесь недоступна\n}"
+        }
+      ]
+    },
+    {
+      "id": "day5_advanced_functions",
+      "title": "Неделя 5: Продвинутые темы функций",
+      "cards": [
+        {
+          "term": "closure",
+          "english": "closure",
+          "russian": "Замыкание — функция, которая «запоминает» переменные из внешней области, даже когда вызывается вне её. Позволяет создавать приватные переменные и фабрики функций.",
+          "example": "function createCounter() {\n  let count = 0; // приватная переменная\n  return () => ++count;\n}\nconst counter = createCounter();\nconsole.log(counter()); // 1\nconsole.log(counter()); // 2"
+        },
+        {
+          "term": "hoisting",
+          "english": "hoisting",
+          "russian": "Поднятие — механизм, при котором объявления переменных и функций перемещаются в начало области видимости перед выполнением кода. var и function declaration поднимаются, let/const — нет (временная мёртвая зона).",
+          "example": "console.log(x); // undefined (не ошибка)\nvar x = 5;\n\n// console.log(y); // Ошибка!\nlet y = 10;\n\n// Функции поднимаются полностью:\nsayHi(); // Работает\nfunction sayHi() {}"
+        },
+        {
+          "term": "this",
+          "english": "this keyword",
+          "russian": "Ключевое слово this ссылается на объект, в контексте которого выполняется функция. Значение this зависит от способа вызова функции. В стрелочных функциях this берётся из внешней области.",
+          "example": "const obj = {\n  name: 'John',\n  greet() {\n    console.log(this.name); // 'John'\n  }\n};\nobj.greet();\n\n// В стрелочной функции:\nconst arrow = () => console.log(this); // this из внешней области"
+        },
+        {
+          "term": "call()",
+          "english": "call() method",
+          "russian": "Метод call() вызывает функцию с указанным this и аргументами, переданными по отдельности. Позволяет явно установить контекст выполнения функции.",
+          "example": "function greet(greeting) {\n  console.log(`${greeting}, ${this.name}`);\n}\nconst person = { name: 'John' };\ngreet.call(person, 'Hello'); // 'Hello, John'"
+        },
+        {
+          "term": "apply()",
+          "english": "apply() method",
+          "russian": "Аналогично call(), но аргументы передаются массивом. Полезно когда количество аргументов динамическое или уже есть массив значений.",
+          "example": "function sum(a, b, c) {\n  return a + b + c;\n}\nconst args = [1, 2, 3];\nconsole.log(sum.apply(null, args)); // 6"
+        },
+        {
+          "term": "bind()",
+          "english": "bind() method",
+          "russian": "Создаёт новую функцию с привязанным this и/или аргументами. Не вызывает функцию сразу, а возвращает новую функцию для последующего вызова. Полезно для сохранения контекста.",
+          "example": "const person = { name: 'John' };\nfunction greet() {\n  console.log(`Hello, ${this.name}`);\n}\nconst boundGreet = greet.bind(person);\nboundGreet(); // 'Hello, John'"
+        },
+        {
+          "term": "rest parameters",
+          "english": "rest parameters",
+          "russian": "Остаточные параметры (...args) позволяют функции принимать неограниченное количество аргументов. Все аргументы собираются в массив. Должны быть последними в списке параметров.",
+          "example": "function sum(...nums) {\n  return nums.reduce((a, b) => a + b, 0);\n}\nconsole.log(sum(1, 2, 3)); // 6\nconsole.log(sum(1, 2, 3, 4, 5)); // 15"
+        },
+        {
+          "term": "spread operator",
+          "english": "spread operator",
+          "russian": "Оператор расширения (...) раскрывает массив или объект на отдельные элементы. Используется для копирования, объединения массивов/объектов, передачи аргументов в функцию.",
+          "example": "const arr1 = [1, 2];\nconst arr2 = [...arr1, 3, 4]; // [1, 2, 3, 4]\n\nconst obj1 = { a: 1 };\nconst obj2 = { ...obj1, b: 2 }; // { a: 1, b: 2 }"
+        },
+        {
+          "term": "default parameters",
+          "english": "default parameters",
+          "russian": "Параметры по умолчанию задаются в определении функции. Используются когда аргумент не передан или равен undefined. Упрощают обработку отсутствующих аргументов.",
+          "example": "function greet(name = 'Гость') {\n  console.log(`Привет, ${name}!`);\n}\ngreet(); // 'Привет, Гость!'\ngreet('John'); // 'Привет, John!'"
+        },
+        {
+          "term": "pure function",
+          "english": "pure function",
+          "russian": "Чистая функция всегда возвращает одинаковый результат для одинаковых аргументов и не имеет побочных эффектов (не изменяет внешнее состояние, не делает запросов). Основа функционального программирования.",
+          "example": "// Чистая:\nfunction add(a, b) {\n  return a + b;\n}\n\n// Нечистая (побочный эффект):\nlet count = 0;\nfunction increment() {\n  count++; // изменяет внешнюю переменную\n}"
+        },
+        {
+          "term": "higher-order function",
+          "english": "higher-order function",
+          "russian": "Функция высшего порядка принимает другую функцию как аргумент или возвращает функцию. Примеры: map, filter, reduce, а также функции для создания других функций.",
+          "example": "function multiplyBy(n) {\n  return (x) => x * n; // возвращает функцию\n}\nconst double = multiplyBy(2);\nconsole.log(double(5)); // 10\n\n// Или принимает функцию:\n[1, 2, 3].map(x => x * 2);"
+        }
+      ]
+    },
+    {
+      "id": "day6_objects",
+      "title": "Неделя 6: Объекты",
+      "cards": [
+        {
+          "term": "object literal",
+          "english": "object literal",
+          "russian": "Литерал объекта — способ создания объекта с помощью фигурных скобок { }. Внутри перечисляются свойства в формате ключ: значение. Это самый распространённый способ создания объектов.",
+          "example": "const user = { name: 'John', age: 30 };\nconsole.log(user.name); // 'John'"
+        },
+        {
+          "term": "property",
+          "english": "property",
+          "russian": "Свойство — это пара ключ-значение в объекте. Ключ всегда строка (или Symbol), значение может быть любого типа. Свойства описывают характеристики объекта.",
+          "example": "const obj = { name: 'John' };\n// 'name' — ключ, 'John' — значение\n// Вместе они образуют свойство"
+        },
+        {
+          "term": "method",
+          "english": "method",
+          "russian": "Метод — это функция, которая является свойством объекта. Вызывается через точку после имени объекта. Методы определяют поведение объекта.",
+          "example": "const obj = {\n  greet() {\n    console.log('Hi');\n  }\n};\nobj.greet(); // 'Hi'"
+        },
+        {
+          "term": "key",
+          "english": "key",
+          "russian": "Ключ — это имя свойства в объекте. Используется для доступа к значению свойства. Ключи должны быть уникальными в пределах одного объекта.",
+          "example": "const obj = { name: 'John' };\n// 'name' — ключ\nconsole.log(obj['name']); // доступ через ключ"
+        },
+        {
+          "term": "dot notation",
+          "english": "dot notation",
+          "russian": "Точечная запись — способ доступа к свойствам объекта через точку. Самый распространённый и удобный способ. Работает только с валидными именами ключей.",
+          "example": "const obj = { name: 'John' };\nconsole.log(obj.name); // 'John'\n// Нельзя: obj.123 (ключ не может начинаться с цифры)"
+        },
+        {
+          "term": "bracket notation",
+          "english": "bracket notation",
+          "russian": "Скобочная запись — доступ к свойствам через квадратные скобки. Позволяет использовать динамические ключи и ключи со special-символами.",
+          "example": "const obj = { name: 'John' };\nconsole.log(obj['name']); // 'John'\n\nconst key = 'name';\nconsole.log(obj[key]); // 'John' (динамический ключ)"
+        },
+        {
+          "term": "delete operator",
+          "english": "delete operator",
+          "russian": "Оператор delete удаляет свойство из объекта. Возвращает true если удаление успешно. Не работает с переменными и функциями, только со свойствами объектов.",
+          "example": "const obj = { name: 'John', age: 30 };\ndelete obj.age;\nconsole.log(obj); // { name: 'John' }"
+        },
+        {
+          "term": "in operator",
+          "english": "in operator",
+          "russian": "Оператор in проверяет существование свойства в объекте (включая прототип). Возвращает true если свойство найдено, false если нет.",
+          "example": "const obj = { name: 'John' };\nconsole.log('name' in obj); // true\nconsole.log('age' in obj);  // false"
+        },
+        {
+          "term": "hasOwnProperty()",
+          "english": "hasOwnProperty() method",
+          "russian": "Метод проверяет, является ли свойство собственным (не унаследованным из прототипа). Возвращает true только для собственных свойств объекта.",
+          "example": "const obj = { name: 'John' };\nconsole.log(obj.hasOwnProperty('name')); // true\nconsole.log(obj.hasOwnProperty('toString')); // false (из прототипа)"
+        },
+        {
+          "term": "Object.keys()",
+          "english": "Object.keys()",
+          "russian": "Статический метод возвращает массив всех собственных перечислимых ключей объекта. Удобно для перебора свойств объекта в цикле.",
+          "example": "const obj = { a: 1, b: 2, c: 3 };\nconsole.log(Object.keys(obj)); // ['a', 'b', 'c']\n\nObject.keys(obj).forEach(key => {\n  console.log(key, obj[key]);\n});"
+        },
+        {
+          "term": "Object.values()",
+          "english": "Object.values()",
+          "russian": "Статический метод возвращает массив всех собственных перечислимых значений объекта. Полезно когда нужны только значения без ключей.",
+          "example": "const obj = { a: 1, b: 2, c: 3 };\nconsole.log(Object.values(obj)); // [1, 2, 3]"
+        },
+        {
+          "term": "Object.entries()",
+          "english": "Object.entries()",
+          "russian": "Статический метод возвращает массив пар [ключ, значение] для каждого свойства объекта. Удобно для преобразования объекта в массив и обратно.",
+          "example": "const obj = { a: 1, b: 2 };\nconsole.log(Object.entries(obj));\n// [['a', 1], ['b', 2]]"
+        },
+        {
+          "term": "Object.assign()",
+          "english": "Object.assign()",
+          "russian": "Копирует все перечислимые свойства из одного или нескольких исходных объектов в целевой объект. Возвращает изменённый целевой объект. Используется для клонирования и объединения.",
+          "example": "const target = { a: 1 };\nconst source = { b: 2 };\nconst result = Object.assign(target, source);\nconsole.log(result); // { a: 1, b: 2 }"
+        }
+      ]
+    },
+    {
+      "id": "day7_prototypes_classes",
+      "title": "Неделя 7: Прототипы и классы (ES6)",
+      "cards": [
+        {
+          "term": "prototype",
+          "english": "prototype",
+          "russian": "Прототип — механизм наследования в JavaScript. Каждый объект имеет ссылку на прототип, из которого наследует свойства и методы. Основа ООП в JS до появления классов.",
+          "example": "Array.prototype.myMethod = function() {\n  console.log('Custom method');\n};\n[1, 2, 3].myMethod(); // 'Custom method'"
+        },
+        {
+          "term": "constructor",
+          "english": "constructor",
+          "russian": "Конструктор — специальная функция для создания объектов через new. Инициализирует свойства нового объекта. В классах это метод constructor().",
+          "example": "function User(name) {\n  this.name = name;\n}\nconst user = new User('John');\nconsole.log(user.name); // 'John'"
+        },
+        {
+          "term": "new operator",
+          "english": "new operator",
+          "russian": "Оператор new создаёт новый экземпляр объекта через конструктор. Вызывает конструктор, устанавливает this и возвращает новый объект.",
+          "example": "function User(name) {\n  this.name = name;\n}\nconst user = new User('John');\n// user — новый объект с свойством name"
+        },
+        {
+          "term": "class",
+          "english": "class",
+          "russian": "Класс — синтаксический сахар над прототипами ES6. Более понятный способ создания конструкторов и методов. Поддерживает наследование, статические методы, геттеры/сеттеры.",
+          "example": "class User {\n  constructor(name) {\n    this.name = name;\n  }\n  greet() {\n    console.log(`Hello, ${this.name}`);\n  }\n}"
+        },
+        {
+          "term": "extends",
+          "english": "extends keyword",
+          "russian": "Ключевое слово extends создаёт класс-наследник от другого класса. Дочерний класс получает все методы и свойства родительского класса. Основа наследования в ES6.",
+          "example": "class User {\n  constructor(name) { this.name = name; }\n}\n\nclass Admin extends User {\n  constructor(name, role) {\n    super(name);\n    this.role = role;\n  }\n}"
+        },
+        {
+          "term": "super",
+          "english": "super keyword",
+          "russian": "Ключевое слово super вызывает конструктор родительского класса или обращается к его методам. Обязательно в конструкторе класса-наследника перед использованием this.",
+          "example": "class Admin extends User {\n  constructor(name, role) {\n    super(name); // вызов конструктора родителя\n    this.role = role;\n  }\n}"
+        },
+        {
+          "term": "static",
+          "english": "static keyword",
+          "russian": "Статические методы и свойства принадлежат классу, а не экземплярам. Вызываются через имя класса, не требуют создания объекта. Полезны для утилитных функций.",
+          "example": "class User {\n  static create() {\n    return new User();\n  }\n}\nconst user = User.create(); // без new"
+        },
+        {
+          "term": "getter",
+          "english": "getter",
+          "russian": "Геттер — специальный метод для получения значения свойства. Вызывается как обычное свойство (без скобок). Позволяет вычислять значения динамически.",
+          "example": "class User {\n  constructor(first, last) {\n    this.first = first;\n    this.last = last;\n  }\n  get fullName() {\n    return this.first + ' ' + this.last;\n  }\n}\nconsole.log(user.fullName); // без скобок!"
+        },
+        {
+          "term": "setter",
+          "english": "setter",
+          "russian": "Сеттер — специальный метод для установки значения свойства. Вызывается как присваивание обычному свойству. Позволяет валидировать и преобразовывать данные.",
+          "example": "class User {\n  set age(value) {\n    if (value < 0) throw new Error('Invalid');\n    this._age = value;\n  }\n}\nuser.age = 25; // вызывает setter"
+        },
+        {
+          "term": "instanceof",
+          "english": "instanceof operator",
+          "russian": "Оператор instanceof проверяет, принадлежит ли объект определённому классу (конструктору). Возвращает true если объект создан через этот конструктор или его наследник.",
+          "example": "class User {}\nconst user = new User();\nconsole.log(user instanceof User); // true\nconsole.log(user instanceof Object); // true"
+        }
+      ]
+    }
+  ]
+}

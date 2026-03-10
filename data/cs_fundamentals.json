@@ -1,0 +1,108 @@
+{
+  "id": "cs_fundamentals",
+  "name": "Computer Science и Алгоритмы",
+  "topics": [
+    {
+      "id": "cs_big_o",
+      "title": "Big O и Сложность алгоритмов",
+      "cards": [
+        {
+          "term": "Big O Notation",
+          "english": "Big O Notation",
+          "russian": "Нотация Big O описывает асимптотическую сложность алгоритма — как растёт время выполнения или использование памяти при увеличении размера входных данных (n). O(1) — константная, O(n) — линейная, O(n²) — квадратичная, O(log n) — логарифмическая. Big O показывает верхнюю границу сложности в худшем случае.",
+          "example": "// O(1) - Константная сложность\nfunction getFirst(arr) {\n  return arr[0]; // Всегда 1 операция\n}\n\n// O(n) - Линейная сложность\nfunction sum(arr) {\n  let total = 0;\n  for (let x of arr) { // n итераций\n    total += x;\n  }\n  return total;\n}\n\n// O(n²) - Квадратичная\nfunction pairs(arr) {\n  for (let i of arr) {\n    for (let j of arr) { // n * n итераций\n      console.log(i, j);\n    }\n  }\n}\n\n// O(log n) - Логарифмическая\n// Бинарный поиск (см. следующие карточки)"
+        },
+        {
+          "term": "Time Complexity",
+          "english": "Time Complexity",
+          "russian": "Временная сложность (Time Complexity) измеряет, как количество операций алгоритма растёт с увеличением входных данных. Не путать с реальным временем выполнения! O(n) означает, что операций пропорционально количеству элементов. O(1) — идеально, O(log n) — отлично, O(n) — хорошо, O(n log n) — приемлемо, O(n²) — плохо для больших n.",
+          "example": "// Сравнение сложностей для n = 1,000,000\n// O(1):        1 операция\n// O(log n):    ~20 операций\n// O(n):        1,000,000 операций\n// O(n log n):  ~20,000,000 операций\n// O(n²):       1,000,000,000,000 операций!\n\n// Практический пример: поиск в массиве\nconst arr = [1, 2, 3, ..., 1000000];\n\n// Линейный поиск: O(n)\narr.find(x => x === target);\n\n// Если массив отсортирован - бинарный поиск: O(log n)\nbinarySearch(arr, target); // НАМНОГО быстрее!\n\n// Почему это важно:\n// O(n²) для n=10k = 100M операций (медленно)\n// O(n log n) для n=10k = 130k операций (быстро)"
+        },
+        {
+          "term": "Space Complexity",
+          "english": "Space Complexity",
+          "russian": "Пространственная сложность (Space Complexity) измеряет, сколько дополнительной памяти использует алгоритм в зависимости от размера входных данных. Включает память для переменных, рекурсивного стека, создаваемых структур данных. Оптимальные алгоритмы минимизируют и время, и память.",
+          "example": "// O(1) Space - константная память\nfunction sum(arr) {\n  let total = 0; // только 1 переменная\n  for (let x of arr) {\n    total += x;\n  }\n  return total;\n}\n\n// O(n) Space - линейная память\nfunction double(arr) {\n  const result = []; // новый массив размера n\n  for (let x of arr) {\n    result.push(x * 2);\n  }\n  return result;\n}\n\n// O(n) Space - рекурсия\nfunction factorial(n) {\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n  // глубина стека вызовов = n\n}\n\n// Оптимизация space для факториала:\n// Tail recursion или итерация - O(1) space"
+        },
+        {
+          "term": "Array Time Complexity",
+          "english": "Array Time Complexity",
+          "russian": "Методы массивов в JavaScript имеют разную сложность. Push/pop в конец — O(1). Shift/unshift в начало — O(n) из-за переиндексации. indexOf/find/includes — O(n) линейный поиск. Sort — O(n log n). Для частых операций в начале массива лучше использовать другие структуры (Linked List) или не мутировать массив.",
+          "example": "const arr = [1, 2, 3, 4, 5];\n\n// O(1) - отлично\narr.push(6);       // добавление в конец\narr.pop();         // удаление с конца\narr[2];            // доступ по индексу\n\n// O(n) - переиндексация всех элементов\narr.unshift(0);    // добавление в начало\narr.shift();       // удаление с начала\narr.splice(2, 1);  // удаление из середины\n\n// O(n) - линейный поиск\narr.indexOf(3);    // поиск индекса\narr.find(x => x > 2);\narr.includes(4);\narr.filter(x => x > 2);\n\n// O(n log n) - сложная сортировка\narr.sort((a, b) => a - b);\n\n// O(n) - проход по всему массиву\narr.map(x => x * 2);\narr.reduce((a, b) => a + b, 0);"
+        },
+        {
+          "term": "Object vs Map Time Complexity",
+          "english": "Object vs Map Time Complexity",
+          "russian": "Object и Map имеют разную производительность. Object: ключи только строки/символы, не гарантирует порядок (до ES2015), hasOwnProperty O(1), но коллизии хэшей могут дать O(n). Map: ключи любого типа, гарантированный порядок вставки, size O(1), delete O(1). Для частых добавлений/удалений Map быстрее. Object лучше только когда ключи известны на этапе компиляции.",
+          "example": "// Object - хорош для статических ключей\nconst obj = { a: 1, b: 2 };\n// Чтение/запись: O(1) в среднем\nobj.a;\nobj.c = 3;\n// Удаление: O(1), но дорого (деоптимизация V8)\ndelete obj.a;\n\n// Map - лучше для динамических операций\nconst map = new Map();\nmap.set('a', 1);     // O(1)\nmap.get('a');        // O(1)\nmap.has('a');        // O(1)\nmap.delete('a');     // O(1) - быстрее чем delete у Object\nmap.size;            // O(1) - быстрый доступ\n\n// Map с объектами как ключи (невозможно в Object)\nconst key = { id: 1 };\nmap.set(key, 'value');\nmap.get(key); // 'value'"
+        }
+      ]
+    },
+    {
+      "id": "cs_data_structures",
+      "title": "Структуры данных",
+      "cards": [
+        {
+          "term": "Stack",
+          "english": "Stack data structure",
+          "russian": "Стек (Stack) — структура данных LIFO (Last In, First Out). Элементы добавляются и удаляются с одного конца (вершины). Аналогия: стопка тарелок. Операции: push (добавить), pop (удалить), peek (посмотреть верхний). Используется для: отмены операций, парсинга выражений, рекурсии (call stack), проверки баланса скобок.",
+          "example": "// Реализация стека\nclass Stack {\n  constructor() {\n    this.items = [];\n  }\n  \n  push(item) {\n    this.items.push(item); // O(1)\n  }\n  \n  pop() {\n    return this.items.pop(); // O(1)\n  }\n  \n  peek() {\n    return this.items[this.items.length - 1];\n  }\n  \n  isEmpty() {\n    return this.items.length === 0;\n  }\n}\n\n// Применение: проверка баланса скобок\nfunction isBalanced(str) {\n  const stack = [];\n  const pairs = { ')': '(', '}': '{', ']': '[' };\n  \n  for (let char of str) {\n    if ('({['.includes(char)) {\n      stack.push(char);\n    } else if (')}]'.includes(char)) {\n      if (stack.pop() !== pairs[char]) return false;\n    }\n  }\n  return stack.length === 0;\n}\n\nisBalanced('({[]})'); // true\nisBalanced('({[})');  // false"
+        },
+        {
+          "term": "Queue",
+          "english": "Queue data structure",
+          "russian": "Очередь (Queue) — структура данных FIFO (First In, First Out). Элементы добавляются в конец (enqueue), удаляются с начала (dequeue). Аналогия: очередь в магазине. Используется для: обработки задач по порядку, BFS (поиск в ширину), буферизации данных, event loop в JavaScript.",
+          "example": "// Реализация очереди\nclass Queue {\n  constructor() {\n    this.items = [];\n    this.head = 0; // оптимизация для O(1) dequeue\n  }\n  \n  enqueue(item) {\n    this.items.push(item); // O(1)\n  }\n  \n  dequeue() {\n    if (this.isEmpty()) return undefined;\n    const item = this.items[this.head];\n    this.head++;\n    // Очистка памяти при необходимости\n    if (this.head * 2 > this.items.length) {\n      this.items = this.items.slice(this.head);\n      this.head = 0;\n    }\n    return item;\n  }\n  \n  isEmpty() {\n    return this.head >= this.items.length;\n  }\n}\n\n// Применение: BFS (обход дерева в ширину)\nfunction bfs(tree, target) {\n  const queue = [tree.root];\n  \n  while (queue.length > 0) {\n    const node = queue.shift(); // dequeue\n    if (node.value === target) return node;\n    queue.push(...node.children); // enqueue\n  }\n  return null;\n}\n\n// Event Loop использует очередь (macrotasks/microtasks)"
+        },
+        {
+          "term": "Linked List",
+          "english": "Linked List",
+          "russian": "Связный список — структура данных, где элементы (nodes) хранят данные и ссылку (pointer) на следующий элемент. В отличие от массива, элементы не хранятся последовательно в памяти. Преимущества: O(1) вставка/удаление в начале/середине (при наличии указателя). Недостатки: O(n) доступ по индексу, больше памяти на указатели, плохой кэш (элементы разбросаны в памяти).",
+          "example": "// Узел списка\nclass ListNode {\n  constructor(value) {\n    this.value = value;\n    this.next = null;\n  }\n}\n\nclass LinkedList {\n  constructor() {\n    this.head = null;\n  }\n  \n  // O(1) - добавление в начало\n  prepend(value) {\n    const newNode = new ListNode(value);\n    newNode.next = this.head;\n    this.head = newNode;\n  }\n  \n  // O(n) - поиск\n  find(value) {\n    let current = this.head;\n    while (current) {\n      if (current.value === value) return current;\n      current = current.next;\n    }\n    return null;\n  }\n  \n  // O(n) - удаление\n  delete(value) {\n    if (!this.head) return;\n    if (this.head.value === value) {\n      this.head = this.head.next;\n      return;\n    }\n    let current = this.head;\n    while (current.next) {\n      if (current.next.value === value) {\n        current.next = current.next.next;\n        return;\n      }\n      current = current.next;\n    }\n  }\n}\n\n// Практика: список используется в Redux, React reconciler"
+        },
+        {
+          "term": "Hash Table",
+          "english": "Hash Table",
+          "russian": "Хэш-таблица — структура данных, реализующая ассоциативный массив. Использует хэш-функцию для преобразования ключа в индекс массива (bucket). Средняя сложность: O(1) для get/set/delete. При коллизиях (разные ключи → один индекс) используются цепочки (chaining) или открытая адресация. JavaScript Object и Map реализованы как хэш-таблицы.",
+          "example": "// Простая реализация хэш-таблицы\nclass HashTable {\n  constructor(size = 53) {\n    this.buckets = new Array(size);\n  }\n  \n  _hash(key) {\n    let total = 0;\n    for (let char of key) {\n      total = (total * 31 + char.charCodeAt(0)) % this.buckets.length;\n    }\n    return total;\n  }\n  \n  set(key, value) {\n    const index = this._hash(key);\n    if (!this.buckets[index]) {\n      this.buckets[index] = [];\n    }\n    // Проверка на существующий ключ\n    const pair = this.buckets[index].find(p => p[0] === key);\n    if (pair) {\n      pair[1] = value;\n    } else {\n      this.buckets[index].push([key, value]);\n    }\n  }\n  \n  get(key) {\n    const index = this._hash(key);\n    const bucket = this.buckets[index];\n    if (bucket) {\n      const pair = bucket.find(p => p[0] === key);\n      return pair ? pair[1] : undefined;\n    }\n    return undefined;\n  }\n}\n\n// Использование\nconst ht = new HashTable();\nht.set('name', 'John'); // O(1) average\nht.get('name'); // 'John' - O(1) average"
+        },
+        {
+          "term": "Binary Search Tree",
+          "english": "Binary Search Tree (BST)",
+          "russian": "Двоичное дерево поиска — иерархическая структура данных. Каждый узел имеет не более двух потомков. Левый потомок < родителя < правый потомок. Операции: O(log n) в среднем для сбалансированного дерева (O(n) в худшем случае для вырожденного). Используется для: быстрого поиска, сортировки, range queries, реализации Map/Set (в некоторых языках).",
+          "example": "class TreeNode {\n  constructor(value) {\n    this.value = value;\n    this.left = null;\n    this.right = null;\n  }\n}\n\nclass BST {\n  constructor() {\n    this.root = null;\n  }\n  \n  insert(value) {\n    this.root = this._insertNode(this.root, value);\n  }\n  \n  _insertNode(node, value) {\n    if (!node) return new TreeNode(value);\n    if (value < node.value) {\n      node.left = this._insertNode(node.left, value);\n    } else if (value > node.value) {\n      node.right = this._insertNode(node.right, value);\n    }\n    return node;\n  }\n  \n  search(value) {\n    return this._searchNode(this.root, value);\n  }\n  \n  _searchNode(node, value) {\n    if (!node) return null;\n    if (value === node.value) return node;\n    if (value < node.value) {\n      return this._searchNode(node.left, value);\n    }\n    return this._searchNode(node.right, value);\n  }\n}\n\n// Сложность:\n// Сбалансированное: O(log n)\n// Вырожденное (как список): O(n)"
+        }
+      ]
+    },
+    {
+      "id": "cs_algorithms",
+      "title": "Алгоритмы",
+      "cards": [
+        {
+          "term": "Binary Search",
+          "english": "Binary Search algorithm",
+          "russian": "Бинарный поиск — алгоритм поиска элемента в ОТСОРТИРОВАННОМ массиве. Работает за O(log n), делая массив пополам на каждой итерации. Сравнивает искомый элемент с серединой: если меньше — ищем в левой половине, если больше — в правой. В 1000 элементах найдёт за ~10 шагов, в 1 млн — за ~20. Требует сортировки.",
+          "example": "function binarySearch(arr, target) {\n  let left = 0;\n  let right = arr.length - 1;\n  \n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    \n    if (arr[mid] === target) {\n      return mid; // Нашли!\n    } else if (arr[mid] < target) {\n      left = mid + 1; // Ищем в правой половине\n    } else {\n      right = mid - 1; // Ищем в левой половине\n    }\n  }\n  \n  return -1; // Не найдено\n}\n\n// Пример\nconst sorted = [1, 3, 5, 7, 9, 11, 13, 15];\nbinarySearch(sorted, 7); // 3 (индекс)\nbinarySearch(sorted, 10); // -1\n\n// O(log n) - невероятно быстро!\n// 1M элементов = ~20 сравнений"
+        },
+        {
+          "term": "Recursion",
+          "english": "Recursion",
+          "russian": "Рекурсия — функция, которая вызывает саму себя. Состоит из: base case (базовый случай — условие остановки) и recursive case (рекурсивный случай — вызов себя с изменёнными аргументами). Каждый вызов добавляет кадр в call stack. Глубокая рекурсия может вызвать stack overflow. Рекурсия элегантна для деревьев, графов, разделения задач.",
+          "example": "// Факториал: n! = n * (n-1)!\nfunction factorial(n) {\n  // Base case\n  if (n <= 1) return 1;\n  \n  // Recursive case\n  return n * factorial(n - 1);\n}\n\n// Рекурсия с хвостовой оптимизацией\nfunction factorialTail(n, acc = 1) {\n  if (n <= 1) return acc;\n  return factorialTail(n - 1, n * acc);\n}\n\n// Обход дерева\nfunction traverse(node) {\n  if (!node) return;\n  console.log(node.value);\n  traverse(node.left);\n  traverse(node.right);\n}\n\n// Глубина стека:\n// factorial(5) → 5 кадров в стеке\n// factorialTail(5) → может быть оптимизировано до 1 кадра"
+        },
+        {
+          "term": "Memoization",
+          "english": "Memoization",
+          "russian": "Мемоизация — техника оптимизации, при которой результаты дорогих функций кэшируются и возвращаются при повторных вызовах с теми же аргументами. Торговля: больше памяти (space) за меньшее время (time). Классическое применение — оптимизация рекурсивных алгоритмов (факториал, числа Фибоначчи).",
+          "example": "// Без мемоизации: O(2^n) - экспоненциально!\nfunction fib(n) {\n  if (n <= 1) return n;\n  return fib(n - 1) + fib(n - 2);\n}\n\n// С мемоизацией: O(n)\nfunction fibMemo(n, memo = {}) {\n  if (n <= 1) return n;\n  if (memo[n]) return memo[n];\n  memo[n] = fibMemo(n - 1, memo) + fibMemo(n - 2, memo);\n  return memo[n];\n}\n\n// Универсальная функция мемоизации\nfunction memoize(fn) {\n  const cache = new Map();\n  return function(...args) {\n    const key = JSON.stringify(args);\n    if (cache.has(key)) {\n      console.log('Cache hit!');\n      return cache.get(key);\n    }\n    const result = fn.apply(this, args);\n    cache.set(key, result);\n    return result;\n  };\n}\n\nconst memoizedFib = memoize(fib);\nfib(40); // медленно\nfibMemo(40); // быстро!"
+        },
+        {
+          "term": "Two Pointer Technique",
+          "english": "Two Pointer Technique",
+          "russian": "Техника двух указателей — использование двух индексов (указателей) для прохода по структуре данных. Обычно один с начала, другой с конца; или оба с начала с разной скоростью. Применяется для: поиска пар с заданной суммой, проверки палиндрома, слияния отсортированных массивов, нахождения цикла (Floyd's), удаления дубликатов.",
+          "example": "// Два указателя с разных концов\n// Проверка палиндрома: O(n) time, O(1) space\nfunction isPalindrome(str) {\n  let left = 0;\n  let right = str.length - 1;\n  \n  while (left < right) {\n    if (str[left] !== str[right]) return false;\n    left++;\n    right--;\n  }\n  return true;\n}\n\n// Пара с заданной суммой в отсортированном массиве\nfunction twoSum(arr, target) {\n  let left = 0;\n  let right = arr.length - 1;\n  \n  while (left < right) {\n    const sum = arr[left] + arr[right];\n    if (sum === target) return [left, right];\n    if (sum < target) left++;\n    else right--;\n  }\n  return null;\n}\n\n// Удаление дубликатов (in-place)\nfunction removeDuplicates(arr) {\n  if (arr.length === 0) return 0;\n  let i = 0;\n  for (let j = 1; j < arr.length; j++) {\n    if (arr[j] !== arr[i]) {\n      i++;\n      arr[i] = arr[j];\n    }\n  }\n  return i + 1; // новая длина\n}"
+        }
+      ]
+    }
+  ]
+}

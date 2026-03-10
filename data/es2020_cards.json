@@ -1,0 +1,84 @@
+{
+  "id": "es2020_modern",
+  "name": "Современный JavaScript (ES2020+)",
+  "topics": [
+    {
+      "id": "es2020_features",
+      "title": "ES2020+ Современные фичи",
+      "cards": [
+        {
+          "term": "Optional Chaining",
+          "english": "Optional chaining operator (?.)",
+          "russian": "Оператор опциональной цепочки (?.) позволяет безопасно обращаться к вложенным свойствам объектов без проверки на null/undefined. Если значение слева от ?. равно null или undefined, выражение немедленно возвращает undefined, не выбрасывая ошибку. Особенно полезен при работе с API и глубоко вложенными объектами.",
+          "example": "const user = { address: { street: 'Main' } };\n\n// Безопасный доступ к глубоким свойствам\nconst zip = user?.address?.zipcode;\n// undefined, без ошибки TypeError\n\n// С вызовом метода\nconst name = user?.getName?.();\n// undefined, если метод не существует\n\n// С массивом\nconst firstItem = arr?.[0];\n// undefined, если arr равен null\n\n// Комбинация с nullish coalescing\nconst city = user?.address?.city ?? 'Unknown';"
+        },
+        {
+          "term": "Nullish Coalescing",
+          "english": "Nullish coalescing operator (??)",
+          "russian": "Оператор нулевого слияния (??) возвращает правый операнд, только если левый равен null или undefined. В отличие от оператора ||, он НЕ срабатывает на 'falsy' значениях типа 0, '' (пустая строка) или false. Это делает его идеальным для установки значений по умолчанию.",
+          "example": "const value = 0;\nconst empty = '';\nconst falseVal = false;\n\n// || возвращает 'default' для ВСЕХ falsy значений\nconsole.log(value || 'default');     // 'default' (неожиданно!)\nconsole.log(empty || 'default');     // 'default' (неожиданно!)\n\n// ?? работает только с null/undefined\nconsole.log(value ?? 'default');     // 0 (корректно!)\nconsole.log(empty ?? 'default');     // '' (корректно!)\nconsole.log(falseVal ?? 'default');  // false (корректно!)\nconsole.log(null ?? 'default');      // 'default'\n\n// Практическое применение\nconst config = {\n  timeout: userTimeout ?? 5000,  // 0 будет сохранён\n  port: port ?? 3000,\n  host: host ?? 'localhost'\n};"
+        },
+        {
+          "term": "BigInt",
+          "english": "BigInt type",
+          "russian": "BigInt — примитивный тип данных для представления целых чисел произвольной точности. Обычный number в JavaScript не может безопасно работать с числами больше 2^53-1 (Number.MAX_SAFE_INTEGER). BigInt позволяет работать с arbitrarily large integers.",
+          "example": "// Обычный number теряет точность\nconsole.log(9007199254740991 + 1); // 9007199254740992\nconsole.log(9007199254740991 + 2); // 9007199254740992 (ошибка!)\n\n// BigInt сохраняет точность\nconst big = 9007199254740991n;\nconsole.log(big + 1n); // 9007199254740992n\nconsole.log(big + 2n); // 9007199254740993n (верно!)\n\n// Создание BigInt\nconst big1 = 123456789012345678901234567890n;\nconst big2 = BigInt('123456789012345678901234567890');\nconst big3 = BigInt(123);\n\n// Операции\nconsole.log(big1 + big2);\nconsole.log(big1 * 2n);\n// Нельзя смешивать с number: big1 + 1 вызовет ошибку"
+        },
+        {
+          "term": "Promise.allSettled",
+          "english": "Promise.allSettled()",
+          "russian": "Метод Promise.allSettled() ждёт выполнения всех промисов и возвращает массив с результатами каждого промиса вне зависимости от того, resolved или rejected. В отличие от Promise.all(), не прерывается при ошибке одного из промисов. Каждый результат содержит status ('fulfilled' или 'rejected') и value или reason.",
+          "example": "const promises = [\n  Promise.resolve('success'),\n  Promise.reject('error'),\n  Promise.resolve('another success')\n];\n\n// Promise.all() упал бы на первом reject\n// Promise.allSettled() дожидается всех\nconst results = await Promise.allSettled(promises);\n\nconsole.log(results);\n// [\n//   { status: 'fulfilled', value: 'success' },\n//   { status: 'rejected', reason: 'error' },\n//   { status: 'fulfilled', value: 'another success' }\n// ]\n\n// Обработка результатов\nconst successful = results\n  .filter(r => r.status === 'fulfilled')\n  .map(r => r.value);\n\nconst failed = results\n  .filter(r => r.status === 'rejected')\n  .map(r => r.reason);"
+        },
+        {
+          "term": "Dynamic Import",
+          "english": "Dynamic import()",
+          "russian": "Динамический импорт позволяет загружать модули асинхронно по требованию (lazy loading). Возвращает Promise, который разрешается в модуль. Это ключевая фича для code splitting и оптимизации производительности приложений. Работает как в браузере, так и в Node.js.",
+          "example": "// Статический импорт (всегда загружается)\nimport { utils } from './utils.js';\n\n// Динамический импорт (загружается по требованию)\nasync function loadHeavyModule() {\n  const module = await import('./heavy-module.js');\n  module.doSomething();\n}\n\n// Условная загрузка\nif (userPrefersAdvanced) {\n  const { AdvancedChart } = await import('./advanced-chart.js');\n  new AdvancedChart(data);\n}\n\n// Деструктуризация при импорте\nconst { helper, formatter } = await import('./helpers.js');\n\n// Динамический путь\nconst lang = 'ru';\nconst messages = await import(`./i18n/${lang}.js`);"
+        },
+        {
+          "term": "globalThis",
+          "english": "globalThis",
+          "russian": "globalThis — стандартный способ получить глобальный объект в любой среде выполнения (браузер, Node.js, Web Workers). В браузере это window, в Node.js — global, в Web Worker — self. globalThis унифицирует доступ к глобальному объекту, делая код кроссплатформенным.",
+          "example": "// Проблема: разные среды - разные объекты\n// Браузер: window\n// Node.js: global\n// Web Worker: self\n\n// Решение: globalThis работает везде\nconsole.log(globalThis);\n\n// Установка глобальной переменной\nglobalThis.APP_VERSION = '1.0.0';\n\n// Проверка окружения\nif (globalThis.window === globalThis) {\n  console.log('Browser');\n} else if (globalThis.process) {\n  console.log('Node.js');\n}\n\n// Полифилл для старых браузеров\nconst getGlobal = () => {\n  if (typeof globalThis !== 'undefined') return globalThis;\n  if (typeof self !== 'undefined') return self;\n  if (typeof window !== 'undefined') return window;\n  if (typeof global !== 'undefined') return global;\n};"
+        },
+        {
+          "term": "Private Class Fields",
+          "english": "Private class fields (#)",
+          "russian": "Приватные поля классов с префиксом # полностью инкапсулируют данные. Они доступны только внутри класса, нельзя получить доступ снаружи даже через obj['#field']. Это настоящая приватность, а не конвенция через underscore. Приватные методы и геттеры/сеттеры также поддерживаются.",
+          "example": "class BankAccount {\n  // Приватное поле - доступно только внутри класса\n  #balance = 0;\n  \n  // Приватный метод\n  #validateAmount(amount) {\n    return amount > 0;\n  }\n  \n  deposit(amount) {\n    if (this.#validateAmount(amount)) {\n      this.#balance += amount;\n    }\n  }\n  \n  getBalance() {\n    return this.#balance;\n  }\n}\n\nconst account = new BankAccount();\naccount.deposit(100);\nconsole.log(account.getBalance()); // 100\n\n// Нет доступа извне!\nconsole.log(account.#balance); // SyntaxError!\nconsole.log(account['#balance']); // undefined\n\n// Приватное статическое поле\nclass Config {\n  static #apiKey = 'secret';\n  static getApiKey() { return this.#apiKey; }\n}"
+        },
+        {
+          "term": "Object.fromEntries",
+          "english": "Object.fromEntries()",
+          "russian": "Метод Object.fromEntries() преобразует список пар ключ-значение (массив массивов или Map) в объект. Является обратным к Object.entries(). Удобен для трансформации объектов: фильтрации, маппинга ключей/значений с последующим восстановлением в объект.",
+          "example": "// Из Map в Object\nconst map = new Map([['a', 1], ['b', 2]]);\nconst obj = Object.fromEntries(map);\n// { a: 1, b: 2 }\n\n// Трансформация объекта\nconst prices = { apple: 1, banana: 2, orange: 3 };\n\n// Удвоим цены\nconst doubled = Object.fromEntries(\n  Object.entries(prices).map(([key, val]) => [key, val * 2])\n);\n// { apple: 2, banana: 4, orange: 6 }\n\n// Фильтрация объекта\nconst filtered = Object.fromEntries(\n  Object.entries(prices).filter(([key, val]) => val > 1)\n);\n// { banana: 2, orange: 3 }\n\n// URLSearchParams в объект\nconst params = new URLSearchParams('?a=1&b=2');\nconst query = Object.fromEntries(params);\n// { a: '1', b: '2' }"
+        },
+        {
+          "term": "Array.flat",
+          "english": "Array.prototype.flat() / flatMap()",
+          "russian": "flat() рекурсивно выравнивает вложенные массивы до указанной глубины (по умолчанию 1). flatMap() сначала применяет map(), затем flat(1) — удобно для операций, где map возвращает массивы. Эти методы упрощают работу с вложенными структурами данных.",
+          "example": "// flat() - выравнивание массивов\nconst nested = [1, [2, 3], [4, [5, 6]]];\n\nnested.flat();\n// [1, 2, 3, 4, [5, 6]] - глубина 1 по умолчанию\n\nnested.flat(2);\n// [1, 2, 3, 4, 5, 6] - глубина 2\n\nnested.flat(Infinity);\n// Полностью выровненный массив\n\n// flatMap() = map() + flat(1)\nconst sentences = ['Hello world', 'Goodbye moon'];\n\nconst words = sentences.flatMap(s => s.split(' '));\n// ['Hello', 'world', 'Goodbye', 'moon']\n\n// Удаление пустых/undefined значений\nconst withEmpty = [1, 2, , 4]; // sparse array\nconst cleaned = withEmpty.flat();\n// [1, 2, 4] - пустые слоты удалены"
+        },
+        {
+          "term": "Logical Assignment Operators",
+          "english": "Logical assignment (||=, &&=, ??=)",
+          "russian": "Логические операторы присваивания ||= (OR), &&= (AND), ??= (nullish coalescing) комбинируют логическую операцию с присваиванием. ||= присваивает только если левый операнд falsy. ??= присваивает только если левый операнд null/undefined. Удобны для установки значений по умолчанию и условной записи.",
+          "example": "// ||= (Logical OR assignment)\nlet a = 0;\na ||= 10; // a === 10 (0 falsy)\n\nlet b = 5;\nb ||= 10; // b === 5 (5 truthy, не меняется)\n\n// ??= (Logical nullish assignment)\nlet c = null;\nc ??= 'default'; // c === 'default'\n\nlet d = 0;\nd ??= 'default'; // d === 0 (0 не nullish!)\n\n// &&= (Logical AND assignment)\nlet e = 1;\ne &&= 2; // e === 2 (1 truthy, присвоилось)\n\nlet f = 0;\nf &&= 2; // f === 0 (0 falsy, не изменилось)\n\n// Практическое применение\nfunction createUser(options) {\n  options.name ??= 'Anonymous';\n  options.role ||= 'user';\n  return options;\n}"
+        },
+        {
+          "term": "Promise.any",
+          "english": "Promise.any()",
+          "russian": "Promise.any() возвращает первый успешно выполненный (fulfilled) промис из массива. Если все промисы rejected — возвращает AggregateError со всеми ошибками. Противоположность Promise.all(): all ждёт всех успехов, any — первый успех. Полезен для гонки нескольких источников данных.",
+          "example": "// Гонка между несколькими источниками\nconst fastestMirror = await Promise.any([\n  fetch('https://mirror1.com/data'),\n  fetch('https://mirror2.com/data'),\n  fetch('https://mirror3.com/data')\n]);\n// Получаем ответ от самого быстрого сервера\n\n// Обработка ошибок\nconst promises = [\n  Promise.reject('Error 1'),\n  Promise.reject('Error 2'),\n  Promise.reject('Error 3')\n];\n\ntry {\n  await Promise.any(promises);\n} catch (error) {\n  console.log(error instanceof AggregateError); // true\n  console.log(error.errors); // ['Error 1', 'Error 2', 'Error 3']\n}\n\n// Отличие от Promise.race():\n// race() возвращает первый settled (успех или ошибка)\n// any() возвращает первый fulfilled (только успех)"
+        },
+        {
+          "term": "Numeric Separators",
+          "english": "Numeric separators (_)",
+          "russian": "Числовые разделители (_) позволяют добавлять подчёркивания в числовые литералы для улучшения читаемости. Работают с десятичными, двоичными, восьмеричными и шестнадцатеричными числами. Игнорируются при парсинге. Нельзя использовать в начале/конце числа или рядом с точкой.",
+          "example": "// Улучшение читаемости больших чисел\nconst million = 1_000_000;\nconst billion = 1_000_000_000;\nconst creditCard = 1234_5678_9012_3456;\n\n// Двоичные числа\nconst flags = 0b1010_1010_1111_0000;\n\n// Шестнадцатеричные\nconst color = 0xFF_CC_00;\n\n// BigInt\nconst huge = 1_000_000_000_000n;\n\n// Разделители игнорируются\nconsole.log(1_000 === 1000); // true\nconsole.log(1_2_3 === 123); // true\n\n// Нельзя так:\n// 1__000 (два подряд)\n// _1000 (в начале)\n// 1000_ (в конце)\n// 1.0_0 (рядом с точкой)"
+        }
+      ]
+    }
+  ]
+}

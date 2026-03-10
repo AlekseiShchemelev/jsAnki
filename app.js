@@ -1,259 +1,550 @@
 // ========================================
+// jsAnki - Enhanced Learning App (Memory Leak Fixed)
+// Features: IndexedDB, Lazy Loading, Search, Filters, Exam Mode
+// ========================================
+
+// ========================================
 // App State
 // ========================================
 const state = {
-    data: null,
+    // Data
+    manifest: null,
+    categories: new Map(),
+    allCards: [],
+    
+    // Current view
     currentTopic: null,
     currentCards: [],
     currentIndex: 0,
     isFlipped: false,
     isRandomMode: false,
+    isExamMode: false,
+    isErrorsOnlyMode: false,
+    cardFilter: 'all',
+    
+    // Theme
     theme: 'dark',
-    cardStatuses: {},
+    
+    // UI
+    searchQuery: '',
+    
+    // Abort controllers for cleanup
+    abortControllers: {
+        search: null,
+        cardLoading: null
+    },
+    
     // Timers for cleanup
     timers: {
         toast: null,
         navigation: null,
-        splash: null
+        splash: null,
+        search: null
     },
-    // Event handler references for cleanup
+    
+    // Event handlers storage
     handlers: {
         touchStart: null,
         touchMove: null,
         touchEnd: null,
-        keyboard: null
-    }
+        keyboard: null,
+        globalSearchClick: null,
+        dotClickHandlers: new Map() // Store dot click handlers for cleanup
+    },
+    
+    // Flags
+    isInitialized: false,
+    isCleaningUp: false
 };
 
 // ========================================
-// Safe LocalStorage Functions
+// IndexedDB Integration
 // ========================================
-function safeGetItem(key, defaultValue = null) {
-    try {
-        const item = localStorage.getItem(key);
-        return item !== null ? item : defaultValue;
-    } catch (e) {
-        console.warn('localStorage getItem failed:', e);
-        return defaultValue;
+const DB_NAME = 'jsAnkiDB';
+const DB_VERSION = 1;
+
+class AnkiDatabase {
+    constructor() {
+        this.db = null;
+        this.isClosing = false;
+    }
+
+    async init() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                this.db = request.result;
+                
+                // Handle connection close
+                this.db.onclose = () => {
+                    console.log('[DB] Connection closed');
+                    this.db = null;
+                };
+                
+                // Handle version change (other tab upgraded DB)
+                this.db.onversionchange = () => {
+                    this.close();
+                };
+                
+                resolve(this.db);
+            };
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+
+                if (!db.objectStoreNames.contains('progress')) {
+                    const progressStore = db.createObjectStore('progress', { keyPath: 'cardId' });
+                    progressStore.createIndex('status', 'status', { unique: false });
+                }
+
+                if (!db.objectStoreNames.contains('cache')) {
+                    const cacheStore = db.createObjectStore('cache', { keyPath: 'key' });
+                    cacheStore.createIndex('category', 'category', { unique: false });
+                }
+
+                if (!db.objectStoreNames.contains('settings')) {
+                    db.createObjectStore('settings', { keyPath: 'key' });
+                }
+            };
+        });
+    }
+    
+    close() {
+        if (this.db && !this.isClosing) {
+            this.isClosing = true;
+            this.db.close();
+            this.db = null;
+            this.isClosing = false;
+        }
+    }
+
+    async saveProgress(cardId, status) {
+        if (!this.db) throw new Error('DB not initialized');
+        return this._put('progress', { cardId, status, timestamp: Date.now() });
+    }
+
+    async getProgress(cardId) {
+        if (!this.db) return null;
+        const result = await this._get('progress', cardId);
+        return result ? result.status : null;
+    }
+
+    async getAllProgress() {
+        if (!this.db) return {};
+        const results = await this._getAll('progress');
+        const map = {};
+        results.forEach(r => map[r.cardId] = r.status);
+        return map;
+    }
+
+    async getProgressByStatus(status) {
+        if (!this.db) return [];
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(['progress'], 'readonly');
+                const store = transaction.objectStore('progress');
+                const index = store.index('status');
+                const request = index.getAll(status);
+                request.onsuccess = () => resolve(request.result.map(r => r.cardId));
+                request.onerror = () => reject(request.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    async clearAllProgress() {
+        if (!this.db) return;
+        return this._clear('progress');
+    }
+
+    async deleteProgress(cardId) {
+        if (!this.db) return;
+        return this._delete('progress', cardId);
+    }
+
+    async getStats() {
+        if (!this.db) return { known: 0, unknown: 0, total: 0 };
+        const allProgress = await this._getAll('progress');
+        const known = allProgress.filter(p => p.status === 'known').length;
+        const unknown = allProgress.filter(p => p.status === 'unknown').length;
+        return { known, unknown, total: allProgress.length };
+    }
+
+    async cacheCategory(categoryId, data) {
+        if (!this.db) return;
+        return this._put('cache', {
+            key: `category_${categoryId}`,
+            category: categoryId,
+            data,
+            timestamp: Date.now()
+        });
+    }
+
+    async getCachedCategory(categoryId) {
+        if (!this.db) return null;
+        const result = await this._get('cache', `category_${categoryId}`);
+        return result ? result.data : null;
+    }
+
+    async cacheManifest(manifest) {
+        if (!this.db) return;
+        return this._put('cache', {
+            key: 'manifest',
+            data: manifest,
+            timestamp: Date.now()
+        });
+    }
+
+    async getCachedManifest() {
+        if (!this.db) return null;
+        const result = await this._get('cache', 'manifest');
+        return result ? result.data : null;
+    }
+
+    async saveSetting(key, value) {
+        if (!this.db) return;
+        return this._put('settings', { key, value });
+    }
+
+    async getSetting(key, defaultValue = null) {
+        if (!this.db) return defaultValue;
+        const result = await this._get('settings', key);
+        return result ? result.value : defaultValue;
+    }
+
+    async migrateFromLocalStorage() {
+        try {
+            const oldData = localStorage.getItem('cardStatuses');
+            if (oldData) {
+                const statuses = JSON.parse(oldData);
+                const promises = Object.entries(statuses).map(([cardId, status]) => 
+                    this.saveProgress(cardId, status)
+                );
+                await Promise.all(promises);
+                localStorage.removeItem('cardStatuses');
+                console.log('Migrated', promises.length, 'items from localStorage');
+            }
+            
+            const oldTheme = localStorage.getItem('theme');
+            if (oldTheme) {
+                await this.saveSetting('theme', oldTheme);
+                localStorage.removeItem('theme');
+            }
+        } catch (e) {
+            console.warn('Migration failed:', e);
+        }
+    }
+
+    // Private helpers
+    _put(storeName, data) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put(data);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    _get(storeName, key) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.get(key);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    _getAll(storeName) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    _delete(storeName, key) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.delete(key);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    _clear(storeName) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.clear();
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
     }
 }
 
-function safeSetItem(key, value) {
-    try {
-        localStorage.setItem(key, value);
-        return true;
-    } catch (e) {
-        console.warn('localStorage setItem failed:', e);
-        return false;
-    }
-}
-
-function safeRemoveItem(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (e) {
-        console.warn('localStorage removeItem failed:', e);
-        return false;
-    }
-}
-
-function safeParseJSON(json, defaultValue = {}) {
-    try {
-        return JSON.parse(json);
-    } catch (e) {
-        console.warn('JSON parse failed:', e);
-        return defaultValue;
-    }
-}
-
-// Initialize state with safe localStorage access
-state.theme = safeGetItem('theme', 'dark');
-state.cardStatuses = safeParseJSON(safeGetItem('cardStatuses', '{}'), {});
+const db = new AnkiDatabase();
 
 // ========================================
-// DOM Elements
+// DOM Elements (cached)
 // ========================================
-const elements = {
-    // Splash
-    splash: document.getElementById('splash'),
-    
-    // Header
-    menuBtn: document.getElementById('menuBtn'),
-    themeBtn: document.getElementById('themeBtn'),
-    shuffleBtn: document.getElementById('shuffleBtn'),
-    
-    // Sidebar
-    sidebar: document.getElementById('sidebar'),
-    overlay: document.getElementById('overlay'),
-    closeSidebar: document.getElementById('closeSidebar'),
-    topicList: document.getElementById('topicList'),
-    searchInput: document.getElementById('searchInput'),
-    randomMode: document.getElementById('randomMode'),
-    totalCards: document.getElementById('totalCards'),
-    clearProgress: document.getElementById('clearProgress'),
-    progressBarMini: document.getElementById('progressBarMini'),
-    knownCount: document.getElementById('knownCount'),
-    unknownCount: document.getElementById('unknownCount'),
-    
-    // Views
-    topicView: document.getElementById('topicView'),
-    studyView: document.getElementById('studyView'),
-    
-    // Topic View
-    currentTopic: document.getElementById('currentTopic'),
-    cardCounter: document.getElementById('cardCounter'),
-    cardsContainer: document.getElementById('cardsContainer'),
-    studyAllBtn: document.getElementById('studyAllBtn'),
-    welcomeRandom: document.getElementById('welcomeRandom'),
-    
-    // Study View
-    backBtn: document.getElementById('backBtn'),
-    progressText: document.getElementById('progressText'),
-    progressPercent: document.getElementById('progressPercent'),
-    progressFill: document.getElementById('progressFill'),
-    cardDots: document.getElementById('cardDots'),
-    flashcard: document.getElementById('flashcard'),
-    cardInner: document.querySelector('.card-inner'),
-    cardTerm: document.getElementById('cardTerm'),
-    cardEnglish: document.getElementById('cardEnglish'),
-    cardRussian: document.getElementById('cardRussian'),
-    cardCode: document.getElementById('cardCode'),
-    codeSection: document.getElementById('codeSection'),
-    prevCard: document.getElementById('prevCard'),
-    nextCard: document.getElementById('nextCard'),
-    cardArea: document.getElementById('cardArea'),
-    flipBtn: document.getElementById('flipBtn'),
-    knowBtn: document.getElementById('knowBtn'),
-    dontKnowBtn: document.getElementById('dontKnowBtn'),
-    
-    // Toast
-    toast: document.getElementById('toast')
-};
+const elements = {};
+
+function cacheElements() {
+    elements.splash = document.getElementById('splash');
+    elements.menuBtn = document.getElementById('menuBtn');
+    elements.themeBtn = document.getElementById('themeBtn');
+    elements.shuffleBtn = document.getElementById('shuffleBtn');
+    elements.sidebar = document.getElementById('sidebar');
+    elements.overlay = document.getElementById('overlay');
+    elements.closeSidebar = document.getElementById('closeSidebar');
+    elements.topicList = document.getElementById('topicList');
+    elements.searchInput = document.getElementById('searchInput');
+    elements.randomMode = document.getElementById('randomMode');
+    elements.totalCards = document.getElementById('totalCards');
+    elements.clearProgress = document.getElementById('clearProgress');
+    elements.progressBarMini = document.getElementById('progressBarMini');
+    elements.knownCount = document.getElementById('knownCount');
+    elements.unknownCount = document.getElementById('unknownCount');
+    elements.topicView = document.getElementById('topicView');
+    elements.studyView = document.getElementById('studyView');
+    elements.currentTopic = document.getElementById('currentTopic');
+    elements.cardCounter = document.getElementById('cardCounter');
+    elements.cardsContainer = document.getElementById('cardsContainer');
+    elements.studyAllBtn = document.getElementById('studyAllBtn');
+    elements.welcomeRandom = document.getElementById('welcomeRandom');
+    elements.backBtn = document.getElementById('backBtn');
+    elements.progressText = document.getElementById('progressText');
+    elements.progressPercent = document.getElementById('progressPercent');
+    elements.progressFill = document.getElementById('progressFill');
+    elements.cardDots = document.getElementById('cardDots');
+    elements.flashcard = document.getElementById('flashcard');
+    elements.cardInner = document.querySelector('.card-inner');
+    elements.cardTerm = document.getElementById('cardTerm');
+    elements.cardEnglish = document.getElementById('cardEnglish');
+    elements.cardRussian = document.getElementById('cardRussian');
+    elements.cardCode = document.getElementById('cardCode');
+    elements.codeSection = document.getElementById('codeSection');
+    elements.prevCard = document.getElementById('prevCard');
+    elements.nextCard = document.getElementById('nextCard');
+    elements.cardArea = document.getElementById('cardArea');
+    elements.flipBtn = document.getElementById('flipBtn');
+    elements.knowBtn = document.getElementById('knowBtn');
+    elements.dontKnowBtn = document.getElementById('dontKnowBtn');
+    elements.toast = document.getElementById('toast');
+    elements.globalSearch = document.getElementById('globalSearch');
+    elements.globalSearchResults = document.getElementById('globalSearchResults');
+    elements.cardFilter = document.getElementById('cardFilter');
+    elements.errorsOnlyMode = document.getElementById('errorsOnlyMode');
+    elements.examMode = document.getElementById('examMode');
+    elements.mdnLink = document.getElementById('mdnLink');
+    elements.copyCodeBtn = document.getElementById('copyCodeBtn');
+}
 
 // ========================================
-// Initialize App
+// Initialization
 // ========================================
 async function init() {
-    // Apply theme
-    applyTheme(state.theme);
+    if (state.isInitialized) return;
     
     try {
-        const response = await fetch('data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // Cache DOM elements
+        cacheElements();
         
-        const data = await response.json();
+        // Initialize database
+        await db.init();
+        await db.migrateFromLocalStorage();
         
-        // Validate data structure
-        if (!data || !Array.isArray(data.topics)) {
-            throw new Error('Invalid data structure: missing topics array');
-        }
+        // Load theme
+        state.theme = await db.getSetting('theme', 'dark');
+        applyTheme(state.theme);
         
-        // Validate each topic has required fields
-        data.topics = data.topics.filter(topic => {
-            if (!topic || typeof topic !== 'object') return false;
-            if (!topic.id || typeof topic.id !== 'string') return false;
-            if (!topic.title || typeof topic.title !== 'string') return false;
-            if (!Array.isArray(topic.cards)) return false;
-            // Validate cards
-            topic.cards = topic.cards.filter(card => {
-                return card && typeof card === 'object' && 
-                       (card.term || card.english || card.russian);
-            });
-            return true;
-        });
+        // Load manifest
+        await loadManifest();
         
-        state.data = data;
+        // Build all cards index for search
+        await buildCardsIndex();
         
-        // Calculate total cards
-        const total = state.data.topics.reduce((sum, t) => sum + (t.cards?.length || 0), 0);
-        if (elements.totalCards) {
-            elements.totalCards.textContent = `${total} карточек`;
-        }
-        
-        renderTopics();
+        // Setup UI
+        renderCategories();
         setupEventListeners();
         setupSwipeGestures();
         setupKeyboardNavigation();
         updateProgressStats();
         
-        // Hide splash screen
+        // Mark as initialized
+        state.isInitialized = true;
+        
+        // Hide splash
         state.timers.splash = setTimeout(() => {
-            if (elements.splash) {
-                elements.splash.classList.add('hidden');
-            }
+            elements.splash?.classList.add('hidden');
         }, 1500);
         
     } catch (error) {
-        console.error('Failed to load data:', error);
-        showError('Ошибка загрузки данных. Пожалуйста, проверьте подключение к интернету.');
-        if (elements.splash) {
-            elements.splash.classList.add('hidden');
+        console.error('Init failed:', error);
+        showError('Ошибка загрузки приложения');
+    }
+}
+
+// ========================================
+// Data Loading (Lazy Loading with AbortController)
+// ========================================
+async function loadManifest() {
+    // Try cache first
+    const cached = await db.getCachedManifest();
+    if (cached) {
+        state.manifest = cached;
+    }
+    
+    try {
+        const response = await fetch('data/manifest.json');
+        if (response.ok) {
+            state.manifest = await response.json();
+            await db.cacheManifest(state.manifest);
+        }
+    } catch (e) {
+        console.warn('Failed to load manifest:', e);
+        if (!state.manifest) {
+            throw new Error('No manifest available');
         }
     }
 }
 
-function showError(message) {
-    if (elements.cardsContainer) {
-        const welcomeDiv = document.createElement('div');
-        welcomeDiv.className = 'welcome';
-        welcomeDiv.innerHTML = `
-            <div class="welcome-icon">⚠️</div>
-            <h3>Ошибка</h3>
-            <p></p>
-        `;
-        welcomeDiv.querySelector('p').textContent = message;
+async function loadCategory(categoryId) {
+    // Return cached if exists
+    if (state.categories.has(categoryId)) {
+        return state.categories.get(categoryId);
+    }
+    
+    // Try IndexedDB cache
+    const cached = await db.getCachedCategory(categoryId);
+    if (cached) {
+        state.categories.set(categoryId, cached);
+        return cached;
+    }
+    
+    // Fetch from network
+    const categoryInfo = state.manifest?.categories?.find(c => c.id === categoryId);
+    if (!categoryInfo) return null;
+    
+    try {
+        const response = await fetch(categoryInfo.file);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
-        const reloadBtn = document.createElement('button');
-        reloadBtn.className = 'welcome-btn';
-        reloadBtn.textContent = '🔄 Перезагрузить';
-        reloadBtn.addEventListener('click', () => location.reload());
-        welcomeDiv.appendChild(reloadBtn);
-        
-        elements.cardsContainer.innerHTML = '';
-        elements.cardsContainer.appendChild(welcomeDiv);
+        const data = await response.json();
+        state.categories.set(categoryId, data);
+        await db.cacheCategory(categoryId, data);
+        return data;
+    } catch (e) {
+        console.error('Failed to load category:', categoryId, e);
+        return null;
+    }
+}
+
+async function loadAllCategories() {
+    if (!state.manifest?.categories) return;
+    const promises = state.manifest.categories.map(c => loadCategory(c.id));
+    await Promise.all(promises);
+}
+
+async function buildCardsIndex() {
+    await loadAllCategories();
+    
+    state.allCards = [];
+    for (const [categoryId, category] of state.categories) {
+        if (!category?.topics) continue;
+        for (const topic of category.topics) {
+            if (!topic?.cards) continue;
+            for (const card of topic.cards) {
+                if (card) {
+                    state.allCards.push({
+                        ...card,
+                        topicId: topic.id,
+                        topicTitle: topic.title,
+                        categoryId,
+                        cardId: getCardId(card)
+                    });
+                }
+            }
+        }
+    }
+    
+    if (elements.totalCards) {
+        elements.totalCards.textContent = `${state.allCards.length} карточек`;
     }
 }
 
 // ========================================
-// Theme Functions
+// UI Rendering
 // ========================================
-function applyTheme(theme) {
-    if (!document.documentElement || !elements.themeBtn) return;
-    document.documentElement.setAttribute('data-theme', theme);
-    elements.themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
-}
-
-function toggleTheme() {
-    state.theme = state.theme === 'dark' ? 'light' : 'dark';
-    applyTheme(state.theme);
-    safeSetItem('theme', state.theme);
-}
-
-// ========================================
-// Render Topics
-// ========================================
-function renderTopics(filter = '') {
-    if (!state.data?.topics || !elements.topicList) return;
+function renderCategories() {
+    if (!elements.topicList || !state.manifest) return;
     
-    const normalizedFilter = filter.toLowerCase().trim();
-    const filteredTopics = state.data.topics.filter(topic => 
-        topic?.title?.toLowerCase().includes(normalizedFilter)
-    );
-    
-    // Use DocumentFragment for better performance
     const fragment = document.createDocumentFragment();
     
-    filteredTopics.forEach(topic => {
+    state.manifest.categories.forEach(category => {
+        const header = document.createElement('li');
+        header.className = 'category-header';
+        header.textContent = category.name;
+        fragment.appendChild(header);
+        
+        const topicsContainer = document.createElement('ul');
+        topicsContainer.className = 'category-topics';
+        topicsContainer.dataset.categoryId = category.id;
+        fragment.appendChild(topicsContainer);
+        
+        loadCategory(category.id).then(catData => {
+            if (catData?.topics) {
+                renderCategoryTopics(topicsContainer, catData.topics);
+            }
+        }).catch(console.error);
+    });
+    
+    elements.topicList.innerHTML = '';
+    elements.topicList.appendChild(fragment);
+}
+
+function renderCategoryTopics(container, topics) {
+    if (!container || !topics) return;
+    
+    const fragment = document.createDocumentFragment();
+    
+    topics.forEach(topic => {
+        if (!topic) return;
         const li = document.createElement('li');
         li.className = 'topic-item';
-        li.dataset.topicId = String(topic.id || '');
+        li.dataset.topicId = topic.id;
         
         const nameDiv = document.createElement('div');
         nameDiv.className = 'topic-name';
-        nameDiv.textContent = String(topic.title || '');
+        nameDiv.textContent = topic.title || '';
         
         const countDiv = document.createElement('div');
         countDiv.className = 'topic-count';
@@ -264,8 +555,663 @@ function renderTopics(filter = '') {
         fragment.appendChild(li);
     });
     
+    container.innerHTML = '';
+    container.appendChild(fragment);
+}
+
+async function renderCardsGrid() {
+    if (!elements.cardsContainer || !state.currentTopic) return;
+    
+    // Abort previous loading if any
+    if (state.abortControllers.cardLoading) {
+        state.abortControllers.cardLoading.abort();
+    }
+    state.abortControllers.cardLoading = new AbortController();
+    
+    let cards = [...(state.currentTopic.cards || [])];
+    
+    if (state.cardFilter === 'unknown') {
+        const unknownIds = await db.getProgressByStatus('unknown');
+        cards = cards.filter(c => unknownIds.includes(getCardId(c)));
+    } else if (state.cardFilter === 'unstudied') {
+        const allProgress = await db.getAllProgress();
+        cards = cards.filter(c => !allProgress[getCardId(c)]);
+    }
+    
+    if (cards.length === 0) {
+        elements.cardsContainer.innerHTML = `
+            <div class="welcome">
+                <div class="welcome-icon">🔍</div>
+                <h3>Нет карточек</h3>
+                <p>По выбранному фильтру нет карточек</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const fragment = document.createDocumentFragment();
+    const grid = document.createElement('div');
+    grid.className = 'card-grid';
+    
+    // Use event delegation for grid clicks
+    grid.addEventListener('click', handleGridClick);
+    
+    for (const card of cards) {
+        if (state.abortControllers.cardLoading.signal.aborted) break;
+        
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'mini-card';
+        cardDiv.dataset.index = String(cards.indexOf(card));
+        cardDiv.dataset.cardId = getCardId(card);
+        
+        const status = await db.getProgress(getCardId(card));
+        if (status === 'known') cardDiv.classList.add('status-known');
+        if (status === 'unknown') cardDiv.classList.add('status-unknown');
+        
+        const termDiv = document.createElement('div');
+        termDiv.className = 'mini-card-term';
+        termDiv.textContent = card.term || '';
+        
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'mini-card-preview';
+        previewDiv.textContent = card.english || '';
+        
+        cardDiv.appendChild(termDiv);
+        cardDiv.appendChild(previewDiv);
+        grid.appendChild(cardDiv);
+    }
+    
+    if (!state.abortControllers.cardLoading.signal.aborted) {
+        fragment.appendChild(grid);
+        elements.cardsContainer.innerHTML = '';
+        elements.cardsContainer.appendChild(fragment);
+    }
+}
+
+function handleGridClick(e) {
+    const card = e.target?.closest('.mini-card');
+    if (card) {
+        const index = parseInt(card.dataset.index, 10);
+        if (!isNaN(index)) {
+            startStudy(index);
+        }
+    }
+}
+
+// ========================================
+// Search (with debounce and AbortController)
+// ========================================
+function setupSearch() {
+    if (!elements.searchInput) return;
+    
+    const debouncedSearch = debounce((value) => {
+        performSearch(value);
+    }, 150);
+    
+    elements.searchInput.addEventListener('input', (e) => {
+        debouncedSearch(e.target.value);
+    });
+}
+
+function debounce(fn, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+
+function performSearch(query) {
+    // Cancel previous search
+    if (state.abortControllers.search) {
+        state.abortControllers.search.abort();
+    }
+    state.abortControllers.search = new AbortController();
+    
+    const normalized = query.toLowerCase().trim();
+    
+    if (!normalized) {
+        renderCategories();
+        return;
+    }
+    
+    const allTopics = [];
+    for (const category of state.categories.values()) {
+        if (!category?.topics) continue;
+        for (const topic of category.topics) {
+            if (topic) {
+                allTopics.push({ ...topic, categoryName: category.name });
+            }
+        }
+    }
+    
+    const filtered = allTopics.filter(t => 
+        t.title?.toLowerCase().includes(normalized)
+    );
+    
+    renderFilteredTopics(filtered);
+}
+
+function renderFilteredTopics(topics) {
+    if (!elements.topicList) return;
+    
+    const fragment = document.createDocumentFragment();
+    
+    (topics || []).forEach(topic => {
+        const li = document.createElement('li');
+        li.className = 'topic-item';
+        li.dataset.topicId = topic.id;
+        
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'topic-name';
+        nameDiv.textContent = topic.title || '';
+        
+        const catDiv = document.createElement('div');
+        catDiv.className = 'topic-category';
+        catDiv.textContent = topic.categoryName || '';
+        
+        const countDiv = document.createElement('div');
+        countDiv.className = 'topic-count';
+        countDiv.textContent = `${topic.cards?.length || 0} карточек`;
+        
+        li.appendChild(nameDiv);
+        if (topic.categoryName) li.appendChild(catDiv);
+        li.appendChild(countDiv);
+        fragment.appendChild(li);
+    });
+    
     elements.topicList.innerHTML = '';
     elements.topicList.appendChild(fragment);
+}
+
+// ========================================
+// Global Card Search
+// ========================================
+function setupGlobalSearch() {
+    if (!elements.globalSearch) return;
+    
+    let searchController = null;
+    
+    elements.globalSearch.addEventListener('input', (e) => {
+        clearTimeout(state.timers.search);
+        
+        // Cancel previous search
+        if (searchController) {
+            searchController.abort();
+        }
+        searchController = new AbortController();
+        
+        state.timers.search = setTimeout(() => {
+            performGlobalCardSearch(e.target.value, searchController.signal);
+        }, 200);
+    });
+    
+    // Close search on outside click (use single handler)
+    if (!state.handlers.globalSearchClick) {
+        state.handlers.globalSearchClick = (e) => {
+            if (!e.target.closest('.global-search-container')) {
+                hideGlobalSearchResults();
+            }
+        };
+        document.addEventListener('click', state.handlers.globalSearchClick);
+    }
+}
+
+function performGlobalCardSearch(query, signal) {
+    const normalized = query.toLowerCase().trim();
+    
+    if (!normalized || normalized.length < 2) {
+        hideGlobalSearchResults();
+        return;
+    }
+    
+    if (signal.aborted) return;
+    
+    const results = state.allCards.filter(card => 
+        card.term?.toLowerCase().includes(normalized) ||
+        card.english?.toLowerCase().includes(normalized) ||
+        card.russian?.toLowerCase().includes(normalized)
+    ).slice(0, 10);
+    
+    if (signal.aborted) return;
+    
+    renderGlobalSearchResults(results);
+}
+
+function renderGlobalSearchResults(results) {
+    if (!elements.globalSearchResults) return;
+    
+    if (results.length === 0) {
+        elements.globalSearchResults.innerHTML = '<div class="search-no-results">Ничего не найдено</div>';
+        elements.globalSearchResults.classList.add('show');
+        return;
+    }
+    
+    const fragment = document.createDocumentFragment();
+    
+    results.forEach(card => {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.innerHTML = `
+            <div class="search-result-term">${escapeHtml(card.term)}</div>
+            <div class="search-result-topic">${escapeHtml(card.topicTitle)}</div>
+        `;
+        item.addEventListener('click', () => {
+            selectTopic(card.topicId, card.cardId);
+            hideGlobalSearchResults();
+        });
+        fragment.appendChild(item);
+    });
+    
+    elements.globalSearchResults.innerHTML = '';
+    elements.globalSearchResults.appendChild(fragment);
+    elements.globalSearchResults.classList.add('show');
+}
+
+function hideGlobalSearchResults() {
+    elements.globalSearchResults?.classList.remove('show');
+}
+
+// ========================================
+// Topic Selection
+// ========================================
+async function selectTopic(topicId, specificCardId = null) {
+    let topic = null;
+    let categoryId = null;
+    
+    for (const [catId, category] of state.categories) {
+        if (!category?.topics) continue;
+        const found = category.topics.find(t => t.id === topicId);
+        if (found) {
+            topic = found;
+            categoryId = catId;
+            break;
+        }
+    }
+    
+    if (!topic?.cards) return;
+    
+    state.currentTopic = topic;
+    state.isRandomMode = false;
+    state.isExamMode = false;
+    state.isErrorsOnlyMode = false;
+    
+    await applyCardFilter();
+    
+    if (state.currentCards.length === 0) {
+        showToast('Нет карточек по выбранному фильтру');
+        return;
+    }
+    
+    if (specificCardId) {
+        const index = state.currentCards.findIndex(c => getCardId(c) === specificCardId);
+        if (index !== -1) {
+            state.currentIndex = index;
+        }
+    }
+    
+    if (elements.currentTopic) {
+        elements.currentTopic.textContent = topic.title;
+    }
+    if (elements.cardCounter) {
+        elements.cardCounter.textContent = `${state.currentCards.length} карточек`;
+    }
+    if (elements.studyAllBtn) {
+        elements.studyAllBtn.style.display = 'flex';
+    }
+    
+    document.querySelectorAll('.topic-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.topicId === topicId);
+    });
+    
+    renderCardsGrid();
+    showView('topic');
+    closeSidebar();
+}
+
+async function applyCardFilter() {
+    let cards = [...(state.currentTopic?.cards || [])];
+    
+    if (state.cardFilter === 'unknown') {
+        const unknownIds = await db.getProgressByStatus('unknown');
+        cards = cards.filter(c => unknownIds.includes(getCardId(c)));
+    } else if (state.cardFilter === 'unstudied') {
+        const allProgress = await db.getAllProgress();
+        cards = cards.filter(c => !allProgress[getCardId(c)]);
+    }
+    
+    state.currentCards = cards;
+    state.currentIndex = 0;
+}
+
+// ========================================
+// Study Modes
+// ========================================
+function startStudy(startIndex = 0) {
+    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) return;
+    
+    state.currentIndex = Math.max(0, Math.min(startIndex, state.currentCards.length - 1));
+    state.isFlipped = false;
+    
+    updateCard();
+    renderCardDots();
+    showView('study');
+}
+
+async function startErrorsOnlyMode() {
+    const unknownIds = await db.getProgressByStatus('unknown');
+    
+    if (unknownIds.length === 0) {
+        showToast('Нет карточек для повторения');
+        return;
+    }
+    
+    const errorCards = [];
+    for (const card of state.allCards) {
+        if (unknownIds.includes(card.cardId)) {
+            errorCards.push(card);
+        }
+    }
+    
+    if (errorCards.length === 0) {
+        showToast('Нет карточек для повторения');
+        return;
+    }
+    
+    state.currentCards = errorCards;
+    state.currentTopic = { title: '🔴 Только ошибки', cards: errorCards };
+    state.currentIndex = 0;
+    state.isRandomMode = false;
+    state.isExamMode = false;
+    state.isErrorsOnlyMode = true;
+    
+    if (elements.currentTopic) {
+        elements.currentTopic.textContent = 'Только ошибки';
+    }
+    if (elements.cardCounter) {
+        elements.cardCounter.textContent = `${errorCards.length} карточек`;
+    }
+    if (elements.studyAllBtn) {
+        elements.studyAllBtn.style.display = 'none';
+    }
+    
+    document.querySelectorAll('.topic-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    startStudy(0);
+    showToast(`Повторяем ${errorCards.length} карточек`);
+    closeSidebar();
+}
+
+function startExamMode() {
+    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) {
+        showToast('Сначала выберите тему');
+        return;
+    }
+    
+    state.isExamMode = true;
+    state.isFlipped = false;
+    state.currentIndex = 0;
+    
+    state.currentCards = shuffleArray([...state.currentCards]);
+    
+    elements.flashcard?.classList.remove('flipped');
+    
+    updateCard();
+    renderCardDots();
+    
+    showToast('Режим экзамена: отвечайте без подсказок');
+}
+
+function endExamMode() {
+    state.isExamMode = false;
+}
+
+// ========================================
+// Card Display & Interactions
+// ========================================
+async function updateCard() {
+    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) return;
+    
+    const card = state.currentCards[state.currentIndex];
+    if (!card) return;
+    
+    if (state.isExamMode && state.isFlipped) {
+        elements.flashcard?.classList.remove('flipped');
+        state.isFlipped = false;
+    } else if (!state.isExamMode) {
+        elements.flashcard?.classList.remove('flipped');
+        state.isFlipped = false;
+    }
+    
+    if (elements.cardTerm) {
+        elements.cardTerm.textContent = card.term || '';
+    }
+    if (elements.cardEnglish) {
+        elements.cardEnglish.textContent = card.english || '';
+    }
+    if (elements.cardRussian) {
+        elements.cardRussian.textContent = card.russian || '';
+    }
+    
+    if (elements.codeSection && elements.cardCode) {
+        if (card.example) {
+            elements.codeSection.style.display = 'block';
+            elements.cardCode.innerHTML = highlightCode(card.example);
+            if (elements.copyCodeBtn) {
+                elements.copyCodeBtn.style.display = 'flex';
+            }
+        } else {
+            elements.codeSection.style.display = 'none';
+            if (elements.copyCodeBtn) {
+                elements.copyCodeBtn.style.display = 'none';
+            }
+        }
+    }
+    
+    updateMdnLink(card.term);
+    
+    const total = state.currentCards.length;
+    const current = state.currentIndex + 1;
+    const percent = Math.round((current / total) * 100);
+    
+    if (elements.progressText) {
+        elements.progressText.textContent = `${current} / ${total}`;
+    }
+    if (elements.progressPercent) {
+        elements.progressPercent.textContent = `${percent}%`;
+    }
+    if (elements.progressFill) {
+        elements.progressFill.style.width = `${percent}%`;
+    }
+    
+    if (elements.prevCard) {
+        elements.prevCard.disabled = state.currentIndex === 0;
+    }
+    if (elements.nextCard) {
+        elements.nextCard.disabled = state.currentIndex === total - 1;
+    }
+    
+    updateCardDots();
+}
+
+function updateMdnLink(term) {
+    if (!elements.mdnLink || !term) return;
+    
+    const mdnTerm = term.toLowerCase().replace(/\s+/g, '_');
+    const mdnUrl = `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/${mdnTerm}`;
+    
+    elements.mdnLink.href = mdnUrl;
+    elements.mdnLink.style.display = 'inline-flex';
+}
+
+async function copyCode() {
+    const card = state.currentCards[state.currentIndex];
+    if (!card?.example) return;
+    
+    try {
+        await navigator.clipboard.writeText(card.example);
+        showToast('Код скопирован!');
+    } catch (e) {
+        showToast('Не удалось скопировать');
+    }
+}
+
+async function markCard(status) {
+    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) return;
+    
+    const card = state.currentCards[state.currentIndex];
+    if (!card) return;
+    
+    const cardId = getCardId(card);
+    if (!cardId) return;
+    
+    await db.saveProgress(cardId, status);
+    
+    updateCardDots();
+    updateProgressStats();
+    
+    const message = status === 'known' ? '✓ Отмечено как изученное' : '✗ Будем повторять';
+    showToast(message);
+    
+    clearTimeout(state.timers.navigation);
+    state.timers.navigation = setTimeout(() => {
+        if (state.currentIndex < state.currentCards.length - 1) {
+            navigateCard(1);
+        } else if (state.isExamMode) {
+            showExamResults();
+        }
+    }, 600);
+}
+
+function showExamResults() {
+    let known = 0;
+    let unknown = 0;
+    
+    showToast(`Экзамен завершен! Изучено: ${known}, На повтор: ${unknown}`);
+    
+    setTimeout(() => {
+        goToTopicView();
+        state.isExamMode = false;
+    }, 2000);
+}
+
+// ========================================
+// Event Listeners (with cleanup tracking)
+// ========================================
+const eventListeners = [];
+
+function addTrackedListener(element, event, handler, options) {
+    if (!element) return;
+    element.addEventListener(event, handler, options);
+    eventListeners.push({ element, event, handler, options });
+}
+
+function setupEventListeners() {
+    // Clean up old listeners first
+    removeAllEventListeners();
+    
+    // Sidebar
+    addTrackedListener(elements.menuBtn, 'click', openSidebar);
+    addTrackedListener(elements.closeSidebar, 'click', closeSidebar);
+    addTrackedListener(elements.overlay, 'click', closeSidebar);
+    
+    // Search
+    setupSearch();
+    setupGlobalSearch();
+    
+    // Filters
+    addTrackedListener(elements.cardFilter, 'change', handleCardFilterChange);
+    
+    // Special modes
+    addTrackedListener(elements.errorsOnlyMode, 'click', startErrorsOnlyMode);
+    addTrackedListener(elements.examMode, 'click', startExamMode);
+    addTrackedListener(elements.randomMode, 'click', startRandomMode);
+    addTrackedListener(elements.welcomeRandom, 'click', startRandomMode);
+    
+    // Theme
+    addTrackedListener(elements.themeBtn, 'click', toggleTheme);
+    
+    // Topic selection (delegation)
+    addTrackedListener(elements.topicList, 'click', handleTopicListClick);
+    
+    // Shuffle
+    addTrackedListener(elements.shuffleBtn, 'click', () => {
+        shuffleCards();
+        showToast('Карточки перемешаны');
+    });
+    
+    // Study
+    addTrackedListener(elements.studyAllBtn, 'click', () => startStudy(0));
+    addTrackedListener(elements.backBtn, 'click', goToTopicView);
+    
+    // Card interactions
+    addTrackedListener(elements.flashcard, 'click', handleFlashcardClick);
+    addTrackedListener(elements.flipBtn, 'click', flipCard);
+    addTrackedListener(elements.prevCard, 'click', () => navigateCard(-1));
+    addTrackedListener(elements.nextCard, 'click', () => navigateCard(1));
+    addTrackedListener(elements.copyCodeBtn, 'click', (e) => {
+        e.stopPropagation();
+        copyCode();
+    });
+    
+    // Progress
+    addTrackedListener(elements.clearProgress, 'click', clearProgress);
+    
+    // Visibility
+    addTrackedListener(document, 'visibilitychange', handleVisibilityChange);
+    addTrackedListener(window, 'beforeunload', handleBeforeUnload);
+    addTrackedListener(window, 'pagehide', handlePageHide);
+}
+
+function handleCardFilterChange(e) {
+    state.cardFilter = e.target.value;
+    if (state.currentTopic) {
+        applyCardFilter().then(() => renderCardsGrid());
+    }
+}
+
+function handleTopicListClick(e) {
+    const topicItem = e.target?.closest('.topic-item');
+    if (topicItem?.dataset.topicId) {
+        selectTopic(topicItem.dataset.topicId);
+    }
+}
+
+function removeAllEventListeners() {
+    eventListeners.forEach(({ element, event, handler, options }) => {
+        if (element) {
+            element.removeEventListener(event, handler, options);
+        }
+    });
+    eventListeners.length = 0;
+}
+
+// ========================================
+// Theme Functions
+// ========================================
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (elements.themeBtn) {
+        elements.themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+async function toggleTheme() {
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(state.theme);
+    await db.saveSetting('theme', state.theme);
+}
+
+// ========================================
+// Utility Functions
+// ========================================
+function getCardId(card) {
+    if (!card) return '';
+    const term = String(card.term || '').slice(0, 50);
+    const english = String(card.english || '').slice(0, 50);
+    return `${term}_${english}`.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 100);
 }
 
 function escapeHtml(text) {
@@ -275,130 +1221,53 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ========================================
-// Setup Event Listeners (one-time setup)
-// ========================================
-function setupEventListeners() {
-    // Sidebar
-    elements.menuBtn?.addEventListener('click', openSidebar);
-    elements.closeSidebar?.addEventListener('click', closeSidebar);
-    elements.overlay?.addEventListener('click', closeSidebar);
-    
-    // Search with debounce
-    let searchTimeout;
-    elements.searchInput?.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            renderTopics(e.target?.value || '');
-        }, 150);
-    });
-    
-    // Theme
-    elements.themeBtn?.addEventListener('click', toggleTheme);
-    
-    // Topic selection (event delegation)
-    elements.topicList?.addEventListener('click', (e) => {
-        const topicItem = e.target?.closest('.topic-item');
-        if (topicItem) {
-            const topicId = topicItem.dataset.topicId;
-            if (topicId) {
-                selectTopic(topicId);
-                closeSidebar();
-            }
-        }
-    });
-    
-    // Random mode
-    elements.randomMode?.addEventListener('click', () => {
-        startRandomMode();
-        closeSidebar();
-    });
-    
-    elements.welcomeRandom?.addEventListener('click', startRandomMode);
-    
-    // Shuffle
-    elements.shuffleBtn?.addEventListener('click', () => {
-        shuffleCards();
-        showToast('Карточки перемешаны');
-    });
-    
-    // Study all
-    elements.studyAllBtn?.addEventListener('click', () => {
-        startStudy(0);
-    });
-    
-    // Back button
-    elements.backBtn?.addEventListener('click', goToTopicView);
-    
-    // Card flip
-    elements.flashcard?.addEventListener('click', handleFlashcardClick);
-    elements.flipBtn?.addEventListener('click', flipCard);
-    
-    // Navigation
-    elements.prevCard?.addEventListener('click', () => navigateCard(-1));
-    elements.nextCard?.addEventListener('click', () => navigateCard(1));
-    
-    // Know / Don't know buttons
-    elements.knowBtn?.addEventListener('click', () => markCard('known'));
-    elements.dontKnowBtn?.addEventListener('click', () => markCard('unknown'));
-    
-    // Clear progress button
-    elements.clearProgress?.addEventListener('click', clearProgress);
-    
-    // Visibility change - cleanup when tab hidden
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    // Before unload - cleanup
-    window.addEventListener('beforeunload', cleanup);
-    
-    // Keyboard navigation is set up separately in setupKeyboardNavigation
+function shuffleArray(array) {
+    if (!Array.isArray(array)) return [];
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
 }
 
-function handleFlashcardClick(e) {
-    // Don't flip if clicking on buttons or interactive elements
-    if (e.target?.closest('.action-btn') || 
-        e.target?.closest('button') ||
-        e.target?.closest('pre') ||
-        e.target?.closest('code')) return;
-    flipCard();
+// ========================================
+// UI Helpers
+// ========================================
+function showToast(message) {
+    if (!elements.toast) return;
+    elements.toast.textContent = message;
+    elements.toast.classList.add('show');
+    
+    clearTimeout(state.timers.toast);
+    state.timers.toast = setTimeout(() => {
+        elements.toast?.classList.remove('show');
+    }, 2000);
 }
 
-function handleVisibilityChange() {
-    if (document.hidden) {
-        // Pause any ongoing animations or timers when tab is hidden
-        clearTimeout(state.timers.toast);
-        clearTimeout(state.timers.navigation);
+function showError(message) {
+    if (elements.cardsContainer) {
+        elements.cardsContainer.innerHTML = `
+            <div class="welcome">
+                <div class="welcome-icon">⚠️</div>
+                <h3>Ошибка</h3>
+                <p>${escapeHtml(message)}</p>
+                <button class="welcome-btn" onclick="location.reload()">🔄 Перезагрузить</button>
+            </div>
+        `;
     }
 }
 
-function cleanup() {
-    // Clear all timers
-    Object.values(state.timers).forEach(timer => clearTimeout(timer));
-    
-    // Remove event listeners
-    if (state.handlers.keyboard) {
-        document.removeEventListener('keydown', state.handlers.keyboard);
-        state.handlers.keyboard = null;
-    }
-    if (elements.cardArea) {
-        if (state.handlers.touchStart) {
-            elements.cardArea.removeEventListener('touchstart', state.handlers.touchStart);
-            state.handlers.touchStart = null;
-        }
-        if (state.handlers.touchMove) {
-            elements.cardArea.removeEventListener('touchmove', state.handlers.touchMove);
-            state.handlers.touchMove = null;
-        }
-        if (state.handlers.touchEnd) {
-            elements.cardArea.removeEventListener('touchend', state.handlers.touchEnd);
-            state.handlers.touchEnd = null;
-        }
+function showView(view) {
+    if (view === 'topic') {
+        elements.topicView?.classList.add('active');
+        elements.studyView?.classList.remove('active');
+    } else if (view === 'study') {
+        elements.topicView?.classList.remove('active');
+        elements.studyView?.classList.add('active');
     }
 }
 
-// ========================================
-// Sidebar Functions
-// ========================================
 function openSidebar() {
     elements.sidebar?.classList.add('open');
     elements.overlay?.classList.add('show');
@@ -412,123 +1281,211 @@ function closeSidebar() {
 }
 
 // ========================================
-// Topic Selection
+// Progress & Stats
 // ========================================
-function selectTopic(topicId) {
-    if (!state.data?.topics || !topicId) return;
+async function updateProgressStats() {
+    if (!elements.knownCount || !elements.unknownCount || !elements.progressBarMini) return;
     
-    const topic = state.data.topics.find(t => t.id === topicId);
-    if (!topic || !Array.isArray(topic.cards)) return;
-    
-    state.currentTopic = topic;
-    state.currentCards = [...topic.cards];
-    state.currentIndex = 0;
-    state.isRandomMode = false;
-    state.isFlipped = false;
-    
-    // Update active state
-    document.querySelectorAll('.topic-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.topicId === topicId);
-    });
-    
-    // Update header
-    if (elements.currentTopic) {
-        elements.currentTopic.textContent = topic.title || '';
+    try {
+        const stats = await db.getStats();
+        const total = state.allCards.length;
+        const percent = total > 0 ? Math.round((stats.known / total) * 100) : 0;
+        
+        elements.knownCount.textContent = `Изучено: ${stats.known}`;
+        elements.knownCount.className = stats.known > 0 ? 'known' : '';
+        elements.unknownCount.textContent = `На повтор: ${stats.unknown}`;
+        elements.unknownCount.className = stats.unknown > 0 ? 'unknown' : '';
+        elements.progressBarMini.style.width = `${percent}%`;
+    } catch (e) {
+        console.error('Failed to update stats:', e);
     }
-    if (elements.cardCounter) {
-        elements.cardCounter.textContent = `${topic.cards.length} карточек`;
+}
+
+async function clearProgress() {
+    try {
+        const stats = await db.getStats();
+        if (stats.total === 0) {
+            showToast('Прогресс и так пуст');
+            return;
+        }
+        
+        if (!confirm('Уверены, что хотите сбросить весь прогресс?')) return;
+        
+        await db.clearAllProgress();
+        updateProgressStats();
+        renderCardsGrid();
+        showToast('Прогресс очищен');
+    } catch (e) {
+        console.error('Failed to clear progress:', e);
+        showToast('Ошибка при очистке');
     }
-    if (elements.studyAllBtn) {
-        elements.studyAllBtn.style.display = 'flex';
-    }
+}
+
+// ========================================
+// Navigation
+// ========================================
+function navigateCard(direction) {
+    if (!Array.isArray(state.currentCards)) return;
     
-    // Render cards
-    renderCardsGrid();
+    const newIndex = state.currentIndex + direction;
+    if (newIndex < 0 || newIndex >= state.currentCards.length) return;
+    
+    clearTimeout(state.timers.navigation);
+    
+    const swipeClass = direction > 0 ? 'swipe-left' : 'swipe-right';
+    elements.flashcard?.classList.add(swipeClass);
+    
+    state.timers.navigation = setTimeout(() => {
+        state.currentIndex = newIndex;
+        state.isFlipped = false;
+        updateCard();
+        elements.flashcard?.classList.remove(swipeClass);
+    }, 150);
+}
+
+function flipCard() {
+    state.isFlipped = !state.isFlipped;
+    elements.flashcard?.classList.toggle('flipped', state.isFlipped);
+}
+
+function handleFlashcardClick(e) {
+    if (e.target?.closest('.action-btn') || 
+        e.target?.closest('button') ||
+        e.target?.closest('pre') ||
+        e.target?.closest('code') ||
+        e.target?.closest('a')) return;
+    flipCard();
+}
+
+function goToTopicView() {
+    clearTimeout(state.timers.navigation);
     showView('topic');
 }
 
 // ========================================
-// Render Cards Grid
+// Card Dots (with proper cleanup)
 // ========================================
-function renderCardsGrid() {
-    if (!elements.cardsContainer || !Array.isArray(state.currentCards)) return;
+async function renderCardDots() {
+    if (!elements.cardDots || !Array.isArray(state.currentCards)) return;
     
-    // Use DocumentFragment for better performance
+    const total = state.currentCards.length;
+    const maxDots = Math.min(total, 50);
+    
+    if (total > maxDots) {
+        elements.cardDots.innerHTML = '<span class="dots-overflow">...</span>';
+        return;
+    }
+    
+    // Clear old handlers
+    state.handlers.dotClickHandlers.forEach((handler, dot) => {
+        dot.removeEventListener('click', handler);
+    });
+    state.handlers.dotClickHandlers.clear();
+    
     const fragment = document.createDocumentFragment();
-    const grid = document.createElement('div');
-    grid.className = 'card-grid';
+    let progressMap = {};
     
-    state.currentCards.forEach((card, index) => {
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'mini-card';
-        cardDiv.dataset.index = String(index);
+    try {
+        progressMap = await db.getAllProgress();
+    } catch (e) {
+        console.error('Failed to get progress:', e);
+    }
+    
+    state.currentCards.forEach((card, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'card-dot';
+        if (i === state.currentIndex) dot.classList.add('active');
         
-        const termDiv = document.createElement('div');
-        termDiv.className = 'mini-card-term';
-        termDiv.textContent = String(card?.term || '');
+        const cardId = getCardId(card);
+        const status = progressMap[cardId];
+        if (status === 'known') dot.classList.add('known');
+        if (status === 'unknown') dot.classList.add('unknown');
         
-        const previewDiv = document.createElement('div');
-        previewDiv.className = 'mini-card-preview';
-        previewDiv.textContent = String(card?.english || '');
+        dot.dataset.index = String(i);
         
-        cardDiv.appendChild(termDiv);
-        cardDiv.appendChild(previewDiv);
-        grid.appendChild(cardDiv);
+        const clickHandler = () => {
+            state.currentIndex = i;
+            updateCard();
+        };
+        
+        dot.addEventListener('click', clickHandler);
+        state.handlers.dotClickHandlers.set(dot, clickHandler);
+        fragment.appendChild(dot);
     });
     
-    fragment.appendChild(grid);
-    elements.cardsContainer.innerHTML = '';
-    elements.cardsContainer.appendChild(fragment);
+    elements.cardDots.innerHTML = '';
+    elements.cardDots.appendChild(fragment);
+}
+
+async function updateCardDots() {
+    if (!elements.cardDots) return;
     
-    // Use event delegation instead of individual listeners
-    grid.addEventListener('click', (e) => {
-        const card = e.target?.closest('.mini-card');
+    const dots = elements.cardDots.querySelectorAll('.card-dot');
+    let progressMap = {};
+    
+    try {
+        progressMap = await db.getAllProgress();
+    } catch (e) {
+        console.error('Failed to get progress:', e);
+        return;
+    }
+    
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === state.currentIndex);
+        
+        const card = state.currentCards[i];
         if (card) {
-            const index = parseInt(card.dataset.index, 10);
-            if (!isNaN(index) && index >= 0 && index < state.currentCards.length) {
-                startStudy(index);
-            }
+            const status = progressMap[getCardId(card)];
+            dot.classList.remove('known', 'unknown');
+            if (status === 'known') dot.classList.add('known');
+            if (status === 'unknown') dot.classList.add('unknown');
         }
     });
 }
 
 // ========================================
-// Study Mode
+// Syntax Highlighting
 // ========================================
-function startStudy(startIndex = 0) {
-    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) return;
+function highlightCode(code) {
+    if (typeof code !== 'string') return '';
     
-    state.currentIndex = Math.max(0, Math.min(startIndex, state.currentCards.length - 1));
-    state.isFlipped = false;
-    showView('study');
-    updateCard();
-    renderCardDots();
+    const cleanCode = code.replace(/<\/?[^>]+(>|$)/g, '');
+    
+    const escaped = cleanCode
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    
+    return escaped
+        .replace(/\b(const|let|var|function|return|if|else|for|while|switch|case|break|default|try|catch|finally|throw|new|this|class|extends|super|static|get|set|import|export|from|async|await|typeof|instanceof|in|of|void|delete|with|yield)\b/g, 
+            '<span class=token-keyword>$1</span>')
+        .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 
+            '<span class=token-boolean>$1</span>')
+        .replace(/(\/\/.*$)/gm, 
+            '<span class=token-comment>$1</span>')
+        .replace(/("[^"]*"|'[^']*'|`[^`]*`)/g, 
+            '<span class=token-string>$1</span>')
+        .replace(/\b(\d+\.?\d*)\b/g, 
+            '<span class=token-number>$1</span>')
+        .replace(/\b(console|Math|JSON|Object|Array|String|Number|Boolean|Date|RegExp|Promise|Set|Map|WeakMap|WeakSet|Error|window|document|localStorage|sessionStorage|fetch|navigator|history|location)\b/g, 
+            '<span class=token-builtins>$1</span>');
 }
 
+// ========================================
+// Random Mode
+// ========================================
 function startRandomMode() {
-    if (!state.data?.topics) return;
-    
-    const allCards = [];
-    state.data.topics.forEach(topic => {
-        if (Array.isArray(topic?.cards)) {
-            topic.cards.forEach(card => {
-                if (card) {
-                    allCards.push({ ...card, topicTitle: topic.title });
-                }
-            });
-        }
-    });
-    
-    if (allCards.length === 0) {
+    if (state.allCards.length === 0) {
         showToast('Нет карточек для изучения');
         return;
     }
     
-    state.currentCards = shuffleArray(allCards);
+    state.currentCards = shuffleArray([...state.allCards]);
     state.currentTopic = { title: '🎲 Случайный режим', cards: state.currentCards };
     state.currentIndex = 0;
     state.isRandomMode = true;
-    state.isFlipped = false;
+    state.isExamMode = false;
+    state.isErrorsOnlyMode = false;
     
     if (elements.currentTopic) {
         elements.currentTopic.textContent = 'Случайный режим';
@@ -546,6 +1503,7 @@ function startRandomMode() {
     
     startStudy(0);
     showToast('Случайный режим запущен');
+    closeSidebar();
 }
 
 function shuffleCards() {
@@ -563,344 +1521,16 @@ function shuffleCards() {
     }
 }
 
-function shuffleArray(array) {
-    if (!Array.isArray(array)) return [];
-    const arr = [...array];
-    // Fisher-Yates shuffle
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-// ========================================
-// Card Display
-// ========================================
-function updateCard() {
-    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) return;
-    
-    const card = state.currentCards[state.currentIndex];
-    if (!card) return;
-    
-    // Reset flip
-    elements.flashcard?.classList.remove('flipped');
-    state.isFlipped = false;
-    
-    // Update content safely using textContent
-    if (elements.cardTerm) {
-        elements.cardTerm.textContent = String(card.term || '');
-    }
-    if (elements.cardEnglish) {
-        elements.cardEnglish.textContent = String(card.english || '');
-    }
-    if (elements.cardRussian) {
-        elements.cardRussian.textContent = String(card.russian || '');
-    }
-    
-    // Code with syntax highlighting
-    if (elements.codeSection && elements.cardCode) {
-        if (card.example) {
-            elements.codeSection.style.display = 'block';
-            elements.cardCode.innerHTML = highlightCode(String(card.example));
-        } else {
-            elements.codeSection.style.display = 'none';
-            elements.cardCode.innerHTML = '';
-        }
-    }
-    
-    // Progress
-    const total = state.currentCards.length;
-    const current = state.currentIndex + 1;
-    const percent = Math.round((current / total) * 100);
-    
-    if (elements.progressText) {
-        elements.progressText.textContent = `${current} / ${total}`;
-    }
-    if (elements.progressPercent) {
-        elements.progressPercent.textContent = `${percent}%`;
-    }
-    if (elements.progressFill) {
-        elements.progressFill.style.width = `${percent}%`;
-    }
-    
-    // Navigation buttons
-    if (elements.prevCard) {
-        elements.prevCard.disabled = state.currentIndex === 0;
-    }
-    if (elements.nextCard) {
-        elements.nextCard.disabled = state.currentIndex === total - 1;
-    }
-    
-    // Update dots
-    updateCardDots();
-}
-
-// ========================================
-// Syntax Highlighting
-// ========================================
-function stripHtmlTags(text) {
-    if (typeof text !== 'string') return '';
-    
-    let result = text;
-    
-    // First decode HTML entities if present (&lt; &gt; &quot; etc.)
-    try {
-        const textarea = document.createElement('textarea');
-        textarea.innerHTML = text;
-        result = textarea.value;
-    } catch (e) {
-        // If DOM fails, continue with original
-    }
-    
-    // Remove HTML tags and their attributes
-    // This handles: <span class="...">, </span>, <br>, etc.
-    result = result.replace(/<\/?[^>]+(>|$)/g, '');
-    
-    // Remove leftover HTML entities
-    result = result.replace(/&lt;|&gt;|&quot;|&amp;/g, '');
-    
-    // Clean up any leftover attribute values like "token-keyword">
-    result = result.replace(/"[^"]*"\s*>\s*/g, '');
-    result = result.replace(/'[^']*'\s*>\s*/g, '');
-    
-    // Remove standalone > and stray quotes
-    result = result.replace(/^\s*>\s*/gm, '');
-    
-    return result.trim();
-}
-
-function highlightCode(code) {
-    if (typeof code !== 'string') return '';
-    
-    // First strip any existing HTML tags from the data
-    const cleanCode = stripHtmlTags(code);
-    
-    // Escape HTML entities
-    const escaped = cleanCode
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    
-    // Apply syntax highlighting (no quotes around class value to avoid string regex conflicts)
-    const result = escaped
-        .replace(/\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|default|try|catch|finally|throw|new|this|class|extends|super|static|get|set|import|export|from|async|await|typeof|instanceof|in|of|void|delete|with|yield)\b/g, 
-            '<span class=token-keyword>$1</span>')
-        .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 
-            '<span class=token-boolean>$1</span>')
-        .replace(/(\/\/.*$)/gm, 
-            '<span class=token-comment>$1</span>')
-        .replace(/("[^"]*"|'[^']*'|`[^`]*`)/g, 
-            '<span class=token-string>$1</span>')
-        .replace(/\b(\d+\.?\d*)\b/g, 
-            '<span class=token-number>$1</span>')
-        .replace(/\b(console|Math|JSON|Object|Array|String|Number|Boolean|Date|RegExp|Promise|Set|Map|WeakMap|WeakSet|Error|window|document|localStorage|sessionStorage|fetch|navigator|history|location)\b/g, 
-            '<span class=token-builtins>$1</span>');
-    
-    return result;
-}
-
-// ========================================
-// Card Dots Navigation
-// ========================================
-function renderCardDots() {
-    if (!elements.cardDots || !Array.isArray(state.currentCards)) return;
-    
-    const total = state.currentCards.length;
-    // Limit dots for performance with many cards
-    const maxDots = Math.min(total, 50);
-    const showDots = total <= maxDots;
-    
-    if (!showDots) {
-        elements.cardDots.innerHTML = '<span class="dots-overflow">...</span>';
-        return;
-    }
-    
-    // Use DocumentFragment
-    const fragment = document.createDocumentFragment();
-    state.currentCards.forEach((_, i) => {
-        const dot = document.createElement('div');
-        dot.className = `card-dot ${i === state.currentIndex ? 'active' : ''}`;
-        dot.dataset.index = String(i);
-        dot.setAttribute('role', 'button');
-        dot.setAttribute('aria-label', `Карточка ${i + 1}`);
-        fragment.appendChild(dot);
-    });
-    
-    elements.cardDots.innerHTML = '';
-    elements.cardDots.appendChild(fragment);
-    
-    // Event delegation for dots
-    elements.cardDots.onclick = (e) => {
-        const dot = e.target?.closest('.card-dot');
-        if (dot) {
-            const index = parseInt(dot.dataset.index, 10);
-            if (!isNaN(index) && index >= 0 && index < state.currentCards.length) {
-                state.currentIndex = index;
-                updateCard();
-            }
-        }
-    };
-}
-
-function updateCardDots() {
-    if (!elements.cardDots) return;
-    
-    const dots = elements.cardDots.querySelectorAll('.card-dot');
-    dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === state.currentIndex);
-        
-        // Add status classes
-        const card = state.currentCards[i];
-        if (card) {
-            const cardId = getCardId(card);
-            dot.classList.remove('known', 'unknown');
-            if (state.cardStatuses[cardId] === 'known') dot.classList.add('known');
-            if (state.cardStatuses[cardId] === 'unknown') dot.classList.add('unknown');
-        }
-    });
-}
-
-function getCardId(card) {
-    if (!card) return '';
-    // Create a safe ID from term and english fields
-    const term = String(card.term || '').slice(0, 50);
-    const english = String(card.english || '').slice(0, 50);
-    return `${term}_${english}`.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 100);
-}
-
-// ========================================
-// Card Actions
-// ========================================
-function flipCard() {
-    state.isFlipped = !state.isFlipped;
-    elements.flashcard?.classList.toggle('flipped', state.isFlipped);
-}
-
-function navigateCard(direction) {
-    if (!Array.isArray(state.currentCards)) return;
-    
-    const newIndex = state.currentIndex + direction;
-    if (newIndex < 0 || newIndex >= state.currentCards.length) return;
-    
-    // Clear pending navigation timer
-    clearTimeout(state.timers.navigation);
-    
-    // Add swipe animation class
-    const swipeClass = direction > 0 ? 'swipe-left' : 'swipe-right';
-    elements.flashcard?.classList.add(swipeClass);
-    
-    state.timers.navigation = setTimeout(() => {
-        state.currentIndex = newIndex;
-        state.isFlipped = false;
-        updateCard();
-        elements.flashcard?.classList.remove(swipeClass);
-    }, 150);
-}
-
-function markCard(status) {
-    if (!Array.isArray(state.currentCards) || state.currentCards.length === 0) return;
-    
-    const card = state.currentCards[state.currentIndex];
-    if (!card) return;
-    
-    const cardId = getCardId(card);
-    if (!cardId) return;
-    
-    state.cardStatuses[cardId] = status;
-    
-    safeSetItem('cardStatuses', JSON.stringify(state.cardStatuses));
-    
-    updateCardDots();
-    updateProgressStats();
-    
-    const message = status === 'known' ? '✓ Отмечено как изученное' : '✗ Будем повторять';
-    showToast(message);
-    
-    // Clear pending auto-advance
-    clearTimeout(state.timers.navigation);
-    
-    // Auto-advance after marking
-    state.timers.navigation = setTimeout(() => {
-        if (state.currentIndex < state.currentCards.length - 1) {
-            navigateCard(1);
-        }
-    }, 600);
-}
-
-// ========================================
-// Progress Statistics
-// ========================================
-function updateProgressStats() {
-    if (!elements.knownCount || !elements.unknownCount || !elements.progressBarMini) return;
-    
-    const statuses = Object.values(state.cardStatuses);
-    const known = statuses.filter(s => s === 'known').length;
-    const unknown = statuses.filter(s => s === 'unknown').length;
-    const total = state.data?.topics?.reduce((sum, t) => sum + (t.cards?.length || 0), 0) || 0;
-    
-    const percent = total > 0 ? Math.round((known / total) * 100) : 0;
-    
-    elements.knownCount.textContent = `Изучено: ${known}`;
-    elements.knownCount.className = known > 0 ? 'known' : '';
-    elements.unknownCount.textContent = `На повтор: ${unknown}`;
-    elements.unknownCount.className = unknown > 0 ? 'unknown' : '';
-    elements.progressBarMini.style.width = `${percent}%`;
-}
-
-function clearProgress() {
-    if (Object.keys(state.cardStatuses).length === 0) {
-        showToast('Прогресс и так пуст');
-        return;
-    }
-    
-    if (!confirm('Уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.')) {
-        return;
-    }
-    
-    state.cardStatuses = {};
-    
-    safeRemoveItem('cardStatuses');
-    
-    updateProgressStats();
-    updateCardDots();
-    showToast('Прогресс очищен');
-}
-
-// ========================================
-// View Management
-// ========================================
-function showView(view) {
-    if (view === 'topic') {
-        elements.topicView?.classList.add('active');
-        elements.studyView?.classList.remove('active');
-    } else if (view === 'study') {
-        elements.topicView?.classList.remove('active');
-        elements.studyView?.classList.add('active');
-    }
-}
-
-function goToTopicView() {
-    // Clear any pending timers when leaving study view
-    clearTimeout(state.timers.navigation);
-    showView('topic');
-}
-
 // ========================================
 // Swipe Gestures (with proper cleanup)
 // ========================================
 function setupSwipeGestures() {
     if (!elements.cardArea) return;
     
-    // Clean up existing listeners first
-    cleanup();
+    cleanupSwipeHandlers();
     
-    let startX = 0;
-    let startY = 0;
-    let startTime = 0;
-    let isTracking = false;
+    let startX = 0, startY = 0, startTime = 0, isTracking = false;
     
-    // Touch start
     state.handlers.touchStart = (e) => {
         if (!e.touches?.[0]) return;
         startX = e.touches[0].clientX;
@@ -909,7 +1539,6 @@ function setupSwipeGestures() {
         isTracking = true;
     };
     
-    // Touch move
     state.handlers.touchMove = (e) => {
         if (!isTracking || !startX || !startY || !e.touches?.[0]) return;
         
@@ -918,18 +1547,13 @@ function setupSwipeGestures() {
         const diffX = startX - x;
         const diffY = startY - y;
         
-        // Let browser handle vertical scroll
-        if (Math.abs(diffY) > Math.abs(diffX)) {
-            return;
-        }
+        if (Math.abs(diffY) > Math.abs(diffX)) return;
         
-        // Prevent default only for horizontal swipes (check if cancelable first)
         if (Math.abs(diffX) > 10 && e.cancelable) {
             e.preventDefault();
         }
     };
     
-    // Touch end
     state.handlers.touchEnd = (e) => {
         if (!isTracking || !startX || !startY || !e.changedTouches?.[0]) return;
         
@@ -940,49 +1564,62 @@ function setupSwipeGestures() {
         const diffY = startY - endY;
         const duration = Date.now() - startTime;
         
-        // Reset
         startX = 0;
         startY = 0;
         
-        // Tap detection (for flip)
         if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10 && duration < 300) {
-            // Don't flip if clicking on specific elements
             const target = e.target;
             if (target?.closest('.card-hint') || 
                 target?.closest('.swipe-hint') ||
                 target?.closest('button') ||
                 target?.closest('pre') ||
-                target?.closest('code')) {
+                target?.closest('code') ||
+                target?.closest('a')) {
                 return;
             }
             flipCard();
             return;
         }
         
-        // Swipe detection
         const swipeThreshold = 50;
         const isHorizontal = Math.abs(diffX) > Math.abs(diffY);
         
         if (isHorizontal && Math.abs(diffX) > swipeThreshold) {
             if (diffX > 0) {
-                navigateCard(1); // Swipe left - next
+                navigateCard(1);
             } else {
-                navigateCard(-1); // Swipe right - previous
+                navigateCard(-1);
             }
         }
     };
     
-    // Add listeners with capture options for proper cleanup
     elements.cardArea.addEventListener('touchstart', state.handlers.touchStart, { passive: true });
     elements.cardArea.addEventListener('touchmove', state.handlers.touchMove, { passive: false });
     elements.cardArea.addEventListener('touchend', state.handlers.touchEnd, { passive: true });
 }
 
+function cleanupSwipeHandlers() {
+    if (!elements.cardArea) return;
+    
+    if (state.handlers.touchStart) {
+        elements.cardArea.removeEventListener('touchstart', state.handlers.touchStart);
+    }
+    if (state.handlers.touchMove) {
+        elements.cardArea.removeEventListener('touchmove', state.handlers.touchMove);
+    }
+    if (state.handlers.touchEnd) {
+        elements.cardArea.removeEventListener('touchend', state.handlers.touchEnd);
+    }
+    
+    state.handlers.touchStart = null;
+    state.handlers.touchMove = null;
+    state.handlers.touchEnd = null;
+}
+
 // ========================================
-// Keyboard Navigation
+// Keyboard Navigation (with cleanup)
 // ========================================
 function setupKeyboardNavigation() {
-    // Remove old listener if exists
     if (state.handlers.keyboard) {
         document.removeEventListener('keydown', state.handlers.keyboard);
     }
@@ -1000,13 +1637,6 @@ function setupKeyboardNavigation() {
                 navigateCard(1);
                 break;
             case ' ':
-                e.preventDefault();
-                if (!state.isFlipped) {
-                    flipCard();
-                } else {
-                    navigateCard(1);
-                }
-                break;
             case 'Enter':
                 e.preventDefault();
                 flipCard();
@@ -1030,46 +1660,91 @@ function setupKeyboardNavigation() {
 }
 
 // ========================================
-// Toast Notifications (with cleanup)
+// Cleanup Functions (comprehensive)
 // ========================================
-function showToast(message) {
-    if (!elements.toast) return;
-    
-    // Clear existing timer
-    clearTimeout(state.timers.toast);
-    
-    elements.toast.textContent = String(message);
-    elements.toast.classList.add('show');
-    
-    state.timers.toast = setTimeout(() => {
-        elements.toast?.classList.remove('show');
-    }, 2000);
+function handleVisibilityChange() {
+    if (document.hidden) {
+        // Pause non-essential operations when tab is hidden
+        clearTimeout(state.timers.toast);
+        clearTimeout(state.timers.navigation);
+        
+        // Abort ongoing searches
+        if (state.abortControllers.search) {
+            state.abortControllers.search.abort();
+        }
+    }
 }
 
-// ========================================
-// Service Worker Registration
-// ========================================
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => {
-                console.log('[App] Service Worker registered');
-                
-                // Check for updates
-                reg.addEventListener('updatefound', () => {
-                    const newWorker = reg.installing;
-                    newWorker?.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            showToast('Доступно обновление! Перезагрузите приложение.');
-                        }
-                    });
-                });
-            })
-            .catch(err => console.log('[App] Service Worker registration failed:', err));
+function handleBeforeUnload(e) {
+    // Quick sync before leaving
+    cleanup();
+}
+
+function handlePageHide(e) {
+    // More aggressive cleanup when page is hidden (mobile)
+    if (e.persisted) {
+        // Page was cached by browser (bfcache), clean up
+        cleanup();
+    }
+}
+
+function cleanup() {
+    if (state.isCleaningUp) return;
+    state.isCleaningUp = true;
+    
+    console.log('[App] Cleanup started');
+    
+    // Clear all timers
+    Object.values(state.timers).forEach(timer => clearTimeout(timer));
+    
+    // Abort all ongoing operations
+    Object.values(state.abortControllers).forEach(controller => {
+        if (controller && !controller.signal.aborted) {
+            controller.abort();
+        }
     });
+    
+    // Remove all event listeners
+    removeAllEventListeners();
+    
+    // Clean up keyboard handler
+    if (state.handlers.keyboard) {
+        document.removeEventListener('keydown', state.handlers.keyboard);
+        state.handlers.keyboard = null;
+    }
+    
+    // Clean up global search click handler
+    if (state.handlers.globalSearchClick) {
+        document.removeEventListener('click', state.handlers.globalSearchClick);
+        state.handlers.globalSearchClick = null;
+    }
+    
+    // Clean up swipe handlers
+    cleanupSwipeHandlers();
+    
+    // Clean up dot handlers
+    state.handlers.dotClickHandlers.forEach((handler, dot) => {
+        dot.removeEventListener('click', handler);
+    });
+    state.handlers.dotClickHandlers.clear();
+    
+    // Close IndexedDB connection
+    db.close();
+    
+    // Clear large data structures
+    state.categories.clear();
+    state.allCards = [];
+    state.currentCards = [];
+    
+    state.isCleaningUp = false;
+    console.log('[App] Cleanup completed');
 }
 
 // ========================================
 // Start App
 // ========================================
-init();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}

@@ -1,0 +1,540 @@
+{
+  "id": "dom",
+  "name": "DOM и браузер",
+  "topics": [
+    {
+      "id": "day18_dom_search",
+      "title": "Неделя 18: DOM — поиск элементов",
+      "cards": [
+        {
+          "term": "DOM",
+          "english": "Document Object Model",
+          "russian": "DOM (объектная модель документа) — это представление HTML-документа в виде дерева объектов. JavaScript может читать и изменять DOM. Каждый HTML-элемент становится узлом DOM.",
+          "example": "document.body;           // <body>\ndocument.documentElement; // <html>\ndocument.head;           // <head>"
+        },
+        {
+          "term": "document",
+          "english": "document object",
+          "russian": "Глобальный объект document представляет всю HTML-страницу. Через него осуществляется доступ ко всем элементам. Точка входа для манипуляций с DOM.",
+          "example": "document.getElementById('main');\ndocument.querySelector('.container');\ndocument.title = 'New Title';"
+        },
+        {
+          "term": "element",
+          "english": "element",
+          "russian": "Элемент — это узел DOM соответствующий HTML-тегу. Имеет свойства и методы для манипуляции. Отличается от текстовых узлов и комментариев.",
+          "example": "<div> — элемент\ntext — текстовый узел\n<!-- --> — узел комментария"
+        },
+        {
+          "term": "node",
+          "english": "node",
+          "russian": "Узел — это базовый тип в DOM-дереве. Включает элементы, текст, комментарии, атрибуты. Все узлы наследуют от Node. Элементы — подтип узлов.",
+          "example": "nodeType 1 — Element\nnodeType 3 — Text\nnodeType 8 — Comment"
+        },
+        {
+          "term": "getElementById()",
+          "english": "getElementById() method",
+          "russian": "Метод getElementById() находит элемент по уникальному id. Возвращает один элемент или null. Самый быстрый способ поиска. Id должен быть уникальным на странице.",
+          "example": "const main = document.getElementById('main');\nif (main) {\n  main.style.color = 'red';\n}"
+        },
+        {
+          "term": "getElementsByClassName()",
+          "english": "getElementsByClassName()",
+          "russian": "Метод возвращает живую HTMLCollection элементов с указанным классом. Живая означает что автоматически обновляется при изменении DOM. Можно перебирать как массив.",
+          "example": "const items = document.getElementsByClassName('item');\nfor (let item of items) {\n  item.style.color = 'blue';\n}"
+        },
+        {
+          "term": "getElementsByTagName()",
+          "english": "getElementsByTagName()",
+          "russian": "Метод возвращает живую HTMLCollection элементов с указанным тегом. Полезно для работы с множественными однотипными элементами (li, p, div).",
+          "example": "const paragraphs = document.getElementsByTagName('p');\nconsole.log(paragraphs.length); // количество <p>"
+        },
+        {
+          "term": "querySelector()",
+          "english": "querySelector() method",
+          "russian": "Метод querySelector() находит первый элемент по CSS-селектору. Возвращает элемент или null. Поддерживает все CSS-селекторы. Более гибкий чем getElementById.",
+          "example": "const first = document.querySelector('.item');\nconst byId = document.querySelector('#main');\nconst nested = document.querySelector('div > p');\n"
+        },
+        {
+          "term": "querySelectorAll()",
+          "english": "querySelectorAll() method",
+          "russian": "Метод querySelectorAll() находит все элементы по CSS-селектору. Возвращает статическую NodeList (не обновляется). Можно преобразовать в массив для методов массива.",
+          "example": "const all = document.querySelectorAll('.item');\nall.forEach(item => item.remove());\n\n// В массив:\nconst arr = [...document.querySelectorAll('p')];"
+        },
+        {
+          "term": "parentNode",
+          "english": "parentNode property",
+          "russian": "Свойство parentNode возвращает родительский узел элемента. Может быть элементом или document. Полезно для навигации вверх по DOM-дереву.",
+          "example": "const parent = element.parentNode;\nparent.style.border = '1px solid black';"
+        },
+        {
+          "term": "childNodes",
+          "english": "childNodes property",
+          "russian": "Свойство childNodes возвращает все дочерние узлы включая текст и комментарии. Возвращает живую NodeList. Индексы могут быть не только у элементов.",
+          "example": "const nodes = element.childNodes;\nnodes.forEach(node => {\n  console.log(node.nodeType, node);\n});"
+        },
+        {
+          "term": "children",
+          "english": "children property",
+          "russian": "Свойство children возвращает только дочерние элементы (без текста и комментариев). Возвращает живую HTMLCollection. Более удобно чем childNodes для работы с тегами.",
+          "example": "const elements = element.children;\nfor (let child of elements) {\n  console.log(child.tagName);\n}"
+        },
+        {
+          "term": "firstChild / lastChild",
+          "english": "firstChild / lastChild",
+          "russian": "Свойства firstChild и lastChild возвращают первый и последний дочерний узел. Могут вернуть текст или комментарий. null если детей нет.",
+          "example": "const first = element.firstChild;\nconst last = element.lastChild;"
+        },
+        {
+          "term": "firstElementChild / lastElementChild",
+          "english": "firstElementChild / lastElementChild",
+          "russian": "Свойства возвращают первый и последний дочерний элемент (игнорируют текст и комментарии). Более предсказуемы чем firstChild/lastChild.",
+          "example": "const first = element.firstElementChild;\nconst last = element.lastElementChild;"
+        },
+        {
+          "term": "nextSibling / previousSibling",
+          "english": "nextSibling / previousSibling",
+          "russian": "Свойства возвращают следующий и предыдущий соседний узел. Могут вернуть текст. null если соседа нет. Для элементов лучше использовать nextElementSibling.",
+          "example": "const next = element.nextSibling;\nconst prev = element.previousSibling;"
+        },
+        {
+          "term": "nextElementSibling / previousElementSibling",
+          "english": "nextElementSibling / previousElementSibling",
+          "russian": "Свойства возвращают следующий и предыдущий соседний элемент. Игнорируют текстовые узлы и комментарии. Удобно для навигации между тегами.",
+          "example": "const next = element.nextElementSibling;\nconst prev = element.previousElementSibling;"
+        }
+      ]
+    },
+    {
+      "id": "day19_dom_manipulation",
+      "title": "Неделя 19: DOM — манипуляции",
+      "cards": [
+        {
+          "term": "innerHTML",
+          "english": "innerHTML property",
+          "russian": "Свойство innerHTML возвращает или устанавливает HTML-содержимое элемента как строку. Позволяет вставлять HTML-теги. Опасно при вставке пользовательских данных (XSS).",
+          "example": "element.innerHTML = '<strong>Bold</strong>';\nconsole.log(element.innerHTML); // '<strong>Bold</strong>'"
+        },
+        {
+          "term": "textContent",
+          "english": "textContent property",
+          "russian": "Свойство textContent возвращает или устанавливает текстовое содержимое без HTML. Безопаснее innerHTML. Все теги экранируются. Рекомендуется для пользовательского ввода.",
+          "example": "element.textContent = '<script>alert(1)</script>';\n// Вставится как текст, не выполнится"
+        },
+        {
+          "term": "innerText",
+          "english": "innerText property",
+          "russian": "Свойство innerText похоже на textContent но учитывает стили. Не возвращает текст скрытых элементов. Медленнее textContent. Зависит от CSS.",
+          "example": "element.innerText = 'Visible text only';\n// Скрытые через display:none не включатся"
+        },
+        {
+          "term": "outerHTML",
+          "english": "outerHTML property",
+          "russian": "Свойство outerHTML возвращает HTML элемента вместе с самим элементом. Установка заменяет весь элемент. Полезно для полной замены элемента.",
+          "example": "console.log(element.outerHTML); // '<div id=\"x\">...</div>'\nelement.outerHTML = '<p>New</p>'; // заменил элемент"
+        },
+        {
+          "term": "createElement()",
+          "english": "createElement() method",
+          "russian": "Метод createElement() создаёт новый HTML-элемент. Не добавляет в DOM автоматически. Нужно использовать appendChild или insertBefore для вставки.",
+          "example": "const div = document.createElement('div');\ndiv.className = 'new';\ndiv.textContent = 'Hello';\nparent.appendChild(div);"
+        },
+        {
+          "term": "createTextNode()",
+          "english": "createTextNode() method",
+          "russian": "Метод createTextNode() создаёт текстовый узел. Полезно для безопасной вставки текста. Альтернатива textContent когда нужно вставить текст в конкретное место.",
+          "example": "const text = document.createTextNode('Hello');\nelement.appendChild(text);"
+        },
+        {
+          "term": "appendChild()",
+          "english": "appendChild() method",
+          "russian": "Метод appendChild() добавляет узел в конец дочерних элементов. Если узел уже в DOM, он перемещается. Возвращает добавленный узел.",
+          "example": "const newEl = document.createElement('li');\nlist.appendChild(newEl); // добавлено в конец"
+        },
+        {
+          "term": "insertBefore()",
+          "english": "insertBefore() method",
+          "russian": "Метод insertBefore() вставляет узел перед указанным参考ным узлом. Если referenceNode null, работает как appendChild. Полезно для вставки в конкретное место.",
+          "example": "parent.insertBefore(newNode, referenceNode);\n// newNode будет перед referenceNode"
+        },
+        {
+          "term": "removeChild()",
+          "english": "removeChild() method",
+          "russian": "Метод removeChild() удаляет дочерний узел из родителя. Возвращает удалённый узел. Современная альтернатива — element.remove() без родителя.",
+          "example": "parent.removeChild(child);\n\n// Или современно:\nchild.remove();"
+        },
+        {
+          "term": "replaceChild()",
+          "english": "replaceChild() method",
+          "russian": "Метод replaceChild() заменяет один дочерний узел на другой. Первый аргумент — новый узел, второй — старый. Возвращает заменённый узел.",
+          "example": "parent.replaceChild(newChild, oldChild);\n// oldChild заменён на newChild"
+        },
+        {
+          "term": "cloneNode()",
+          "english": "cloneNode() method",
+          "russian": "Метод cloneNode() создаёт копию узла. Параметр true — глубокое клонирование (с детьми), false — только узел. Клон не привязан к DOM.",
+          "example": "const clone = element.cloneNode(true); // с детьми\nconst shallow = element.cloneNode(false); // без детей"
+        },
+        {
+          "term": "classList",
+          "english": "classList property",
+          "russian": "Свойство classList предоставляет удобный API для работы с классами. Имеет методы add, remove, toggle, contains. Заменяет работу с className как строкой.",
+          "example": "element.classList.add('active');\nelement.classList.remove('hidden');\nelement.classList.toggle('visible');"
+        },
+        {
+          "term": "classList.add()",
+          "english": "add() method",
+          "russian": "Метод add() добавляет один или несколько классов. Не дублирует существующие классы. Можно передавать несколько классов через запятую.",
+          "example": "element.classList.add('active', 'visible');\n// Добавит оба класса"
+        },
+        {
+          "term": "classList.remove()",
+          "english": "remove() method",
+          "russian": "Метод remove() удаляет один или несколько классов. Не вызывает ошибку если класс не найден. Можно передавать несколько классов.",
+          "example": "element.classList.remove('hidden', 'old');\n// Удалит оба класса если есть"
+        },
+        {
+          "term": "classList.toggle()",
+          "english": "toggle() method",
+          "russian": "Метод toggle() переключает класс: добавляет если нет, удаляет если есть. Возвращает true если класс добавлен, false если удалён. Можно передать второе условие.",
+          "example": "element.classList.toggle('active');\nelement.classList.toggle('active', true); // добавить\n"
+        },
+        {
+          "term": "classList.contains()",
+          "english": "contains() method",
+          "russian": "Метод contains() проверяет наличие класса. Возвращает true или false. Удобно для условной логики в зависимости от класса.",
+          "example": "if (element.classList.contains('active')) {\n  // элемент активен\n}"
+        },
+        {
+          "term": "setAttribute()",
+          "english": "setAttribute() method",
+          "russian": "Метод setAttribute() устанавливает значение атрибута. Создаёт атрибут если не существует. Работает со всеми атрибутами включая data-*.",
+          "example": "element.setAttribute('data-id', '123');\nelement.setAttribute('disabled', 'true');"
+        },
+        {
+          "term": "getAttribute()",
+          "english": "getAttribute() method",
+          "russian": "Метод getAttribute() возвращает значение атрибута. Возвращает null если атрибут не найден. Все значения возвращаются как строки.",
+          "example": "const id = element.getAttribute('data-id');\nconsole.log(typeof id); // 'string'"
+        },
+        {
+          "term": "removeAttribute()",
+          "english": "removeAttribute() method",
+          "russian": "Метод removeAttribute() удаляет атрибут из элемента. Не возвращает значение. Полезно для очистки атрибутов (disabled, hidden).",
+          "example": "element.removeAttribute('disabled');\nelement.removeAttribute('data-temp');"
+        }
+      ]
+    },
+    {
+      "id": "day20_styles_dimensions",
+      "title": "Неделя 20: Стили и размеры",
+      "cards": [
+        {
+          "term": "style",
+          "english": "style property",
+          "russian": "Свойство style предоставляет доступ к инлайн-стилям элемента. Только стили заданные напрямую в HTML или через style. Не включает стили из CSS-файлов.",
+          "example": "element.style.color = 'red';\nelement.style.fontSize = '16px';\nelement.style.display = 'none';"
+        },
+        {
+          "term": "getComputedStyle()",
+          "english": "getComputedStyle() method",
+          "russian": "Функция getComputedStyle() возвращает все вычисленные стили элемента включая из CSS-файлов. Возвращает объект только для чтения. Полезно для получения реальных значений.",
+          "example": "const styles = getComputedStyle(element);\nconsole.log(styles.color);\nconsole.log(styles.marginTop);"
+        },
+        {
+          "term": "className",
+          "english": "className property",
+          "russian": "Свойство className возвращает строку со всеми классами элемента. Устаревший способ, лучше использовать classList. Позволяет установить все классы сразу.",
+          "example": "element.className = 'class1 class2';\nconsole.log(element.className); // 'class1 class2'"
+        },
+        {
+          "term": "offsetWidth / offsetHeight",
+          "english": "offsetWidth / offsetHeight",
+          "russian": "Свойства возвращают ширину и высоту элемента включая рамки и отступы (border + padding + content). Не включает margin. Только целые числа.",
+          "example": "console.log(element.offsetWidth);  // ширина с рамкой\nconsole.log(element.offsetHeight); // высота с рамкой"
+        },
+        {
+          "term": "clientWidth / clientHeight",
+          "english": "clientWidth / clientHeight",
+          "russian": "Свойства возвращают ширину и высоту без рамок, но с внутренними отступами (padding + content). Полезно для расчёта видимой области контента.",
+          "example": "console.log(element.clientWidth);  // без border\nconsole.log(element.clientHeight); // без border"
+        },
+        {
+          "term": "scrollWidth / scrollHeight",
+          "english": "scrollWidth / scrollHeight",
+          "russian": "Свойства возвращают полный размер контента включая невидимую прокручиваемую область. Полезно для определения нужна ли прокрутка.",
+          "example": "if (element.scrollHeight > element.clientHeight) {\n  // есть прокрутка\n}"
+        },
+        {
+          "term": "offsetTop / offsetLeft",
+          "english": "offsetTop / offsetLeft",
+          "russian": "Свойства возвращают смещение элемента относительно offsetParent. Полезно для определения позиции элемента в пределах родителя.",
+          "example": "console.log(element.offsetTop);  // отступ сверху\nconsole.log(element.offsetLeft); // отступ слева"
+        },
+        {
+          "term": "scrollTop / scrollLeft",
+          "english": "scrollTop / scrollLeft",
+          "russian": "Свойства возвращают текущую прокрутку элемента. Можно устанавливать для программной прокрутки. 0 если прокрутки нет.",
+          "example": "console.log(element.scrollTop);  // прокрутка по Y\nelement.scrollTop = 100; // прокрутить на 100px"
+        },
+        {
+          "term": "getBoundingClientRect()",
+          "english": "getBoundingClientRect()",
+          "russian": "Метод возвращает координаты элемента относительно окна просмотра. Возвращает объект с top, right, bottom, left, width, height. Полезно для позиционирования.",
+          "example": "const rect = element.getBoundingClientRect();\nconsole.log(rect.top);    // от верха окна\nconsole.log(rect.left);   // от левого края\nconsole.log(rect.width);  // ширина"
+        }
+      ]
+    },
+    {
+      "id": "day21_bom",
+      "title": "Неделя 21: BOM (Browser Object Model)",
+      "cards": [
+        {
+          "term": "window",
+          "english": "window object",
+          "russian": "Глобальный объект браузера, представляющий окно браузера. Через window доступны все глобальные функции и объекты. Является корнем объектной модели браузера (BOM).",
+          "example": "window.alert('Hello');\n// window можно опускать:\nalert('Hello'); // то же самое"
+        },
+        {
+          "term": "navigator",
+          "english": "navigator object",
+          "russian": "Объект содержащий информацию о браузере и системе. Включает userAgent, язык, платформу. Используется для определения возможностей браузера.",
+          "example": "console.log(navigator.userAgent);\nconsole.log(navigator.language); // 'ru-RU'\nconsole.log(navigator.platform); // 'Win32'"
+        },
+        {
+          "term": "screen",
+          "english": "screen object",
+          "russian": "Объект с информацией об экране пользователя. Включает ширину, высоту, глубину цвета. Полезно для адаптивного дизайна и определения возможностей дисплея.",
+          "example": "console.log(screen.width); // ширина экрана\nconsole.log(screen.height); // высота экрана\nconsole.log(screen.colorDepth); // глубина цвета"
+        },
+        {
+          "term": "location",
+          "english": "location object",
+          "russian": "Объект с информацией о текущем URL и методами навигации. Позволяет читать и изменять адрес страницы. Используется для редиректов и работы с URL.",
+          "example": "console.log(location.href); // полный URL\nlocation.href = 'https://new.com'; // переход\nlocation.reload(); // перезагрузка"
+        },
+        {
+          "term": "history",
+          "english": "history object",
+          "russian": "Объект предоставляющий доступ к истории браузера. Позволяет навигировать назад/вперёд без перезагрузки. Критически важен для SPA-приложений.",
+          "example": "history.back(); // назад\nhistory.forward(); // вперёд\nhistory.go(-2); // на 2 страницы назад"
+        },
+        {
+          "term": "localStorage",
+          "english": "localStorage",
+          "russian": "Хранилище данных без срока давности в браузере. Данные сохраняются после закрытия браузера. Вместимость около 5-10 МБ. Хранит только строки.",
+          "example": "localStorage.setItem('key', 'value');\nconst val = localStorage.getItem('key');\nlocalStorage.removeItem('key');\nlocalStorage.clear(); // очистить всё"
+        },
+        {
+          "term": "sessionStorage",
+          "english": "sessionStorage",
+          "russian": "Хранилище данных на время сессии браузера. Данные удаляются при закрытии вкладки. Аналогично localStorage но временное. Полезно для временных данных.",
+          "example": "sessionStorage.setItem('temp', 'data');\nconst val = sessionStorage.getItem('temp');\n// Данные исчезнут при закрытии вкладки"
+        },
+        {
+          "term": "cookie",
+          "english": "cookie",
+          "russian": "Небольшие данные хранящиеся в браузере и отправляемые на сервер. Имеют срок действия и ограничения по размеру (4 КБ). Используются для сессий и трекинга.",
+          "example": "document.cookie = 'name=value; max-age=3600';\nconsole.log(document.cookie); // все куки\n// Для работы с куками удобнее библиотеки"
+        },
+        {
+          "term": "alert()",
+          "english": "alert() method",
+          "russian": "Метод показывающий диалоговое окно с сообщением. Блокирует выполнение кода пока пользователь не нажмёт OK. Не рекомендуется для продакшена (плохой UX).",
+          "example": "alert('Hello World!');\n// Выполнение остановится пока пользователь\n// не нажмёт кнопку OK"
+        },
+        {
+          "term": "confirm()",
+          "english": "confirm() method",
+          "russian": "Метод показывающий окно с подтверждением (OK/Отмена). Возвращает true если нажат OK, false если Отмена. Используется для подтверждения действий.",
+          "example": "if (confirm('Вы уверены?')) {\n  // Пользователь нажал OK\n} else {\n  // Пользователь нажал Отмена\n}"
+        },
+        {
+          "term": "prompt()",
+          "english": "prompt() method",
+          "russian": "Метод показывающий окно с вводом текста. Возвращает введённое значение или null если отменено. Устаревший способ, лучше использовать свои модальные окна.",
+          "example": "const name = prompt('Введите имя:', 'Гость');\nif (name !== null) {\n  console.log('Привет, ' + name);\n}"
+        },
+        {
+          "term": "setTimeout()",
+          "english": "setTimeout() method",
+          "russian": "Метод выполняющий функцию через заданное время в миллисекундах. Возвращает ID таймера для отмены. Выполняется один раз. Основа для отложенных действий.",
+          "example": "const id = setTimeout(() => {\n  console.log('Через 1 секунду');\n}, 1000);\n\n// Отмена:\nclearTimeout(id);"
+        },
+        {
+          "term": "setInterval()",
+          "english": "setInterval() method",
+          "russian": "Метод выполняющий функцию периодически через заданный интервал. Возвращает ID для отмены. Выполняется многократно пока не отменён. Опасен утечками памяти.",
+          "example": "const id = setInterval(() => {\n  console.log('Каждую секунду');\n}, 1000);\n\n// Отмена через 5 секунд:\nsetTimeout(() => clearInterval(id), 5000);"
+        },
+        {
+          "term": "clearTimeout()",
+          "english": "clearTimeout()",
+          "russian": "Метод отменяющий таймер созданный через setTimeout(). Принимает ID таймера. Важно вызывать для предотвращения выполнения отменённых действий.",
+          "example": "const id = setTimeout(() => {\n  console.log('Не выполнится');\n}, 1000);\nclearTimeout(id); // отмена"
+        },
+        {
+          "term": "clearInterval()",
+          "english": "clearInterval()",
+          "russian": "Метод отменяющий интервал созданный через setInterval(). Принимает ID интервала. Критически важен для очистки и предотвращения утечек памяти.",
+          "example": "const id = setInterval(() => {\n  console.log('Тикает...');\n}, 1000);\n\n// Остановить через 5 секунд:\nsetTimeout(() => clearInterval(id), 5000);"
+        },
+        {
+          "term": "requestAnimationFrame()",
+          "english": "requestAnimationFrame()",
+          "russian": "Метод для оптимизированной анимации. Синхронизируется с частотой обновления экрана (обычно 60 FPS). Эффективнее setTimeout для анимаций. Автоматически приостанавливается в неактивных вкладках.",
+          "example": "function animate() {\n  // анимация\n  requestAnimationFrame(animate);\n}\nrequestAnimationFrame(animate);"
+        }
+      ]
+    },
+    {
+      "id": "day22_modules",
+      "title": "Неделя 22: Модули",
+      "cards": [
+        {
+          "term": "module",
+          "english": "module",
+          "russian": "Модуль — отдельный файл с кодом который можно импортировать в другие файлы. Позволяет разделять код на логические части. Каждый модуль имеет свою область видимости.",
+          "example": "// module.js\nexport const x = 5;\nexport function foo() {}\n\n// main.js\nimport { x, foo } from './module.js';"
+        },
+        {
+          "term": "export",
+          "english": "export keyword",
+          "russian": "Ключевое слово для экспорта переменных, функций или классов из модуля. Бывает именованный (export const) и по умолчанию (export default). Делает код доступным для других модулей.",
+          "example": "// Именованный экспорт:\nexport const PI = 3.14;\nexport function add(a, b) { return a + b; }\n\n// Экспорт по умолчанию:\nexport default class User {}"
+        },
+        {
+          "term": "import",
+          "english": "import keyword",
+          "russian": "Ключевое слово для импорта экспортированных значений из других модулей. Поддерживает именованный импорт, импорт по умолчанию и импорт всего модуля. Должен быть в начале файла.",
+          "example": "// Именованный импорт:\nimport { add, PI } from './math.js';\n\n// Импорт по умолчанию:\nimport User from './User.js';\n\n// Весь модуль:\nimport * as Math from './math.js';"
+        },
+        {
+          "term": "default export",
+          "english": "default export",
+          "russian": "Экспорт по умолчанию — один основной экспорт из модуля. При импорте можно дать любое имя. Модуль может иметь только один default export. Удобно для основных классов/функций.",
+          "example": "// module.js\nexport default function main() {}\n\n// import.js\nimport anything from './module.js'; // любое имя"
+        },
+        {
+          "term": "named export",
+          "english": "named export",
+          "russian": "Именованный экспорт — экспорт с конкретными именами. Можно экспортировать множество именованных значений. При импорте нужно использовать те же имена или переименовывать.",
+          "example": "// module.js\nexport const a = 1;\nexport const b = 2;\n\n// import.js\nimport { a, b } from './module.js';\nimport { a as x } from './module.js'; // переименование"
+        },
+        {
+          "term": "import * as",
+          "english": "import all",
+          "russian": "Импорт всего модуля под одним псевдонимом (namespace). Все экспорты становятся свойствами этого объекта. Удобно когда нужно много значений из модуля.",
+          "example": "import * as Utils from './utils.js';\n\nUtils.formatDate();\nUtils.validateEmail();\nUtils.capitalize();"
+        },
+        {
+          "term": "dynamic import()",
+          "english": "dynamic import()",
+          "russian": "Асинхронный импорт модулей через функцию import(). Возвращает промис. Позволяет загружать модули по требованию (lazy loading). Работает в любом месте кода.",
+          "example": "// Динамический импорт:\nimport('./module.js').then(mod => {\n  mod.function();\n});\n\n// С async/await:\nconst mod = await import('./module.js');"
+        },
+        {
+          "term": "ES modules",
+          "english": "ES modules",
+          "russian": "Модули стандарта ES6 — современный стандарт модулей в JavaScript. Используют import/export. Поддерживаются браузерами с type=\"module\". Статическая структура (импорты в начале).",
+          "example": "<script type=\"module\" src=\"app.js\"></script>\n\n// В app.js:\nimport { x } from './module.js';\nexport const y = 10;"
+        },
+        {
+          "term": "CommonJS",
+          "english": "CommonJS",
+          "russian": "Система модулей Node.js. Использует require() для импорта и module.exports для экспорта. Синхронная загрузка модулей. Стандарт для серверного JavaScript.",
+          "example": "// Node.js:\nconst fs = require('fs');\nconst path = require('path');\n\nmodule.exports = { foo: 'bar' };\n// или:\nexports.foo = 'bar';"
+        },
+        {
+          "term": "AMD",
+          "english": "Asynchronous Module Definition",
+          "russian": "Асинхронное определение модулей — устаревший стандарт для браузера. Использует define() и require(). Позволял загружать модули асинхронно до появления ES modules.",
+          "example": "// Устаревший формат:\ndefine(['dep1', 'dep2'], function(dep1, dep2) {\n  return {\n    init: function() {}\n  };\n});"
+        },
+        {
+          "term": "module bundler",
+          "english": "module bundler",
+          "russian": "Сборщик модулей — инструмент объединяющий множество модулей в один или несколько файлов. Решает зависимости, трансформирует код. Примеры: Webpack, Rollup, Vite, Parcel.",
+          "example": "// Webpack собирает все импорты:\n// src/index.js + src/utils.js + src/components.js\n// ↓\n// dist/bundle.js (один файл для браузера)"
+        }
+      ]
+    },
+    {
+      "id": "day23_json_fetch",
+      "title": "Неделя 23: JSON, AJAX, Fetch",
+      "cards": [
+        {
+          "term": "JSON",
+          "english": "JavaScript Object Notation",
+          "russian": "Формат обмена данными основанный на синтаксисе JavaScript объектов. Текстовый формат легко читаемый человеком и машиной. Стандарт для API и хранения данных.",
+          "example": "{\n  \"name\": \"John\",\n  \"age\": 30,\n  \"active\": true\n}\n// Ключи всегда в двойных кавычках"
+        },
+        {
+          "term": "JSON.stringify()",
+          "english": "JSON.stringify()",
+          "russian": "Метод преобразующий JavaScript объект в JSON-строку. Полезно для отправки данных на сервер или сохранения в localStorage. Невозможно сериализовать функции и undefined.",
+          "example": "const obj = { name: 'John', age: 30 };\nconst json = JSON.stringify(obj);\nconsole.log(json); // '{\"name\":\"John\",\"age\":30}'"
+        },
+        {
+          "term": "JSON.parse()",
+          "english": "JSON.parse()",
+          "russian": "Метод преобразующий JSON-строку обратно в JavaScript объект. Используется для получения данных от сервера. Выбрасывает ошибку если строка невалидна.",
+          "example": "const json = '{\"name\":\"John\",\"age\":30}';\nconst obj = JSON.parse(json);\nconsole.log(obj.name); // 'John'\n\n// С обработкой ошибки:\ntry {\n  JSON.parse('invalid');\n} catch (e) { console.error(e); }"
+        },
+        {
+          "term": "AJAX",
+          "english": "Asynchronous JavaScript and XML",
+          "russian": "Технология асинхронного обмена данными с сервером без перезагрузки страницы. Исторически использовала XML, сейчас чаще JSON. Основа современных веб-приложений.",
+          "example": "// Старый способ через XMLHttpRequest:\nconst xhr = new XMLHttpRequest();\nxhr.open('GET', '/api/data');\nxhr.send();"
+        },
+        {
+          "term": "XMLHttpRequest",
+          "english": "XMLHttpRequest object",
+          "russian": "Устаревший объект для AJAX-запросов. Имеет сложный API с колбэками. Поддерживается во всех браузерах включая старые. Сейчас рекомендуется использовать Fetch API.",
+          "example": "const xhr = new XMLHttpRequest();\nxhr.open('GET', '/api/users');\nxhr.onload = () => console.log(xhr.response);\nxhr.send();"
+        },
+        {
+          "term": "Fetch API",
+          "english": "Fetch API",
+          "russian": "Современный интерфейс для HTTP-запросов основанный на промисах. Проще и чище чем XMLHttpRequest. Поддерживает async/await. Стандарт для новых проектов.",
+          "example": "fetch('/api/users')\n  .then(response => response.json())\n  .then(data => console.log(data))\n  .catch(error => console.error(error));"
+        },
+        {
+          "term": "fetch()",
+          "english": "fetch() function",
+          "russian": "Функция выполняющая HTTP-запрос и возвращающая промис. Первый аргумент — URL, второй — опции (метод, заголовки, тело). Требует отдельного вызова .json() для парсинга.",
+          "example": "// GET запрос:\nfetch('/api/data')\n  .then(res => res.json());\n\n// POST запрос:\nfetch('/api/data', {\n  method: 'POST',\n  body: JSON.stringify({ name: 'John' })\n});"
+        },
+        {
+          "term": "Response",
+          "english": "Response object",
+          "russian": "Объект ответа от fetch(). Содержит статус, заголовки, тело ответа. Имеет методы для чтения тела: json(), text(), blob(). Нужно проверять ok перед чтением.",
+          "example": "fetch('/api').then(response => {\n  console.log(response.status); // 200\n  console.log(response.ok); // true/false\n  return response.json(); // парсим тело\n});"
+        },
+        {
+          "term": "Request",
+          "english": "Request object",
+          "russian": "Объект представляющий HTTP-запрос. Можно создавать явно для повторного использования или кастомизации. Используется внутри fetch() автоматически.",
+          "example": "const request = new Request('/api', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' }\n});\nfetch(request);"
+        },
+        {
+          "term": "Headers",
+          "english": "Headers object",
+          "russian": "Объект для работы с HTTP-заголовками запроса и ответа. Позволяет добавлять, получать, удалять заголовки. Автоматически создаётся в fetch().",
+          "example": "const headers = new Headers();\nheaders.append('Content-Type', 'application/json');\nheaders.append('Authorization', 'Bearer token');\n\nfetch('/api', { headers });"
+        },
+        {
+          "term": "CORS",
+          "english": "Cross-Origin Resource Sharing",
+          "russian": "Механизм безопасности разрешающий запросы с других доменов. Сервер должен явно разрешить CORS заголовками. Без CORS браузер блокирует междоменные запросы.",
+          "example": "// Сервер должен отправить:\n// Access-Control-Allow-Origin: *\n// или конкретный домен:\n// Access-Control-Allow-Origin: https://mysite.com"
+        },
+        {
+          "term": "REST API",
+          "english": "REST API",
+          "russian": "Архитектурный стиль для веб-API использующий HTTP-методы. GET (чтение), POST (создание), PUT (обновление), DELETE (удаление). Данные обычно в формате JSON.",
+          "example": "GET    /users      // получить всех\nPOST   /users      // создать\nGET    /users/1    // получить одного\nPUT    /users/1    // обновить\nDELETE /users/1    // удалить"
+        }
+      ]
+    }
+  ]
+}

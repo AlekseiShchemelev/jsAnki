@@ -1,0 +1,72 @@
+{
+  "id": "performance",
+  "name": "Performance Optimization",
+  "topics": [
+    {
+      "id": "perf_js",
+      "title": "Оптимизация JavaScript",
+      "cards": [
+        {
+          "term": "Debouncing vs Throttling",
+          "english": "Debouncing vs Throttling",
+          "russian": "Debounce: гарантирует, что функция выполнится только после того, как прошло N мс с момента последнего вызова. Используется для: поиска при вводе, ресайза окна, автосохранения. Throttle: гарантирует выполнение не чаще чем раз в N мс. Используется для: скролла, mousemove, drag. Оба паттерна предотвращают 'flood' событий и уменьшают нагрузку на CPU.",
+          "example": "// Debounce: ждём паузу в 300ms после последнего ввода\nfunction debounce(fn, delay) {\n  let timeoutId;\n  return function(...args) {\n    clearTimeout(timeoutId);\n    timeoutId = setTimeout(() => fn.apply(this, args), delay);\n  };\n}\n\nsearchInput.addEventListener('input', debounce((e) => {\n  api.search(e.target.value); // вызовется только после остановки печати\n}, 300));\n\n// Throttle: выполняем не чаще раза в 100ms\nfunction throttle(fn, limit) {\n  let inThrottle;\n  return function(...args) {\n    if (!inThrottle) {\n      fn.apply(this, args);\n      inThrottle = true;\n      setTimeout(() => inThrottle = false, limit);\n    }\n  };\n}\n\nwindow.addEventListener('scroll', throttle(() => {\n  checkInfiniteScroll(); // не чаще 100ms\n}, 100));\n\n// Modern: requestAnimationFrame для throttle\nfunction rafThrottle(fn) {\n  let ticking = false;\n  return (...args) => {\n    if (!ticking) {\n      window.requestAnimationFrame(() => {\n        fn(...args);\n        ticking = false;\n      });\n      ticking = true;\n    }\n  };\n}"
+        },
+        {
+          "term": "Web Workers",
+          "english": "Web Workers",
+          "russian": "Web Workers позволяют выполнять JavaScript в фоновом потоке, не блокируя главный поток (UI). Нет доступа к DOM, window, document. Общение через postMessage. Использование: тяжелые вычисления, сортировка больших массивов, обработка изображений, парсинг JSON, Machine Learning inference. Service Workers — отдельная концепция (для оффлайна/кэширования).",
+          "example": "// Создание Worker\n// worker.js\nself.addEventListener('message', (e) => {\n  const data = e.data;\n  const result = heavyCalculation(data);\n  self.postMessage(result);\n});\n\n// main.js\nconst worker = new Worker('worker.js');\n\nworker.postMessage(largeArray);\n\nworker.onmessage = (e) => {\n  console.log('Result:', e.data);\n  // Обновляем UI, worker не блокировал его!\n};\n\n// Worker с ошибкой\nworker.onerror = (err) => {\n  console.error('Worker error:', err);\n};\n\n// Завершение worker\nworker.terminate();\n\n// SharedWorker (shared между вкладками) - редко нужен\n\n// Modern: OffscreenCanvas для рендеринга в worker\nconst offscreen = canvas.transferControlToOffscreen();\nworker.postMessage({ canvas: offscreen }, [offscreen]);"
+        },
+        {
+          "term": "Lazy Loading",
+          "english": "Lazy Loading",
+          "russian": "Ленивая загрузка — отложенная загрузка ресурсов до момента необходимости. Картинки: loading='lazy' (нативно) или Intersection Observer. Код: dynamic imports (import()). Данные: pagination, virtual scrolling. Преимущества: уменьшение Initial Page Load, экономия трафика пользователя, улучшение Time to Interactive (TTI).",
+          "example": "// Lazy loading изображений (Native)\n<img src=\"placeholder.jpg\" loading=\"lazy\" data-src=\"real-image.jpg\" alt=\"...\" />\n\n// Intersection Observer (более контролируемо)\nconst imageObserver = new IntersectionObserver((entries, observer) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      const img = entry.target;\n      img.src = img.dataset.src;\n      img.classList.add('loaded');\n      observer.unobserve(img);\n    }\n  });\n});\n\ndocument.querySelectorAll('img[data-src]').forEach(img => {\n  imageObserver.observe(img);\n});\n\n// Lazy loading компонентов (React/Vue)\nconst HeavyChart = lazy(() => import('./HeavyChart'));\n\nfunction Dashboard() {\n  return (\n    <Suspense fallback={<Spinner />}>\n      <HeavyChart />\n    </Suspense>\n  );\n}\n\n// Infinite scroll (ленивая подгрузка данных)\nconst observer = new IntersectionObserver(([entry]) => {\n  if (entry.isIntersecting) {\n    loadMoreData(); // подгрузка следующей страницы\n  }\n});\nobserver.observe(sentinelElement);"
+        },
+        {
+          "term": "Virtual Scrolling",
+          "english": "Virtual Scrolling",
+          "russian": "Виртуальный скроллинг (windowing) — рендеринг только видимых элементов списка + буфер. Для списков с тысячами/миллионами элементов. DOM содержит только ~10-20 видимых items вместо 10000. Библиотеки: react-window, react-virtualized, vue-virtual-scroller, CDK Virtual Scroll (Angular). Критично для performance с большими таблицами, чатами, логами.",
+          "example": "// Концепция: рендерим только видимое\n// Container height: 500px\n// Item height: 50px\n// Total items: 10000\n// Visible items: 10 + buffer\n\n// React с react-window\nimport { FixedSizeList } from 'react-window';\n\nfunction VirtualList({ items }) {\n  const Row = ({ index, style }) => (\n    <div style={style}>\n      {items[index].name}\n    </div>\n  );\n  \n  return (\n    <FixedSizeList\n      height={500}\n      itemCount={items.length}\n      itemSize={50}\n      width=\"100%\"\n    >\n      {Row}\n    </FixedSizeList>\n  );\n}\n// DOM содержит только ~10 div'ов вместо 10000!\n\n// Ручная реализация:\n// 1. Слушаем scroll\n// 2. Вычисляем startIndex = scrollTop / itemHeight\n// 3. Вычисляем endIndex = startIndex + visibleCount\n// 4. Рендерим items[startIndex..endIndex]\n// 5. Добавляем padding-top и padding-bottom для общей высоты"
+        },
+        {
+          "term": "Memoization React",
+          "english": "React.memo, useMemo, useCallback",
+          "russian": "React оптимизации рендеринга. React.memo — мемоизация компонента (shallow compare props). useMemo — мемоизация вычислений. useCallback — мемоизация функций (важно для передачи в дочерние компоненты). Не злоупотреблять: сравнение тоже имеет cost. Профилировать перед оптимизацией. React DevTools Profiler.",
+          "example": "// React.memo - предотвращает рендер если props не изменились\nconst ExpensiveComponent = React.memo(function MyComponent({ data, onUpdate }) {\n  // Тяжёлый рендер\n  return <div>{heavyCalculation(data)}</div>;\n});\n\n// useMemo - кэшируем результат вычислений\nfunction Dashboard({ items, filter }) {\n  const filteredItems = useMemo(() => {\n    return items.filter(filter); // O(n) операция\n  }, [items, filter]); // только если items/filter изменились\n  \n  return <List items={filteredItems} />;\n}\n\n// useCallback - кэшируем функцию\nfunction Parent() {\n  const [count, setCount] = useState(0);\n  \n  // ❌ Без useCallback: новая функция каждый рендер\n  const handleClick = () => console.log('clicked');\n  \n  // ✅ С useCallback: та же ссылка\n  const handleClick = useCallback(() => {\n    console.log('clicked');\n  }, []); // зависимости\n  \n  return <Child onClick={handleClick} />; // Child не будет лишний раз рендериться\n}\n\n// Profiler для измерения\n<Profiler id=\"App\" onRender={onRenderCallback}>\n  <App />\n</Profiler>"
+        },
+        {
+          "term": "Code Splitting",
+          "english": "Code Splitting",
+          "russian": "Разделение кода — загрузка только необходимого JavaScript для текущей страницы/функциональности. Уменьшает Initial Bundle Size, ускоряет Time to Interactive. Методы: Route-based splitting (разделение по роутам), Component-based splitting (React.lazy), Vendor splitting (отдельно node_modules). Webpack/Vite/Rollup поддерживают из коробки. Prefetch/Prefetch для предзагрузки следующих чанков.",
+          "example": "// Route-based code splitting (React Router)\nimport { lazy, Suspense } from 'react';\nimport { BrowserRouter, Routes, Route } from 'react-router-dom';\n\n// Каждый роут = отдельный чанк\nconst Home = lazy(() => import('./pages/Home'));\nconst Dashboard = lazy(() => import('./pages/Dashboard'));\nconst Admin = lazy(() => import('./pages/Admin')); // тяжёлый\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <Suspense fallback={<Loading />}>\n        <Routes>\n          <Route path=\"/\" element={<Home />} />\n          <Route path=\"/dashboard\" element={<Dashboard />} />\n          <Route path=\"/admin\" element={<Admin />} />\n        </Routes>\n      </Suspense>\n    </BrowserRouter>\n  );\n}\n\n// Webpack magic comments для named chunks\nconst Admin = lazy(() => import(\n  /* webpackChunkName: \"admin\" */ \n  /* webpackPrefetch: true */\n  './pages/Admin'\n));\n\n// Prefetch после загрузки страницы\n// <link rel=\"prefetch\" href=\"/admin.chunk.js\">"
+        }
+      ]
+    },
+    {
+      "id": "perf_browser",
+      "title": "Browser Performance",
+      "cards": [
+        {
+          "term": "Critical Rendering Path",
+          "english": "Critical Rendering Path",
+          "russian": "Критический путь рендеринга — последовательность шагов браузера для отображения страницы: DOM → CSSOM → Render Tree → Layout → Paint → Composite. Оптимизация: inline critical CSS, preload важных ресурсов, defer/async для скриптов, минимизация repaints/reflows. Метрики: FP (First Paint), FCP (First Contentful Paint), LCP (Largest Contentful Paint), TTI (Time to Interactive).",
+          "example": "// Оптимизация CRP:\n\n// 1. Inline Critical CSS (стили для above-the-fold)\n<style>\n  /* Критические стили для первого экрана */\n  .header, .hero { ... }\n</style>\n\n// 2. Предзагрузка важных ресурсов\n<link rel=\"preload\" href=\"/fonts/main.woff2\" as=\"font\" crossorigin>\n<link rel=\"preload\" href=\"/hero-image.webp\" as=\"image\">\n\n// 3. Defer/Async для скриптов\n<script defer src=\"/app.js\"></script> <!-- загрузится после HTML -->\n<script async src=\"/analytics.js\"></script> <!-- не блокирует -->\n\n// 4. Prefetch следующей страницы\n<link rel=\"prefetch\" href=\"/about\" />\n\n// Метрики (Core Web Vitals):\n// LCP < 2.5s (Largest Contentful Paint)\n// FID < 100ms (First Input Delay)\n// CLS < 0.1 (Cumulative Layout Shift)"
+        },
+        {
+          "term": "Reflow и Repaint",
+          "english": "Reflow and Repaint",
+          "russian": "Reflow (Layout) — пересчёт геометрии элементов (position, size). Repaint — перерисовка пикселей (color, visibility). Reflow дороже: затрагивает дочерние и соседние элементы. Composite — самый дешёвый слой (transform, opacity). Оптимизация: используйте transform/opacity для анимаций, batch DOM изменения (DocumentFragment), avoid forced synchronous layout (чтение свойств после изменений).",
+          "example": "// ❌ ПЛОХО: Forced Synchronous Layout\nfunction updatePositions() {\n  const boxes = document.querySelectorAll('.box');\n  boxes.forEach(box => {\n    const width = box.offsetWidth; // Читаем (Reflow!)\n    box.style.width = width * 2 + 'px'; // Пишем (Reflow!)\n    // Каждая итерация заставляет браузер пересчитывать!\n  });\n}\n\n// ✅ ХОРОШО: Batch операции\nfunction updatePositions() {\n  const boxes = document.querySelectorAll('.box');\n  \n  // Сначала читаем всё\n  const widths = Array.from(boxes).map(box => box.offsetWidth);\n  \n  // Потом пишем всё\n  boxes.forEach((box, i) => {\n    box.style.width = widths[i] * 2 + 'px';\n  });\n}\n\n// ✅ Анимации только с transform/opacity (Composite layer)\n.box {\n  /* GPU-accelerated */\n  transform: translateX(100px);\n  opacity: 0.5;\n  /* Не используйте для анимаций: */\n  /* left, top, width, height, margin, padding */\n}\n\n// will-change для сложных анимаций\n.animated {\n  will-change: transform;\n}"
+        },
+        {
+          "term": "Image Optimization",
+          "english": "Image Optimization",
+          "russian": "Оптимизация изображений — 80% размера страницы обычно это картинки. Форматы: WebP (лучшее сжатие), AVIF (ещё лучше), SVG для иконок/иллюстраций. Responsive images (srcset) для разных размеров экрана. Lazy loading. Compression (Imagemin, Squoosh). CDN для доставки. picture element для fallback форматов.",
+          "example": "// Responsive images\n<img\n  srcset=\"\n    image-400.jpg 400w,\n    image-800.jpg 800w,\n    image-1200.jpg 1200w\n  \"\n  sizes=\"(max-width: 600px) 400px, (max-width: 1000px) 800px, 1200px\"\n  src=\"image-800.jpg\"\n  alt=\"Description\"\n  loading=\"lazy\"\n/>\n\n// Modern formats с fallback\n<picture>\n  <source srcset=\"image.avif\" type=\"image/avif\">\n  <source srcset=\"image.webp\" type=\"image/webp\">\n  <img src=\"image.jpg\" alt=\"Description\">\n</picture>\n\n// SVG для иконок (inline для критических)\n<svg width=\"24\" height=\"24\" aria-hidden=\"true\">\n  <use href=\"#icon-name\" />\n</svg>\n\n// Image CDN (Cloudinary, Imgix)\n<img src=\"https://cdn.com/image.jpg?w=800&h=600&fit=crop&q=80\" />\n\n// LCP optimization: preload LCP image\n<link rel=\"preload\" as=\"image\" href=\"/hero.webp\" fetchpriority=\"high\">"
+        }
+      ]
+    }
+  ]
+}

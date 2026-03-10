@@ -1,0 +1,78 @@
+{
+  "id": "system_design",
+  "name": "System Design Основы",
+  "topics": [
+    {
+      "id": "sd_basics",
+      "title": "Основы проектирования систем",
+      "cards": [
+        {
+          "term": "Horizontal vs Vertical Scaling",
+          "english": "Horizontal vs Vertical Scaling",
+          "russian": "Масштабирование: горизонтальное (добавление серверов) vs вертикальное (улучшение железа). Вертикальное: проще, но есть предел (один сервер не бесконечно мощный). Горизонтальное: сложнее (требует балансировки, консистентности), но лучше для High Availability и отказоустойчивости. Современные системы используют горизонтальное.",
+          "example": "// Вертикальное масштабирование\n// Было: 4 CPU, 8GB RAM\n// Стало: 32 CPU, 128GB RAM\n// Предел: физические ограничения сервера\n// Стоимость: нелинейная (супер-сервер дорогой)\n\n// Горизонтальное масштабирование\n// 1 сервер → 10 серверов\n// Load Balancer распределяет запросы\n// Преимущества:\n// - Нет единой точки отказа\n// - Можно добавлять/убирать сервера динамически\n// - Используем commodity hardware\n\n// Auto-scaling (AWS/Azure/GCP)\n// Добавляем инстансы при росте нагрузки\n// Убираем при снижении (экономия)"
+        },
+        {
+          "term": "Load Balancer",
+          "english": "Load Balancer",
+          "russian": "Балансировщик нагрузки распределяет входящие запросы между несколькими серверами. Алгоритмы: Round Robin (по кругу), Least Connections (наименее загруженный), IP Hash (привязка к IP), Weighted (веса серверов). Также проверяет health check (здоровье серверов) и не отправляет запросы на упавшие. Может быть L4 (транспортный уровень, TCP/UDP) или L7 (прикладной уровень, HTTP).",
+          "example": "// Nginx как Load Balancer\nupstream backend {\n  server backend1.example.com weight=5;\n  server backend2.example.com;\n  server backend3.example.com backup;\n  \n  least_conn; // алгоритм: наименее соединений\n}\n\nserver {\n  listen 80;\n  location / {\n    proxy_pass http://backend;\n    \n    // Health checks\n    health_check interval=5s fails=3 passes=2;\n  }\n}\n\n// AWS ALB (Application Load Balancer)\n// - L7 (HTTP/HTTPS)\n// - Path-based routing (/api → api-servers, /static → cdn)\n// - SSL termination\n\n// AWS NLB (Network Load Balancer)  \n// - L4 (TCP/UDP)\n// - Очень высокая производительность\n// - Static IP addresses"
+        },
+        {
+          "term": "CAP Theorem",
+          "english": "CAP Theorem",
+          "russian": "Теорема CAP: распределённая система может гарантировать только 2 из 3 свойств. Consistency (консистентность): все чтения возвращают последнюю запись. Availability (доступность): каждый запрос получает ответ (без гарантии актуальности). Partition Tolerance (устойчивость к разделению): система работает при сетевых сбоях между узлами. Сетевые сбои неизбежны, поэтому выбор между CP и AP.",
+          "example": "// CAP Theorem в действии:\n\n// CP система (Consistency + Partition tolerance)\n// - MongoDB с write concern majority\n// - PostgreSQL синхронная репликация\n// - При разделении: отказываем в записи до восстановления\n// Пример: банковская система - лучше недоступность, чем потеря денег\n\n// AP система (Availability + Partition tolerance)\n// - Cassandra, DynamoDB\n// - DNS\n// - При разделении: принимаем записи, разрешаем конфликты позже\n// Пример: соцсеть - лучше показать старый пост, чем ошибку\n\n// CA система (Consistency + Availability)\n// - Невозможна в распределённой системе!\n// - Только односерверные (не partition tolerant)"
+        },
+        {
+          "term": "Caching Strategies",
+          "english": "Caching Strategies",
+          "russian": "Стратегии кэширования: Cache-Aside (приложение управляет кэшем, само читает/пишет), Read-Through (кэш читает из БД при промахе), Write-Through (пишем в кэш и БД синхронно), Write-Behind/Write-Back (пишем в кэш, асинхронно в БД). Cache invalidation: TTL (время жизни), LRU (вытеснение давно не используемых), явное удаление. Проблемы: Cache Stampede (dog-piling), Cache Penetration (запросы на несуществующие ключи), Hot Key (один ключ на всех).",
+          "example": "// Cache-Aside (самый популярный)\nasync function getUser(id) {\n  // 1. Пробуем кэш\n  let user = await redis.get(`user:${id}`);\n  if (user) return JSON.parse(user);\n  \n  // 2. Промах - читаем из БД\n  user = await db.users.findById(id);\n  \n  // 3. Пишем в кэш (TTL 1 час)\n  await redis.setex(`user:${id}`, 3600, JSON.stringify(user));\n  return user;\n}\n\n// Write-Through\nasync function updateUser(id, data) {\n  await db.users.update(id, data);\n  await redis.set(`user:${id}`, JSON.stringify(data));\n}\n\n// Cache Stampede защита (Per-Cache-Item Lock)\nconst user = await cache.getOrSet(`user:${id}`, () => {\n  return db.users.findById(id); // выполнится только 1 раз\n}, { lockTimeout: 5000 });"
+        },
+        {
+          "term": "CDN",
+          "english": "Content Delivery Network",
+          "russian": "CDN — сеть серверов, доставляющих контент пользователям с географически ближайшего сервера (edge server). Уменьшает latency, разгружает origin server, защищает от DDoS. Кэширует: статику (JS/CSS/картинки), видео, API responses (если настроено). Популярные: Cloudflare, AWS CloudFront, Fastly. Push vs Pull CDN. Edge computing: выполнение кода на edge-серверах (Cloudflare Workers).",
+          "example": "// CDN в архитектуре:\n// User (Moscow) → Cloudflare Edge (Moscow) [10ms]\n//                          ↓ cache miss\n//                   Origin Server (Frankfurt) [150ms]\n\n// Последующие запросы: 10ms вместо 150ms!\n\n// Cloudflare Workers (Edge Computing)\naddEventListener('fetch', event => {\n  event.respondWith(handleRequest(event.request));\n});\n\nasync function handleRequest(request) {\n  // Логика на edge-сервере, ближайшем к пользователю\n  const country = request.headers.get('CF-IPCountry');\n  \n  if (country === 'RU') {\n    return fetch('https://ru-origin.com' + request.url);\n  }\n  return fetch(request);\n}\n\n// Cache-Control заголовки\nCache-Control: public, max-age=31536000 // 1 год для статики\nCache-Control: private, no-cache // не кэшировать в CDN"
+        },
+        {
+          "term": "Database Replication",
+          "english": "Database Replication",
+          "russian": "Репликация баз данных: Master-Slave (один master для записи, много slave для чтения), Master-Master (запись в оба, сложно), Multi-Leader (региональные лидеры). Synchronous (ждём подтверждения от реплики, медленно, консистентно) vs Asynchronous (быстро, но lag/replication delay). Read replicas для масштабирования чтения. Hot standby для failover.",
+          "example": "// Master-Slave архитектура\n// Write → Master (PostgreSQL)\n// Read → Slaves (3 реплики)\n\n// PostgreSQL настройка\n// postgresql.conf на Master:\nwal_level = replica\nmax_wal_senders = 3\n\n// Connection string в приложении\nconst writePool = new Pool({ host: 'master.db', ... });\nconst readPool = new Pool({ host: 'replica.db', ... });\n\n// Routing:\nasync function query(sql, params, type = 'read') {\n  if (type === 'write') {\n    return writePool.query(sql, params);\n  }\n  return readPool.query(sql, params);\n}\n\n// Replication Lag!\n// После записи в Master данные могут появиться в Slave с задержкой\n// Решение: 'sticky sessions' или читать из Master после записи"
+        },
+        {
+          "term": "Database Sharding",
+          "english": "Database Sharding",
+          "russian": "Шардирование (партиционирование) — разделение данных на несколько баз (шардов) по ключу. Горизонтальное партиционирование: каждый шард содержит подмножество строк (users 1-1000000 → shard1, 1000001-2000000 → shard2). Алгоритмы шардирования: Hash (user_id % N), Range (по диапазонам), Directory-based (lookup table). Проблемы: resharding (добавление шардов), cross-shard joins, hot spots (популярный шард).",
+          "example": "// Hash-based шардирование\nfunction getShard(userId) {\n  const shardCount = 4;\n  return `shard_${userId % shardCount}`;\n}\n\ngetShard(100); // shard_0\ngetShard(101); // shard_1\n\n// Directory-based (гибче)\n// shard_map таблица:\n// user_id_range | shard\n// 0 - 999999    | shard_1\n// 1000000+      | shard_2\n\n// Миграция шардов (resharding)\n// 4 шарда → 8 шардов:\n// Оффлайн: downtime, но просто\n// Онлайн: двойная запись, постепенный перенос\n\n// Consistent Hashing (для кэшей)\n// При добавлении/удалении нод трогается минимум ключей\n// Используется в Redis Cluster, Cassandra"
+        },
+        {
+          "term": "Microservices vs Monolith",
+          "english": "Microservices vs Monolith",
+          "russian": "Монолит: одно приложение со всеми компонентами. Плюсы: простота разработки/деплоя/отладки, производительность (внутренние вызовы). Минусы: сложность масштабирования частей, технологический lock-in, большая кодовая база. Микросервисы: независимые сервисы со своей БД, общающиеся через API/events. Плюсы: масштабируемость, независимые деплои, разные технологии. Минусы: distributed complexity, network latency, debugging сложнее.",
+          "example": "// Монолит\n// [Frontend] → [Backend API + Auth + Orders + Payments] → [One DB]\n\n// Микросервисы\n// [Frontend] → [API Gateway]\n//                  ↓\n//    [Auth Service] → [Auth DB]\n//    [Orders Service] → [Orders DB]\n//    [Payments Service] → [Payments DB]\n//    [Notifications Service] → [...]\n\n// Взаимодействие:\n// Synchronous (REST/gRPC) - просто, но tight coupling\n// Asynchronous (Message Queue) - loose coupling, eventual consistency\n\n// Service Discovery\n// Consul, Eureka, Kubernetes DNS\n// auth-service.local → 10.0.1.15 (динамически)"
+        },
+        {
+          "term": "Message Queue",
+          "english": "Message Queue",
+          "russian": "Очередь сообщений для асинхронной коммуникации между сервисами. Паттерны: Point-to-Point (один consumer), Publish-Subscribe (много subscribers). Гарантии доставки: At-most-once (можем потерять), At-least-once (можем дублировать), Exactly-once (сложно, медленно). Backpressure handling: когда consumer не справляется. Message persistence: durability. Dead Letter Queue (DLQ) для необработанных сообщений.",
+          "example": "// RabbitMQ (AMQP)\n// Producer → Exchange → Queue → Consumer\n\n// AWS SQS (simple)\nawait sqs.sendMessage({\n  QueueUrl: 'https://sqs.../order-processing',\n  MessageBody: JSON.stringify(order)\n});\n\n// Apache Kafka (high throughput, persistent)\n// Topics с partitions для параллелизма\n// Retention policy: хранение N дней\n// Consumer groups: группа читает партицию\n\n// Use cases:\n// 1. Отправка email (не блокировать HTTP запрос)\n// 2. Обработка заказов\n// 3. Log aggregation\n// 4. Event sourcing\n\n// Idempotency!\n// Consumer должен обрабатывать дубликаты корректно\n// Использовать idempotency key"
+        },
+        {
+          "term": "Rate Limiting Strategies",
+          "english": "Rate Limiting Strategies",
+          "russian": "Стратегии rate limiting для защиты API. Token Bucket: ведро с токенами, пополняется со скоростью R в секунду, максимум B токенов (burst допустим). Leaky Bucket: очередь с постоянной скоростью обработки (плавный выход). Fixed Window: X запросов в интервал (проблема: burst в конце и начале окна). Sliding Window: более плавный. Rate limiting уровней: IP, User ID, API Key, Global.",
+          "example": "// Token Bucket (Redis)\nasync function isAllowed(key, burst, rate) {\n  const now = Date.now();\n  const bucketKey = `ratelimit:${key}`;\n  \n  // Lua script для атомарности\n  const lua = `\n    local bucket = redis.call('HMGET', KEYS[1], 'tokens', 'last_update');\n    local tokens = tonumber(bucket[1]) or ARGV[1];\n    local last_update = tonumber(bucket[2]) or ARGV[2];\n    local now = tonumber(ARGV[2]);\n    \n    local delta = math.max(0, now - last_update);\n    tokens = math.min(ARGV[1], tokens + delta * ARGV[3]);\n    \n    if tokens >= 1 then\n      tokens = tokens - 1;\n      redis.call('HMSET', KEYS[1], 'tokens', tokens, 'last_update', now);\n      redis.call('EXPIRE', KEYS[1], 60);\n      return 1;\n    else\n      redis.call('HSET', KEYS[1], 'last_update', now);\n      return 0;\n    end\n  `;\n  \n  return redis.eval(lua, 1, bucketKey, burst, now, rate);\n}\n\n// Использование: 100 запросов/минуту, burst 10\nconst allowed = await isAllowed(userId, 10, 100/60);"
+        },
+        {
+          "term": "Circuit Breaker",
+          "english": "Circuit Breaker Pattern",
+          "russian": "Паттерн Circuit Breaker (автоматический выключатель) защищает от каскадных сбоев. Состояния: Closed (всё работает, запросы проходят), Open (много ошибок, запросы сразу отклоняются), Half-Open (пробуем восстановление). При пороге ошибок (N из M запросов) переходим в Open. После таймаута пробуем Half-Open. Защищает упавший сервис от наводнения запросами (даёт время восстановиться) и быстро отвечает клиенту (fail fast).",
+          "example": "// Circuit Breaker реализация\nclass CircuitBreaker {\n  constructor(threshold = 5, timeout = 60000) {\n    this.failureCount = 0;\n    this.threshold = threshold;\n    this.timeout = timeout;\n    this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN\n    this.nextAttempt = Date.now();\n  }\n  \n  async call(fn) {\n    if (this.state === 'OPEN') {\n      if (Date.now() < this.nextAttempt) {\n        throw new Error('Circuit breaker is OPEN');\n      }\n      this.state = 'HALF_OPEN';\n    }\n    \n    try {\n      const result = await fn();\n      this.onSuccess();\n      return result;\n    } catch (err) {\n      this.onFailure();\n      throw err;\n    }\n  }\n  \n  onSuccess() {\n    this.failureCount = 0;\n    this.state = 'CLOSED';\n  }\n  \n  onFailure() {\n    this.failureCount++;\n    if (this.failureCount >= this.threshold) {\n      this.state = 'OPEN';\n      this.nextAttempt = Date.now() + this.timeout;\n    }\n  }\n}\n\n// Использование\nconst breaker = new CircuitBreaker(5, 60000);\nconst result = await breaker.call(() => fetchPaymentService());"
+        }
+      ]
+    }
+  ]
+}

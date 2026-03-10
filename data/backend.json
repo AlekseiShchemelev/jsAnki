@@ -1,0 +1,468 @@
+{
+  "id": "backend",
+  "name": "Node.js и Backend",
+  "topics": [
+    {
+      "id": "day36_node_basics",
+      "title": "Неделя 36: Node.js — основы",
+      "cards": [
+        {
+          "term": "Node.js",
+          "english": "Node.js",
+          "russian": "Среда выполнения JavaScript на движке V8 от Google. Позволяет запускать JS вне браузера. Асинхронная, событийно-ориентированная архитектура. Используется для серверов, CLI инструментов, скриптов.",
+          "example": "// Запуск файла:\nnode app.js\n\n// REPL (интерактивная консоль):\nnode\n> 2 + 2\n4"
+        },
+        {
+          "term": "npm",
+          "english": "npm (Node Package Manager)",
+          "russian": "Менеджер пакетов для Node.js. Устанавливается вместе с Node. Позволяет устанавливать, обновлять, публиковать пакеты. Имеет крупнейшую экосистему библиотек. Управляет зависимостями проекта.",
+          "example": "npm init                    // создать package.json\nnpm install express         // установить пакет\nnpm install --save-dev jest // для разработки\nnpm run start               // запустить скрипт\nnpm update                  // обновить пакеты"
+        },
+        {
+          "term": "yarn",
+          "english": "Yarn",
+          "russian": "Альтернативный менеджер пакетов от Facebook. Быстрее npm, имеет lock-файл по умолчанию. Совместим с npm пакетами. Сейчас менее популярен из-за улучшений в npm v7+.",
+          "example": "yarn init                 // создать проект\nyarn add express          // установить\nyarn add --dev jest       // для разработки\nyarn start                // запустить\nyarn upgrade              // обновить"
+        },
+        {
+          "term": "pnpm",
+          "english": "pnpm",
+          "russian": "Быстрый менеджер пакетов экономящий место на диске. Использует жёсткие ссылки вместо копирования. Совместим с npm/yarn. Набирает популярность в больших монорепозиториях.",
+          "example": "pnpm init              // создать проект\npnpm add express       // установить\npnpm add -D jest       // для разработки\npnpm run start         // запустить"
+        },
+        {
+          "term": "package.json",
+          "english": "package.json",
+          "russian": "Файл метаданных проекта. Содержит имя, версию, зависимости, скрипты. Генерируется через npm init. Обязателен для npm/yarn проектов. Определяет как проект собирается и запускается.",
+          "example": "{\n  \"name\": \"my-app\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"start\": \"node app.js\",\n    \"test\": \"jest\"\n  },\n  \"dependencies\": {\n    \"express\": \"^4.18.0\"\n  }\n}"
+        },
+        {
+          "term": "dependencies",
+          "english": "dependencies",
+          "russian": "Зависимости необходимые для работы приложения в продакшене. Устанавливаются через npm install. Включаются в production сборку. Примеры: express, react, lodash.",
+          "example": "// Установка:\nnpm install express\nnpm install --save express\n\n// В package.json:\n\"dependencies\": {\n  \"express\": \"^4.18.0\"\n}"
+        },
+        {
+          "term": "devDependencies",
+          "english": "devDependencies",
+          "russian": "Зависимости только для разработки. Не нужны в продакшене. Устанавливаются с флагом --save-dev. Примеры: jest, eslint, webpack, typescript.",
+          "example": "// Установка:\nnpm install --save-dev jest\nnpm install -D eslint\n\n// В package.json:\n\"devDependencies\": {\n  \"jest\": \"^29.0.0\"\n}"
+        },
+        {
+          "term": "scripts",
+          "english": "npm scripts",
+          "russian": "Команды которые можно запускать через npm run. Определяются в package.json. Упрощают запуск задач: сборка, тесты, линтинг. Могут использовать локальные пакеты.",
+          "example": "\"scripts\": {\n  \"start\": \"node app.js\",\n  \"dev\": \"nodemon app.js\",\n  \"test\": \"jest\",\n  \"build\": \"webpack\",\n  \"lint\": \"eslint src/\"\n}\n\n// Запуск:\nnpm run dev"
+        },
+        {
+          "term": "npx",
+          "english": "npx",
+          "russian": "Утилита для выполнения пакетов без глобальной установки. Поставляется с npm 5.2+. Удобно для одноразовых команд. Автоматически скачивает пакет если нужно.",
+          "example": "npx create-react-app my-app\nnpx eslint .\nnpx prettier --write .\nnpx cowsay hello\n\n// Пакет скачивается,\n// выполняется, не остаётся"
+        },
+        {
+          "term": "global",
+          "english": "global object",
+          "russian": "Глобальный объект Node.js (аналог window в браузере). Содержит глобальные переменные и функции. Не рекомендуется использовать глобальные переменные. В ES-модулях недоступен.",
+          "example": "global.myVar = 'value';\nconsole.log(global.myVar);\n\n// Но лучше использовать модули:\n// export/import вместо global"
+        },
+        {
+          "term": "__dirname",
+          "english": "__dirname",
+          "russian": "Переменная содержащая абсолютный путь к директории текущего модуля. Только в CommonJS. Полезно для работы с файловой системой. В ES-модулях использовать import.meta.url.",
+          "example": "console.log(__dirname);\n// '/Users/name/project/src'\n\nconst path = require('path');\nconst filePath = path.join(__dirname, 'data.txt');"
+        },
+        {
+          "term": "__filename",
+          "english": "__filename",
+          "russian": "Переменная содержащая абсолютный путь к текущему файлу модуля. Только в CommonJS. Полезно для логирования, работы с путями. В ES-модулях использовать import.meta.url.",
+          "example": "console.log(__filename);\n// '/Users/name/project/src/app.js'\n\nconst fileName = path.basename(__filename);\n// 'app.js'"
+        },
+        {
+          "term": "require",
+          "english": "require function",
+          "russian": "Функция для импорта модулей в CommonJS. Синхронная загрузка. Возвращает exports модуля. Стандарт для Node.js до ES-модулей. Сейчас поддерживается для обратной совместимости.",
+          "example": "const fs = require('fs');\nconst express = require('express');\nconst myModule = require('./myModule');\n\n// Деструктуризация:\nconst { readFile } = require('fs');"
+        },
+        {
+          "term": "module.exports",
+          "english": "module.exports",
+          "russian": "Объект который экспортируется из модуля в CommonJS. Можно присвоить объект, функцию, значение. Определяет что будет возвращено при require(). Стандарт экспорта в Node.js.",
+          "example": "// Экспорт одного значения:\nmodule.exports = function() {};\n\n// Экспорт объекта:\nmodule.exports = {\n  foo: 'bar',\n  baz: () => {}\n};"
+        },
+        {
+          "term": "exports",
+          "english": "exports",
+          "russian": "Ссылка на module.exports. Удобен для добавления свойств. Нельзя переназначать (exports = {} не работает). Рекомендуется использовать module.exports для ясности.",
+          "example": "// Правильно:\nexports.foo = 'bar';\nexports.baz = () => {};\n\n// Неправильно:\nexports = {}; // Не работает!"
+        },
+        {
+          "term": "process",
+          "english": "process object",
+          "russian": "Глобальный объект с информацией о текущем процессе Node.js. Содержит env, argv, pid, version. Позволяет управлять процессом. Важный источник информации о среде выполнения.",
+          "example": "console.log(process.pid);      // ID процесса\nconsole.log(process.version);    // версия Node\nconsole.log(process.argv);       // аргументы\nconsole.log(process.env.NODE_ENV); // окружение"
+        },
+        {
+          "term": "process.env",
+          "english": "process.env",
+          "russian": "Объект с переменными окружения. Используется для конфигурации: API ключи, порты, режимы. Не коммитьте секреты в git. Используйте .env файлы с dotenv.",
+          "example": "// Чтение:\nconst port = process.env.PORT || 3000;\nconst apiKey = process.env.API_KEY;\n\n// Установка (в терминале):\nNODE_ENV=production node app.js"
+        },
+        {
+          "term": "process.argv",
+          "english": "process.argv",
+          "russian": "Массив аргументов командной строки. Первый элемент — путь к node, второй — путь к скрипту, далее — аргументы пользователя. Полезно для CLI инструментов.",
+          "example": "node app.js --port 3000 --dev\n\n// process.argv:\n// [0] '/usr/bin/node'\n// [1] '/path/app.js'\n// [2] '--port'\n// [3] '3000'\n// [4] '--dev'"
+        }
+      ]
+    },
+    {
+      "id": "day37_node_modules",
+      "title": "Неделя 37: Node.js — встроенные модули",
+      "cards": [
+        {
+          "term": "fs",
+          "english": "fs (file system)",
+          "russian": "Модуль для работы с файловой системой. Позволяет читать, писать, удалять файлы и директории. Имеет синхронные и асинхронные методы. Асинхронные методы предпочтительнее.",
+          "example": "const fs = require('fs');\n\n// Асинхронно:\nfs.readFile('file.txt', 'utf8', (err, data) => {});\n\n// Синхронно:\nconst data = fs.readFileSync('file.txt', 'utf8');\n\n// Promise API (Node 10+):\nawait fs.promises.readFile('file.txt');"
+        },
+        {
+          "term": "path",
+          "english": "path",
+          "russian": "Модуль для работы с путями файлов. Кроссплатформенный (Windows/Unix). Позволяет соединять, нормализовать, парсить пути. Всегда используйте вместо ручной конкатенации строк.",
+          "example": "const path = require('path');\n\npath.join(__dirname, 'data', 'file.txt');\npath.resolve('relative/path');\npath.basename('/path/file.txt'); // 'file.txt'\npath.extname('file.txt'); // '.txt'\npath.dirname('/path/file.txt'); // '/path'"
+        },
+        {
+          "term": "http",
+          "english": "http",
+          "russian": "Модуль для создания HTTP-сервера и клиента. Низкоуровневый API. Основа для Express и других фреймворков. Позволяет обрабатывать запросы и отправлять ответы.",
+          "example": "const http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200);\n  res.end('Hello World');\n});\n\nserver.listen(3000);"
+        },
+        {
+          "term": "https",
+          "english": "https",
+          "russian": "Модуль для HTTPS соединений. Аналогичен http но с поддержкой SSL/TLS. Требует сертификаты для сервера. Используется для безопасных соединений.",
+          "example": "const https = require('https');\n\n// Сервер:\nhttps.createServer({\n  key: fs.readFileSync('key.pem'),\n  cert: fs.readFileSync('cert.pem')\n}, app).listen(443);\n\n// Клиент:\nhttps.get('https://api.com');"
+        },
+        {
+          "term": "url",
+          "english": "url",
+          "russian": "Модуль для парсинга и форматирования URL. Включает конструктор URL (современный) и устаревший url.parse(). Позволяет работать с компонентами URL отдельно.",
+          "example": "const url = require('url');\n\n// Современный API:\nconst myURL = new URL('https://example.com/path?q=test');\nconsole.log(myURL.hostname); // 'example.com'\nconsole.log(myURL.searchParams.get('q')); // 'test'\n\n// Устаревший:\nurl.parse('https://example.com');"
+        },
+        {
+          "term": "querystring",
+          "english": "querystring",
+          "russian": "Модуль для работы со строкой запроса (query string). Устарел в пользу URLSearchParams. Позволяет парсить и форматировать query параметры. Рекомендуется использовать новый API.",
+          "example": "const querystring = require('querystring');\n\n// Парсинг:\nquerystring.parse('a=1&b=2');\n// { a: '1', b: '2' }\n\n// Форматирование:\nquerystring.stringify({ a: 1, b: 2 });\n// 'a=1&b=2'\n\n// Лучше: new URLSearchParams()"
+        },
+        {
+          "term": "crypto",
+          "english": "crypto",
+          "russian": "Криптографический модуль. Предоставляет хеширование, шифрование, генерацию случайных значений. Используется для хеширования паролей, создания токенов, шифрования данных.",
+          "example": "const crypto = require('crypto');\n\n// Хеширование:\ncrypto.createHash('sha256')\n  .update('password')\n  .digest('hex');\n\n// Случайные байты:\ncrypto.randomBytes(32);"
+        },
+        {
+          "term": "os",
+          "english": "os",
+          "russian": "Модуль с информацией об операционной системе. Предоставляет данные о CPU, памяти, платформе, пользователе. Полезно для системных утилит и адаптации под ОС.",
+          "example": "const os = require('os');\n\nconsole.log(os.platform());    // 'linux', 'win32'\nconsole.log(os.arch());        // 'x64'\nconsole.log(os.cpus());        // информация о CPU\nconsole.log(os.freemem());     // свободная память\nconsole.log(os.homedir());     // домашняя директория"
+        },
+        {
+          "term": "events",
+          "english": "events",
+          "russian": "Модуль для работы с событиями. Предоставляет класс EventEmitter. Основа асинхронной архитектуры Node.js. Используется во многих встроенных модулях.",
+          "example": "const EventEmitter = require('events');\n\nclass MyEmitter extends EventEmitter {}\n\nconst emitter = new MyEmitter();\nemitter.on('event', () => console.log('fired'));\nemitter.emit('event');"
+        },
+        {
+          "term": "EventEmitter",
+          "english": "EventEmitter class",
+          "russian": "Класс для создания объектов которые могут emit и on события. Основа event-driven архитектуры. Позволяет слабую связь между компонентами. Широко используется в Node.js.",
+          "example": "const { EventEmitter } = require('events');\n\nconst emitter = new EventEmitter();\n\n// Подписка:\nemitter.on('data', (data) => {\n  console.log(data);\n});\n\n// Отправка:\nemitter.emit('data', { value: 1 });"
+        },
+        {
+          "term": "stream",
+          "english": "stream",
+          "russian": "Абстрактный интерфейс для работы с потоками данных. Позволяет обрабатывать данные по частям без загрузки в память. Эффективно для больших файлов и сетевых запросов.",
+          "example": "const stream = require('stream');\n\n// Чтение:\nconst readable = new stream.Readable();\n\n// Запись:\nconst writable = new stream.Writable();\n\n// Трансформация:\nconst transform = new stream.Transform();"
+        },
+        {
+          "term": "Readable",
+          "english": "Readable stream",
+          "russian": "Поток для чтения данных. Источники: файлы, HTTP запросы, stdin. Данные читаются порциями. События: data, end, error. Основа для чтения больших объёмов данных.",
+          "example": "const { Readable } = require('stream');\n\nconst readable = new Readable({\n  read() {\n    this.push('chunk of data');\n    this.push(null); // конец\n  }\n});\n\nreadable.on('data', chunk => {\n  console.log(chunk.toString());\n});"
+        },
+        {
+          "term": "Writable",
+          "english": "Writable stream",
+          "russian": "Поток для записи данных. Назначения: файлы, HTTP ответы, stdout. Данные записываются порциями. Методы: write(), end(). Эффективно для записи больших объёмов.",
+          "example": "const { Writable } = require('stream');\n\nconst writable = new Writable({\n  write(chunk, encoding, callback) {\n    console.log(chunk.toString());\n    callback();\n  }\n});\n\nwritable.write('Hello');\nwritable.end();"
+        },
+        {
+          "term": "Transform",
+          "english": "Transform stream",
+          "russian": "Поток который может и читать и писать. Преобразует данные при прохождении. Используется для сжатия, шифрования, парсинга. Наследуется от Readable и Writable.",
+          "example": "const { Transform } = require('stream');\n\nconst upperCase = new Transform({\n  transform(chunk, encoding, callback) {\n    this.push(chunk.toString().toUpperCase());\n    callback();\n  }\n});\n\ninput.pipe(upperCase).pipe(output);"
+        },
+        {
+          "term": "buffer",
+          "english": "Buffer class",
+          "russian": "Класс для работы с бинарными данными. Представляет фиксированный размер памяти. Используется для работы с файлами, сетью, криптографией. Временное хранилище сырых байтов.",
+          "example": "const buf = Buffer.from('hello');\nconsole.log(buf); // <Buffer 68 65 6c 6c 6f>\n\n// Конвертация:\nbuf.toString(); // 'hello'\nBuffer.from([72, 101, 108, 108, 111]);"
+        }
+      ]
+    },
+    {
+      "id": "day38_express",
+      "title": "Неделя 38: Express.js",
+      "cards": [
+        {
+          "term": "Express.js",
+          "english": "Express.js",
+          "russian": "Минималистичный веб-фреймворк для Node.js. Упрощает создание HTTP-серверов и API. Основан на middleware архитектуре. Самый популярный фреймворк для Node.js бэкенда.",
+          "example": "const express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Hello World');\n});\n\napp.listen(3000);"
+        },
+        {
+          "term": "middleware",
+          "english": "middleware",
+          "russian": "Функция которая имеет доступ к req, res и next. Выполняется перед обработчиком маршрута. Может модифицировать запрос/ответ, завершать запрос, вызывать следующий middleware.",
+          "example": "app.use((req, res, next) => {\n  console.log(`${req.method} ${req.path}`);\n  next(); // передать управление дальше\n});\n\n// Встроенные:\napp.use(express.json());\napp.use(express.static('public'));"
+        },
+        {
+          "term": "route",
+          "english": "route",
+          "russian": "Маршрут — комбинация HTTP метода и URL path. Определяет какой код выполняется при запросе. Поддерживает параметры, query строки. Основа REST API.",
+          "example": "app.get('/users', getUsers);\napp.post('/users', createUser);\napp.get('/users/:id', getUser);\napp.put('/users/:id', updateUser);\napp.delete('/users/:id', deleteUser);"
+        },
+        {
+          "term": "request (req)",
+          "english": "request object",
+          "russian": "Объект HTTP-запроса. Содержит headers, params, query, body, cookies. Предоставляет информацию о входящем запросе. Основной источник данных от клиента.",
+          "example": "req.method;           // 'GET', 'POST'\nreq.path;             // '/users'\nreq.params;           // { id: '123' }\nreq.query;            // { sort: 'name' }\nreq.body;             // { name: 'John' }\nreq.headers;          // заголовки\nreq.cookies;          // куки"
+        },
+        {
+          "term": "response (res)",
+          "english": "response object",
+          "russian": "Объект HTTP-ответа. Методы для отправки данных клиенту: send, json, sendFile, redirect. Позволяет устанавливать статус, заголовки, куки. Завершает запрос.",
+          "example": "res.status(200).json({ data });\nres.send('Hello');\nres.redirect('/home');\nres.download('file.pdf');\nres.cookie('name', 'value');\nres.clearCookie('name');\nres.end();"
+        },
+        {
+          "term": "next",
+          "english": "next function",
+          "russian": "Функция для передачи управления следующему middleware. Вызывается когда текущий middleware завершил работу. Без next запрос зависнет. Может передавать ошибки.",
+          "example": "app.use((req, res, next) => {\n  if (error) {\n    next(error); // передача ошибки\n  } else {\n    next(); // продолжить\n  }\n});\n\n// next('route') — пропустить остальные middleware маршрута"
+        },
+        {
+          "term": "body-parser",
+          "english": "body-parser",
+          "russian": "Middleware для парсинга тела запроса. Встроен в Express 4.16+ как express.json() и express.urlencoded(). Преобразует JSON и form данные в req.body.",
+          "example": "// Express 4.16+:\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\n\n// Старый способ:\nconst bodyParser = require('body-parser');\napp.use(bodyParser.json());"
+        },
+        {
+          "term": "cors",
+          "english": "cors",
+          "russian": "Middleware для настройки Cross-Origin Resource Sharing. Разрешает запросы с других доменов. Критически важен для API используемых с фронтенда на другом домене.",
+          "example": "const cors = require('cors');\n\n// Разрешить все:\napp.use(cors());\n\n// С опциями:\napp.use(cors({\n  origin: 'https://myapp.com',\n  credentials: true\n}));"
+        },
+        {
+          "term": "helmet",
+          "english": "helmet",
+          "russian": "Middleware для защиты через HTTP-заголовки безопасности. Устанавливает заголовки: X-Content-Type-Options, X-Frame-Options, CSP. Рекомендуется для всех продакшен приложений.",
+          "example": "const helmet = require('helmet');\n\napp.use(helmet());\n\n// С опциями:\napp.use(helmet({\n  contentSecurityPolicy: false\n}));"
+        },
+        {
+          "term": "morgan",
+          "english": "morgan",
+          "russian": "HTTP-логгер middleware. Логирует каждый запрос в консоль или файл. Полезно для отладки и мониторинга. Разные форматы логов: dev, combined, common.",
+          "example": "const morgan = require('morgan');\n\n// В development:\napp.use(morgan('dev'));\n\n// В production:\napp.use(morgan('combined', {\n  stream: writeStream\n}));"
+        },
+        {
+          "term": "static",
+          "english": "express.static",
+          "russian": "Middleware для раздачи статических файлов. HTML, CSS, JS, изображения. Указывает директорию с файлами. Автоматически устанавливает правильные Content-Type.",
+          "example": "// Раздача из папки public:\napp.use(express.static('public'));\n\n// Теперь доступны:\n// /style.css → public/style.css\n// /images/logo.png → public/images/logo.png\n\n// С опциями:\napp.use(express.static('public', {\n  maxAge: '1d'\n}));"
+        }
+      ]
+    },
+    {
+      "id": "day39_typescript",
+      "title": "Неделя 39: TypeScript",
+      "cards": [
+        {
+          "term": "TypeScript",
+          "english": "TypeScript",
+          "russian": "Типизированное надмножество JavaScript от Microsoft. Добавляет статическую типизацию, интерфейсы, дженерики. Компилируется в обычный JavaScript. Улучшает IDE-поддержку и надёжность кода.",
+          "example": "// TypeScript:\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n\n// Компиляция:\ntsc file.ts        // → file.js\ntsc --watch        // режим наблюдения"
+        },
+        {
+          "term": "type annotation",
+          "english": "type annotation",
+          "russian": "Аннотация типа — явное указание типа переменной, параметра, возврата. Синтаксис: : Type. Позволяет TypeScript проверять типы во время компиляции. Улучшает автодополнение.",
+          "example": "let name: string = 'John';\nlet age: number = 25;\nlet active: boolean = true;\nlet items: string[] = ['a', 'b'];\nlet user: { name: string; age: number };\n\n// В функциях:\nfunction greet(name: string): string {\n  return 'Hello ' + name;\n}"
+        },
+        {
+          "term": "interface",
+          "english": "interface",
+          "russian": "Интерфейс описывает форму объекта. Определяет какие свойства и методы должны быть. Используется для типизации объектов, классов, функций. Может расширять другие интерфейсы.",
+          "example": "interface User {\n  id: number;\n  name: string;\n  email?: string; // опциональное\n  readonly createdAt: Date;\n}\n\ninterface Admin extends User {\n  role: string;\n}\n\nconst user: User = { id: 1, name: 'John' };"
+        },
+        {
+          "term": "type alias",
+          "english": "type alias",
+          "russian": "Псевдоним типа — именование типа для переиспользования. Похож на interface но более гибкий. Может представлять примитивы, union, intersection, tuples. Использует ключевое слово type.",
+          "example": "type ID = string | number;\ntype Point = [number, number];\ntype Callback = (data: any) => void;\n\ntype User = {\n  id: ID;\n  name: string;\n};\n\nconst userId: ID = 123;"
+        },
+        {
+          "term": "union type",
+          "english": "union type",
+          "russian": "Объединение типов — значение может быть одного из нескольких типов. Синтаксис: Type1 | Type2. Позволяет гибкую типизацию. Требует проверки типа перед использованием специфичных свойств.",
+          "example": "let id: string | number;\nid = 'abc';  // OK\nid = 123;    // OK\n\nfunction printId(id: number | string) {\n  if (typeof id === 'string') {\n    console.log(id.toUpperCase());\n  } else {\n    console.log(id);\n  }\n}"
+        },
+        {
+          "term": "intersection type",
+          "english": "intersection type",
+          "russian": "Пересечение типов — комбинация нескольких типов в один. Синтаксис: Type1 & Type2. Объект должен иметь все свойства из всех типов. Полезно для композиции типов.",
+          "example": "type A = { a: number };\ntype B = { b: string };\n\ntype C = A & B;\n\nconst obj: C = {\n  a: 1,    // из A\n  b: 'x'   // из B\n};"
+        },
+        {
+          "term": "enum",
+          "english": "enum",
+          "russian": "Перечисление — именованный набор констант. Упрощает работу с фиксированным набором значений. Бывает numeric (по умолчанию) и string. Улучшает читаемость кода.",
+          "example": "enum Color {\n  Red,      // 0\n  Green,    // 1\n  Blue      // 2\n}\n\nenum Status {\n  Pending = 'pending',\n  Approved = 'approved'\n}\n\nlet c: Color = Color.Red;"
+        },
+        {
+          "term": "generics",
+          "english": "generics",
+          "russian": "Обобщения — параметризованные типы. Позволяют создавать переиспользуемые компоненты работающие с разными типами. Синтаксис: <T>. Основа для типизации коллекций и утилит.",
+          "example": "function identity<T>(arg: T): T {\n  return arg;\n}\n\nidentity<string>('hello');\nidentity<number>(42);\n\n// С ограничениями:\nfunction logLength<T extends { length: number }>(arg: T) {\n  console.log(arg.length);\n}"
+        },
+        {
+          "term": "type inference",
+          "english": "type inference",
+          "russian": "Вывод типов — TypeScript автоматически определяет тип на основе значения. Не всегда нужно указывать типы явно. Упрощает код сохраняя безопасность типов.",
+          "example": "let x = 3;      // TypeScript выводит: number\nlet y = 'hi';     // выводит: string\n\nfunction add(a: number, b: number) {\n  return a + b;   // выводит: number\n}\n\n// Явная аннотация не нужна\n// когда тип очевиден"
+        },
+        {
+          "term": "type assertion",
+          "english": "type assertion",
+          "russian": "Утверждение типа — указание компилятору что вы знаете тип лучше. Синтаксис: as Type или <Type>. Используйте осторожно — отключает проверку типов для этого выражения.",
+          "example": "let value: any = 'hello';\n\n// Два способа:\nlet str1 = value as string;\nlet str2 = <string>value;\n\n// С non-null:\nconst el = document.getElementById('x')!;\n// ! говорит что не null"
+        },
+        {
+          "term": "declaration file",
+          "english": "declaration file (.d.ts)",
+          "russian": "Файл объявлений содержит только типы без реализации. Используется для описания JavaScript библиотек. Расширение .d.ts. Позволяет использовать JS библиотеки с типизацией.",
+          "example": "// types.d.ts\ndeclare module 'my-library' {\n  export function foo(): string;\n  export const version: string;\n}\n\n// Установка типов:\nnpm install --save-dev @types/react"
+        },
+        {
+          "term": "namespace",
+          "english": "namespace",
+          "russian": "Пространство имён для группировки кода. Устаревший способ организации кода в TypeScript. Сейчас рекомендуется использовать ES-модули (import/export) вместо namespace.",
+          "example": "// Устаревший способ:\nnamespace Utils {\n  export function add(a: number, b: number) {\n    return a + b;\n  }\n}\n\n// Современный способ:\nexport function add(a: number, b: number) {\n  return a + b;\n}"
+        },
+        {
+          "term": "module",
+          "english": "module (in TS)",
+          "russian": "Модуль в TypeScript — файл с import/export. Каждый файл с импортами/экспортами автоматически становится модулем. Использует стандарт ES-модулей или CommonJS.",
+          "example": "// math.ts\nexport function add(a: number, b: number) {\n  return a + b;\n}\n\n// main.ts\nimport { add } from './math';\nconsole.log(add(2, 3));"
+        },
+        {
+          "term": "tsconfig.json",
+          "english": "tsconfig.json",
+          "russian": "Конфигурационный файл компилятора TypeScript. Определяет какие файлы компилировать, опции компиляции, целевую версию JS. Генерируется через tsc --init.",
+          "example": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"commonjs\",\n    \"strict\": true,\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\"\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\"]\n}"
+        },
+        {
+          "term": "tsc",
+          "english": "tsc",
+          "russian": "Компилятор TypeScript. Преобразует .ts файлы в .js. Устанавливается через npm install typescript. Имеет множество опций для настройки компиляции.",
+          "example": "tsc                    // компилировать\ntsc --init             // создать tsconfig\ntsc --watch            // режим наблюдения\ntsc --project tsconfig.prod.json\n\n// В package.json:\n\"scripts\": {\n  \"build\": \"tsc\"\n}"
+        }
+      ]
+    },
+    {
+      "id": "day42_databases_orm",
+      "title": "Неделя 42: Базы данных и ORM",
+      "cards": [
+        {
+          "term": "MongoDB",
+          "english": "MongoDB",
+          "russian": "NoSQL база данных документоориентированного типа. Хранит данные в BSON (бинарный JSON). Гибкая схема. Масштабируется горизонтально. Популярна для Node.js приложений.",
+          "example": "// Подключение:\nconst mongoose = require('mongoose');\nmongoose.connect('mongodb://localhost:27017/mydb');\n\n// Документ:\n{ _id: ObjectId, name: 'John', age: 30 }"
+        },
+        {
+          "term": "Mongoose",
+          "english": "Mongoose",
+          "russian": "ODM (Object Document Mapper) для MongoDB и Node.js. Предоставляет схемы, валидацию, middleware. Упрощает работу с MongoDB. Популярная библиотека для MERN стека.",
+          "example": "const userSchema = new Schema({\n  name: String,\n  email: { type: String, unique: true }\n});\n\nconst User = mongoose.model('User', userSchema);\nawait User.create({ name: 'John' });"
+        },
+        {
+          "term": "PostgreSQL",
+          "english": "PostgreSQL",
+          "russian": "Реляционная база данных с открытым исходным кодом. Поддерживает сложные запросы, транзакции, JSON. Надёжная и производительная. Популярна для серьёзных приложений.",
+          "example": "// Connection string:\npostgresql://user:pass@localhost:5432/dbname\n\n// SQL запрос:\nSELECT * FROM users WHERE age > 18;\nINSERT INTO users (name) VALUES ('John');"
+        },
+        {
+          "term": "MySQL",
+          "english": "MySQL",
+          "russian": "Популярная реляционная база данных. Часть LAMP стека. Быстрая для read-операций. Широкая поддержка хостингов. Имеет форк MariaDB с улучшениями.",
+          "example": "// Connection:\nmysql://user:pass@localhost:3306/dbname\n\n// SQL запрос:\nSELECT * FROM products;\nUPDATE users SET active = 1 WHERE id = 5;"
+        },
+        {
+          "term": "Sequelize",
+          "english": "Sequelize",
+          "russian": "ORM для SQL баз данных в Node.js. Поддерживает PostgreSQL, MySQL, SQLite, MSSQL. Предоставляет модели, миграции, валидацию. Абстрагирует SQL запросы.",
+          "example": "const User = sequelize.define('user', {\n  name: DataTypes.STRING,\n  email: DataTypes.STRING\n});\n\nawait User.create({ name: 'John' });\nawait User.findAll({ where: { active: true } });"
+        },
+        {
+          "term": "Prisma",
+          "english": "Prisma",
+          "russian": "ORM нового поколения с type-safe queries. Имеет собственный schema язык. Генерирует type definitions. Отличная IDE поддержка. Набирает популярность в TypeScript проектах.",
+          "example": "// schema.prisma\nmodel User {\n  id    Int     @id @default(@autoincrement())\n  name  String\n  email String  @unique\n}\n\n// Query:\nconst user = await prisma.user.create({\n  data: { name: 'John', email: 'j@t.com' }\n});"
+        },
+        {
+          "term": "Redis",
+          "english": "Redis",
+          "russian": "In-memory хранилище структур данных. Используется для кэширования, сессий, очередей. Очень быстрое (до 100K ops/sec). Поддерживает персистентность. Key-value база.",
+          "example": "const redis = require('redis');\nconst client = redis.createClient();\n\nawait client.set('key', 'value');\nawait client.get('key'); // 'value'\nawait client.expire('key', 3600); // TTL 1 час"
+        },
+        {
+          "term": "index",
+          "english": "database index",
+          "russian": "Индекс базы данных ускоряет поиск по полям. Создаётся на часто используемых в WHERE полях. Увеличивает скорость чтения но замедляет запись. Требует дополнительного места.",
+          "example": "// SQL:\nCREATE INDEX idx_email ON users(email);\n\n// MongoDB:\ndb.users.createIndex({ email: 1 });\n\n// Ускоряет:\nSELECT * FROM users WHERE email = '...';"
+        },
+        {
+          "term": "query",
+          "english": "query",
+          "russian": "Запрос к базе данных для получения или изменения данных. Бывает SELECT (чтение), INSERT (создание), UPDATE (обновление), DELETE (удаление). ORM абстрагирует SQL.",
+          "example": "// SQL:\nSELECT * FROM users WHERE age > 18;\nINSERT INTO users (name) VALUES ('John');\nUPDATE users SET age = 31 WHERE id = 1;\nDELETE FROM users WHERE id = 1;\n\n// Prisma:\nawait prisma.user.findMany({ where: { age: { gt: 18 } } });"
+        },
+        {
+          "term": "transaction",
+          "english": "database transaction",
+          "russian": "Транзакция — группа операций выполняемых атомарно. Либо все выполняются либо ни одна. Гарантирует целостность данных. Использует BEGIN, COMMIT, ROLLBACK.",
+          "example": "// SQL:\nBEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT; // или ROLLBACK при ошибке\n\n// Prisma:\nawait prisma.$transaction([...queries]);"
+        },
+        {
+          "term": "ACID",
+          "english": "ACID",
+          "russian": "Свойства транзакций: Atomicity (атомарность), Consistency (согласованность), Isolation (изоляция), Durability (долговечность). Гарантируют надёжность БД. Стандарт для реляционных БД.",
+          "example": "// Atomicity: все или ничего\n// Consistency: данные валидны до и после\n// Isolation: транзакции не мешают друг другу\n// Durability: данные сохранены после commit\n\n// PostgreSQL, MySQL поддерживают ACID"
+        },
+        {
+          "term": "sharding",
+          "english": "sharding",
+          "russian": "Шардирование — горизонтальное разделение базы данных на части (шарды). Каждый шард на отдельном сервере. Масштабируемость для больших объёмов данных. Сложнее в управлении.",
+          "example": "// Шардирование по user_id:\n// users 1-1000000 → shard1\n// users 1000001-2000000 → shard2\n\n// MongoDB поддерживает автоматическое\n// шардирование"
+        },
+        {
+          "term": "replication",
+          "english": "replication",
+          "russian": "Репликация — копирование данных на несколько серверов. Master-slave архитектура. Master для записи, slaves для чтения. Улучшает отказоустойчивость и производительность чтения.",
+          "example": "// Master-Slave:\n// Master: принимает записи\n// Slave 1: реплика для чтения\n// Slave 2: реплика для чтения\n\n// PostgreSQL, MySQL, MongoDB\n// поддерживают репликацию"
+        }
+      ]
+    }
+  ]
+}
