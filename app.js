@@ -8,10 +8,8 @@ const state = {
     currentIndex: 0,
     isFlipped: false,
     isRandomMode: false,
-    knownCards: new Set(),
-    unknownCards: new Set(),
-    theme: localStorage.getItem('theme') || 'dark',
-    cardStatuses: JSON.parse(localStorage.getItem('cardStatuses') || '{}'),
+    theme: 'dark',
+    cardStatuses: {},
     // Timers for cleanup
     timers: {
         toast: null,
@@ -26,6 +24,52 @@ const state = {
         keyboard: null
     }
 };
+
+// ========================================
+// Safe LocalStorage Functions
+// ========================================
+function safeGetItem(key, defaultValue = null) {
+    try {
+        const item = localStorage.getItem(key);
+        return item !== null ? item : defaultValue;
+    } catch (e) {
+        console.warn('localStorage getItem failed:', e);
+        return defaultValue;
+    }
+}
+
+function safeSetItem(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (e) {
+        console.warn('localStorage setItem failed:', e);
+        return false;
+    }
+}
+
+function safeRemoveItem(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (e) {
+        console.warn('localStorage removeItem failed:', e);
+        return false;
+    }
+}
+
+function safeParseJSON(json, defaultValue = {}) {
+    try {
+        return JSON.parse(json);
+    } catch (e) {
+        console.warn('JSON parse failed:', e);
+        return defaultValue;
+    }
+}
+
+// Initialize state with safe localStorage access
+state.theme = safeGetItem('theme', 'dark');
+state.cardStatuses = safeParseJSON(safeGetItem('cardStatuses', '{}'), {});
 
 // ========================================
 // DOM Elements
@@ -47,6 +91,10 @@ const elements = {
     searchInput: document.getElementById('searchInput'),
     randomMode: document.getElementById('randomMode'),
     totalCards: document.getElementById('totalCards'),
+    clearProgress: document.getElementById('clearProgress'),
+    progressBarMini: document.getElementById('progressBarMini'),
+    knownCount: document.getElementById('knownCount'),
+    unknownCount: document.getElementById('unknownCount'),
     
     // Views
     topicView: document.getElementById('topicView'),
@@ -95,12 +143,29 @@ async function init() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        state.data = await response.json();
+        
+        const data = await response.json();
         
         // Validate data structure
-        if (!state.data || !Array.isArray(state.data.topics)) {
-            throw new Error('Invalid data structure');
+        if (!data || !Array.isArray(data.topics)) {
+            throw new Error('Invalid data structure: missing topics array');
         }
+        
+        // Validate each topic has required fields
+        data.topics = data.topics.filter(topic => {
+            if (!topic || typeof topic !== 'object') return false;
+            if (!topic.id || typeof topic.id !== 'string') return false;
+            if (!topic.title || typeof topic.title !== 'string') return false;
+            if (!Array.isArray(topic.cards)) return false;
+            // Validate cards
+            topic.cards = topic.cards.filter(card => {
+                return card && typeof card === 'object' && 
+                       (card.term || card.english || card.russian);
+            });
+            return true;
+        });
+        
+        state.data = data;
         
         // Calculate total cards
         const total = state.data.topics.reduce((sum, t) => sum + (t.cards?.length || 0), 0);
@@ -112,6 +177,7 @@ async function init() {
         setupEventListeners();
         setupSwipeGestures();
         setupKeyboardNavigation();
+        updateProgressStats();
         
         // Hide splash screen
         state.timers.splash = setTimeout(() => {
@@ -131,14 +197,23 @@ async function init() {
 
 function showError(message) {
     if (elements.cardsContainer) {
-        elements.cardsContainer.innerHTML = `
-            <div class="welcome">
-                <div class="welcome-icon">⚠️</div>
-                <h3>Ошибка</h3>
-                <p>${escapeHtml(message)}</p>
-                <button onclick="location.reload()" class="welcome-btn">🔄 Перезагрузить</button>
-            </div>
+        const welcomeDiv = document.createElement('div');
+        welcomeDiv.className = 'welcome';
+        welcomeDiv.innerHTML = `
+            <div class="welcome-icon">⚠️</div>
+            <h3>Ошибка</h3>
+            <p></p>
         `;
+        welcomeDiv.querySelector('p').textContent = message;
+        
+        const reloadBtn = document.createElement('button');
+        reloadBtn.className = 'welcome-btn';
+        reloadBtn.textContent = '🔄 Перезагрузить';
+        reloadBtn.addEventListener('click', () => location.reload());
+        welcomeDiv.appendChild(reloadBtn);
+        
+        elements.cardsContainer.innerHTML = '';
+        elements.cardsContainer.appendChild(welcomeDiv);
     }
 }
 
@@ -154,11 +229,7 @@ function applyTheme(theme) {
 function toggleTheme() {
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
     applyTheme(state.theme);
-    try {
-        localStorage.setItem('theme', state.theme);
-    } catch (e) {
-        console.warn('localStorage not available');
-    }
+    safeSetItem('theme', state.theme);
 }
 
 // ========================================
@@ -172,12 +243,29 @@ function renderTopics(filter = '') {
         topic?.title?.toLowerCase().includes(normalizedFilter)
     );
     
-    elements.topicList.innerHTML = filteredTopics.map(topic => `
-        <li class="topic-item" data-topic-id="${escapeHtml(topic.id || '')}">
-            <div class="topic-name">${escapeHtml(topic.title || '')}</div>
-            <div class="topic-count">${topic.cards?.length || 0} карточек</div>
-        </li>
-    `).join('');
+    // Use DocumentFragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    filteredTopics.forEach(topic => {
+        const li = document.createElement('li');
+        li.className = 'topic-item';
+        li.dataset.topicId = String(topic.id || '');
+        
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'topic-name';
+        nameDiv.textContent = String(topic.title || '');
+        
+        const countDiv = document.createElement('div');
+        countDiv.className = 'topic-count';
+        countDiv.textContent = `${topic.cards?.length || 0} карточек`;
+        
+        li.appendChild(nameDiv);
+        li.appendChild(countDiv);
+        fragment.appendChild(li);
+    });
+    
+    elements.topicList.innerHTML = '';
+    elements.topicList.appendChild(fragment);
 }
 
 function escapeHtml(text) {
@@ -254,11 +342,16 @@ function setupEventListeners() {
     elements.knowBtn?.addEventListener('click', () => markCard('known'));
     elements.dontKnowBtn?.addEventListener('click', () => markCard('unknown'));
     
+    // Clear progress button
+    elements.clearProgress?.addEventListener('click', clearProgress);
+    
     // Visibility change - cleanup when tab hidden
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Before unload - cleanup
     window.addEventListener('beforeunload', cleanup);
+    
+    // Keyboard navigation is set up separately in setupKeyboardNavigation
 }
 
 function handleFlashcardClick(e) {
@@ -285,16 +378,20 @@ function cleanup() {
     // Remove event listeners
     if (state.handlers.keyboard) {
         document.removeEventListener('keydown', state.handlers.keyboard);
+        state.handlers.keyboard = null;
     }
     if (elements.cardArea) {
         if (state.handlers.touchStart) {
             elements.cardArea.removeEventListener('touchstart', state.handlers.touchStart);
+            state.handlers.touchStart = null;
         }
         if (state.handlers.touchMove) {
             elements.cardArea.removeEventListener('touchmove', state.handlers.touchMove);
+            state.handlers.touchMove = null;
         }
         if (state.handlers.touchEnd) {
             elements.cardArea.removeEventListener('touchend', state.handlers.touchEnd);
+            state.handlers.touchEnd = null;
         }
     }
 }
@@ -361,12 +458,23 @@ function renderCardsGrid() {
     const grid = document.createElement('div');
     grid.className = 'card-grid';
     
-    grid.innerHTML = state.currentCards.map((card, index) => `
-        <div class="mini-card" data-index="${index}">
-            <div class="mini-card-term">${escapeHtml(card?.term || '')}</div>
-            <div class="mini-card-preview">${escapeHtml(card?.english || '')}</div>
-        </div>
-    `).join('');
+    state.currentCards.forEach((card, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'mini-card';
+        cardDiv.dataset.index = String(index);
+        
+        const termDiv = document.createElement('div');
+        termDiv.className = 'mini-card-term';
+        termDiv.textContent = String(card?.term || '');
+        
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'mini-card-preview';
+        previewDiv.textContent = String(card?.english || '');
+        
+        cardDiv.appendChild(termDiv);
+        cardDiv.appendChild(previewDiv);
+        grid.appendChild(cardDiv);
+    });
     
     fragment.appendChild(grid);
     elements.cardsContainer.innerHTML = '';
@@ -458,6 +566,7 @@ function shuffleCards() {
 function shuffleArray(array) {
     if (!Array.isArray(array)) return [];
     const arr = [...array];
+    // Fisher-Yates shuffle
     for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -478,22 +587,22 @@ function updateCard() {
     elements.flashcard?.classList.remove('flipped');
     state.isFlipped = false;
     
-    // Update content safely
+    // Update content safely using textContent
     if (elements.cardTerm) {
-        elements.cardTerm.textContent = card.term || '';
+        elements.cardTerm.textContent = String(card.term || '');
     }
     if (elements.cardEnglish) {
-        elements.cardEnglish.textContent = card.english || '';
+        elements.cardEnglish.textContent = String(card.english || '');
     }
     if (elements.cardRussian) {
-        elements.cardRussian.textContent = card.russian || '';
+        elements.cardRussian.textContent = String(card.russian || '');
     }
     
     // Code with syntax highlighting
     if (elements.codeSection && elements.cardCode) {
         if (card.example) {
             elements.codeSection.style.display = 'block';
-            elements.cardCode.innerHTML = highlightCode(card.example);
+            elements.cardCode.innerHTML = highlightCode(String(card.example));
         } else {
             elements.codeSection.style.display = 'none';
             elements.cardCode.innerHTML = '';
@@ -527,29 +636,29 @@ function updateCard() {
     updateCardDots();
 }
 
-// Syntax highlighting with caching
-const highlightCache = new Map();
-const MAX_CACHE_SIZE = 100;
-
-function decodeHtmlEntities(text) {
+// ========================================
+// Syntax Highlighting
+// ========================================
+function stripHtmlTags(text) {
     if (typeof text !== 'string') return '';
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    // Use regex to remove HTML tags - safer than DOM manipulation
+    return text.replace(/<[^>]*>/g, '');
 }
 
 function highlightCode(code) {
     if (typeof code !== 'string') return '';
     
-    // Check cache
-    if (highlightCache.has(code)) {
-        return highlightCache.get(code);
-    }
+    // First strip any existing HTML tags from the data
+    const cleanCode = stripHtmlTags(code);
     
-    // Decode existing HTML entities first (in case data already contains encoded HTML)
-    const decodedCode = decodeHtmlEntities(code);
+    // Escape HTML entities
+    const escaped = cleanCode
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     
-    let highlighted = escapeHtml(decodedCode)
+    // Apply syntax highlighting
+    return escaped
         .replace(/\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|default|try|catch|finally|throw|new|this|class|extends|super|static|get|set|import|export|from|async|await|typeof|instanceof|in|of|void|delete|with|yield)\b/g, 
             '<span class="token-keyword">$1</span>')
         .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 
@@ -562,15 +671,6 @@ function highlightCode(code) {
             '<span class="token-number">$1</span>')
         .replace(/\b(console|Math|JSON|Object|Array|String|Number|Boolean|Date|RegExp|Promise|Set|Map|WeakMap|WeakSet|Error|window|document|localStorage|sessionStorage|fetch|navigator|history|location)\b/g, 
             '<span class="token-builtins">$1</span>');
-    
-    // Cache result (LRU-like)
-    if (highlightCache.size >= MAX_CACHE_SIZE) {
-        const firstKey = highlightCache.keys().next().value;
-        highlightCache.delete(firstKey);
-    }
-    highlightCache.set(code, highlighted);
-    
-    return highlighted;
 }
 
 // ========================================
@@ -589,9 +689,19 @@ function renderCardDots() {
         return;
     }
     
-    elements.cardDots.innerHTML = state.currentCards.map((_, i) => 
-        `<div class="card-dot ${i === state.currentIndex ? 'active' : ''}" data-index="${i}" role="button" aria-label="Карточка ${i + 1}"></div>`
-    ).join('');
+    // Use DocumentFragment
+    const fragment = document.createDocumentFragment();
+    state.currentCards.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = `card-dot ${i === state.currentIndex ? 'active' : ''}`;
+        dot.dataset.index = String(i);
+        dot.setAttribute('role', 'button');
+        dot.setAttribute('aria-label', `Карточка ${i + 1}`);
+        fragment.appendChild(dot);
+    });
+    
+    elements.cardDots.innerHTML = '';
+    elements.cardDots.appendChild(fragment);
     
     // Event delegation for dots
     elements.cardDots.onclick = (e) => {
@@ -626,7 +736,10 @@ function updateCardDots() {
 
 function getCardId(card) {
     if (!card) return '';
-    return `${card.term || ''}_${card.english || ''}`.slice(0, 100); // Limit ID length
+    // Create a safe ID from term and english fields
+    const term = String(card.term || '').slice(0, 50);
+    const english = String(card.english || '').slice(0, 50);
+    return `${term}_${english}`.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 100);
 }
 
 // ========================================
@@ -646,7 +759,7 @@ function navigateCard(direction) {
     // Clear pending navigation timer
     clearTimeout(state.timers.navigation);
     
-    // Add swipe animation
+    // Add swipe animation class
     const swipeClass = direction > 0 ? 'swipe-left' : 'swipe-right';
     elements.flashcard?.classList.add(swipeClass);
     
@@ -669,13 +782,10 @@ function markCard(status) {
     
     state.cardStatuses[cardId] = status;
     
-    try {
-        localStorage.setItem('cardStatuses', JSON.stringify(state.cardStatuses));
-    } catch (e) {
-        console.warn('localStorage not available');
-    }
+    safeSetItem('cardStatuses', JSON.stringify(state.cardStatuses));
     
     updateCardDots();
+    updateProgressStats();
     
     const message = status === 'known' ? '✓ Отмечено как изученное' : '✗ Будем повторять';
     showToast(message);
@@ -689,6 +799,45 @@ function markCard(status) {
             navigateCard(1);
         }
     }, 600);
+}
+
+// ========================================
+// Progress Statistics
+// ========================================
+function updateProgressStats() {
+    if (!elements.knownCount || !elements.unknownCount || !elements.progressBarMini) return;
+    
+    const statuses = Object.values(state.cardStatuses);
+    const known = statuses.filter(s => s === 'known').length;
+    const unknown = statuses.filter(s => s === 'unknown').length;
+    const total = state.data?.topics?.reduce((sum, t) => sum + (t.cards?.length || 0), 0) || 0;
+    
+    const percent = total > 0 ? Math.round((known / total) * 100) : 0;
+    
+    elements.knownCount.textContent = `Изучено: ${known}`;
+    elements.knownCount.className = known > 0 ? 'known' : '';
+    elements.unknownCount.textContent = `На повтор: ${unknown}`;
+    elements.unknownCount.className = unknown > 0 ? 'unknown' : '';
+    elements.progressBarMini.style.width = `${percent}%`;
+}
+
+function clearProgress() {
+    if (Object.keys(state.cardStatuses).length === 0) {
+        showToast('Прогресс и так пуст');
+        return;
+    }
+    
+    if (!confirm('Уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.')) {
+        return;
+    }
+    
+    state.cardStatuses = {};
+    
+    safeRemoveItem('cardStatuses');
+    
+    updateProgressStats();
+    updateCardDots();
+    showToast('Прогресс очищен');
 }
 
 // ========================================
@@ -716,20 +865,13 @@ function goToTopicView() {
 function setupSwipeGestures() {
     if (!elements.cardArea) return;
     
+    // Clean up existing listeners first
+    cleanup();
+    
     let startX = 0;
     let startY = 0;
     let startTime = 0;
-    
-    // Remove old listeners if any
-    if (state.handlers.touchStart) {
-        elements.cardArea.removeEventListener('touchstart', state.handlers.touchStart);
-    }
-    if (state.handlers.touchMove) {
-        elements.cardArea.removeEventListener('touchmove', state.handlers.touchMove);
-    }
-    if (state.handlers.touchEnd) {
-        elements.cardArea.removeEventListener('touchend', state.handlers.touchEnd);
-    }
+    let isTracking = false;
     
     // Touch start
     state.handlers.touchStart = (e) => {
@@ -737,11 +879,12 @@ function setupSwipeGestures() {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         startTime = Date.now();
+        isTracking = true;
     };
     
     // Touch move
     state.handlers.touchMove = (e) => {
-        if (!startX || !startY || !e.touches?.[0]) return;
+        if (!isTracking || !startX || !startY || !e.touches?.[0]) return;
         
         const x = e.touches[0].clientX;
         const y = e.touches[0].clientY;
@@ -761,8 +904,9 @@ function setupSwipeGestures() {
     
     // Touch end
     state.handlers.touchEnd = (e) => {
-        if (!startX || !startY || !e.changedTouches?.[0]) return;
+        if (!isTracking || !startX || !startY || !e.changedTouches?.[0]) return;
         
+        isTracking = false;
         const endX = e.changedTouches[0].clientX;
         const endY = e.changedTouches[0].clientY;
         const diffX = startX - endX;
@@ -801,7 +945,7 @@ function setupSwipeGestures() {
         }
     };
     
-    // Add listeners
+    // Add listeners with capture options for proper cleanup
     elements.cardArea.addEventListener('touchstart', state.handlers.touchStart, { passive: true });
     elements.cardArea.addEventListener('touchmove', state.handlers.touchMove, { passive: false });
     elements.cardArea.addEventListener('touchend', state.handlers.touchEnd, { passive: true });
@@ -867,7 +1011,7 @@ function showToast(message) {
     // Clear existing timer
     clearTimeout(state.timers.toast);
     
-    elements.toast.textContent = message;
+    elements.toast.textContent = String(message);
     elements.toast.classList.add('show');
     
     state.timers.toast = setTimeout(() => {

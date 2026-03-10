@@ -1,4 +1,4 @@
-const CACHE_NAME = 'anki-js-v3';
+const CACHE_NAME = 'anki-js-v6';
 const STATIC_ASSETS = [
     './',
     './index.html',
@@ -48,7 +48,7 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch Event - Stale-while-revalidate strategy
+// Fetch Event - Network first, then cache
 self.addEventListener('fetch', (event) => {
     // Skip non-GET requests
     if (event.request.method !== 'GET') return;
@@ -57,19 +57,36 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     if (url.origin !== self.location.origin) return;
 
+    // For data.json - always fetch fresh, fallback to cache
+    if (url.pathname.includes('data.json')) {
+        event.respondWith(
+            fetch(event.request)
+                .then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
+                        caches.open(CACHE_NAME)
+                            .then((cache) => cache.put(event.request, responseToCache));
+                    }
+                    return networkResponse;
+                })
+                .catch(() => {
+                    console.log('[SW] Network failed for data.json, serving from cache');
+                    return caches.match(event.request);
+                })
+        );
+        return;
+    }
+
+    // For other assets - cache first, then network
     event.respondWith(
         caches.match(event.request)
             .then((cachedResponse) => {
-                // Return cached version immediately
                 const fetchPromise = fetch(event.request)
                     .then((networkResponse) => {
-                        // Update cache with fresh version
                         if (networkResponse && networkResponse.status === 200) {
                             const responseToCache = networkResponse.clone();
                             caches.open(CACHE_NAME)
-                                .then((cache) => {
-                                    cache.put(event.request, responseToCache);
-                                });
+                                .then((cache) => cache.put(event.request, responseToCache));
                         }
                         return networkResponse;
                     })
@@ -78,7 +95,6 @@ self.addEventListener('fetch', (event) => {
                         return cachedResponse;
                     });
 
-                // Return cached or fetch
                 return cachedResponse || fetchPromise;
             })
     );
@@ -88,12 +104,5 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('message', (event) => {
     if (event.data === 'skipWaiting') {
         self.skipWaiting();
-    }
-});
-
-// Background sync for offline form submissions (if needed later)
-self.addEventListener('sync', (event) => {
-    if (event.tag === 'sync-progress') {
-        console.log('[SW] Syncing progress...');
     }
 });

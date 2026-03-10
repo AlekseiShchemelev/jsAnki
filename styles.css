@@ -384,6 +384,74 @@ body {
     color: var(--text-muted);
 }
 
+.progress-stats {
+    margin-bottom: 12px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--border);
+}
+
+.progress-bar-mini {
+    height: 6px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar-mini-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success), var(--primary));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text-mini {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.progress-text-mini span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.progress-text-mini .known {
+    color: var(--success);
+}
+
+.progress-text-mini .unknown {
+    color: var(--danger);
+}
+
+.clear-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--bg-hover);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.clear-btn:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+}
+
+.clear-btn:active {
+    transform: scale(0.98);
+}
+
 .random-btn {
     width: 100%;
     padding: 14px;
