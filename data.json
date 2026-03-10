@@ -1,8 +1,8 @@
 {
   "topics": [
     {
-      "id": "basics",
-      "title": "Неделя 1: Основы языка",
+      "id": "day1_types_and_variables",
+      "title": "Неделя 1: Типы данных и переменные",
       "cards": [
         {
           "term": "variable",
@@ -14,301 +14,319 @@
           "term": "value",
           "english": "value",
           "russian": "значение (данные, которые хранятся в переменной)",
-          "example": "let x = 42; // 42 is the value"
+          "example": "const age = 25;"
         },
         {
           "term": "data type",
           "english": "data type",
           "russian": "тип данных (число, строка, буль и т.д.)",
-          "example": "typeof 'hello' // 'string'"
+          "example": "typeof 'hello'; // 'string'"
         },
         {
           "term": "number",
           "english": "number",
           "russian": "число (целое или с плавающей точкой)",
-          "example": "let age = 25;\nlet price = 99.99;"
+          "example": "const pi = 3.14;"
         },
         {
           "term": "string",
           "english": "string",
           "russian": "строка (текстовые данные)",
-          "example": "let greeting = 'Hello World';"
+          "example": "const text = 'Hello World';"
         },
         {
           "term": "boolean",
           "english": "boolean",
           "russian": "логический тип (true / false)",
-          "example": "let isActive = true;\nlet isComplete = false;"
+          "example": "const isActive = true;"
         },
         {
           "term": "null",
           "english": "null",
-          "russian": "«ничего», пустое значение (специальное значение)",
-          "example": "let data = null;"
+          "russian": "«ничего», пустое значение",
+          "example": "let user = null;"
         },
         {
           "term": "undefined",
           "english": "undefined",
           "russian": "«не определено» (значение не присвоено)",
-          "example": "let x;\nconsole.log(x); // undefined"
+          "example": "let x; console.log(x); // undefined"
         },
         {
           "term": "object",
           "english": "object",
           "russian": "объект (коллекция свойств)",
-          "example": "let user = {\n  name: 'John',\n  age: 30\n};"
+          "example": "const person = { name: 'John', age: 30 };"
         },
         {
           "term": "symbol",
           "english": "symbol",
           "russian": "символ (уникальный идентификатор, ES6)",
-          "example": "let id = Symbol('id');"
+          "example": "const id = Symbol('id');"
         },
         {
           "term": "typeof",
           "english": "typeof operator",
           "russian": "оператор определения типа",
-          "example": "typeof 42;        // 'number'\ntypeof 'hello';   // 'string'"
+          "example": "typeof 42; // 'number'"
         },
         {
           "term": "literal",
           "english": "literal",
           "russian": "литерал (явно заданное значение)",
-          "example": "42          // number literal\n'hello'     // string literal"
-        },
+          "example": "const str = 'hello'; const num = 42;"
+        }
+      ]
+    },
+    {
+      "id": "day2_variables_and_operators",
+      "title": "Неделя 2: Объявление переменных и операторы",
+      "cards": [
         {
           "term": "var",
           "english": "var keyword",
           "russian": "ключевое слово для объявления переменной (устаревшее)",
-          "example": "var name = 'John'; // function scope"
+          "example": "var x = 10;"
         },
         {
           "term": "let",
           "english": "let keyword",
           "russian": "объявление переменной с блочной областью видимости",
-          "example": "let count = 0;\nif (true) {\n  let count = 1;\n}"
+          "example": "let count = 0;"
         },
         {
           "term": "const",
           "english": "const keyword",
           "russian": "объявление константы (неизменяемая ссылка)",
-          "example": "const PI = 3.14159;"
+          "example": "const PI = 3.14;"
         },
         {
           "term": "assignment",
           "english": "assignment",
           "russian": "присваивание (оператор =)",
-          "example": "let x = 10;  // = is assignment"
+          "example": "let x = 5;"
         },
         {
           "term": "operator",
           "english": "operator",
           "russian": "оператор (символ для выполнения операции)",
-          "example": "+, -, *, /, %, ===, &&"
+          "example": "5 + 3; // оператор +"
         },
         {
           "term": "arithmetic operators",
           "english": "arithmetic operators",
           "russian": "арифметические операторы (+, -, *, /, %, **)",
-          "example": "10 + 5  // 15\n10 % 3  // 1\n2 ** 3  // 8"
+          "example": "10 % 3; // 1 (остаток)"
         },
         {
           "term": "increment",
           "english": "increment",
           "russian": "инкремент (++, увеличение на 1)",
-          "example": "let i = 5;\ni++;  // i is now 6"
+          "example": "let i = 0; i++; // i = 1"
         },
         {
           "term": "decrement",
           "english": "decrement",
           "russian": "декремент (--, уменьшение на 1)",
-          "example": "let i = 5;\ni--;  // i is now 4"
+          "example": "let i = 5; i--; // i = 4"
         },
         {
           "term": "comparison operators",
           "english": "comparison operators",
           "russian": "операторы сравнения (==, ===, !=, !==, >, <, >=, <=)",
-          "example": "5 === '5'  // false\n5 == '5'   // true"
+          "example": "5 === '5'; // false (строгое равенство)"
         },
         {
           "term": "logical operators",
           "english": "logical operators",
-          "russian": "логические операторы (&& — AND, || — OR, ! — NOT)",
-          "example": "true && false  // false\ntrue || false  // true\n!true          // false"
+          "russian": "логические операторы (&&, ||, !)",
+          "example": "true && false; // false"
         },
         {
           "term": "ternary operator",
           "english": "ternary operator",
-          "russian": "тернарный оператор (условие ? значение1 : значение2)",
-          "example": "let age = 20;\nlet status = age >= 18 ? 'adult' : 'minor';"
-        },
+          "russian": "тернарный оператор (условие ? знач1 : знач2)",
+          "example": "const result = age >= 18 ? 'adult' : 'minor';"
+        }
+      ]
+    },
+    {
+      "id": "day3_conditionals_loops",
+      "title": "Неделя 3: Условные конструкции и циклы",
+      "cards": [
         {
           "term": "if statement",
           "english": "if statement",
           "russian": "условный оператор «если»",
-          "example": "if (score >= 90) {\n  console.log('A');\n}"
+          "example": "if (x > 0) { console.log('positive'); }"
         },
         {
           "term": "else",
           "english": "else",
           "russian": "иначе (блок при ложном условии)",
-          "example": "if (x > 0) {\n  console.log('positive');\n} else {\n  console.log('not positive');\n}"
+          "example": "if (x > 0) { } else { }"
         },
         {
           "term": "else if",
           "english": "else if",
           "russian": "иначе если (цепочка условий)",
-          "example": "if (x > 0) {\n  // positive\n} else if (x < 0) {\n  // negative\n} else {\n  // zero\n}"
+          "example": "if (x > 0) { } else if (x < 0) { }"
         },
         {
           "term": "switch",
           "english": "switch statement",
           "russian": "оператор множественного выбора",
-          "example": "switch (day) {\n  case 1: console.log('Mon'); break;\n  default: console.log('Other');\n}"
+          "example": "switch(day) { case 1: break; }"
         },
         {
           "term": "case",
           "english": "case",
           "russian": "вариант в switch",
-          "example": "switch (x) {\n  case 1: // do something\n  case 2: // do something else\n}"
+          "example": "case 'Monday': console.log('Mon');"
         },
         {
           "term": "default",
           "english": "default",
           "russian": "действие по умолчанию в switch",
-          "example": "switch (x) {\n  default: console.log('unknown');\n}"
+          "example": "default: console.log('Unknown');"
         },
         {
           "term": "break",
           "english": "break",
           "russian": "прервать выполнение цикла или switch",
-          "example": "for (let i = 0; i < 10; i++) {\n  if (i === 5) break;\n}"
+          "example": "break;"
         },
         {
           "term": "continue",
           "english": "continue",
           "russian": "перейти к следующей итерации цикла",
-          "example": "for (let i = 0; i < 5; i++) {\n  if (i === 2) continue;\n  console.log(i);\n}"
+          "example": "continue;"
         },
         {
           "term": "for loop",
           "english": "for loop",
           "russian": "цикл со счётчиком",
-          "example": "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}"
+          "example": "for (let i = 0; i < 10; i++) { }"
         },
         {
           "term": "while loop",
           "english": "while loop",
           "russian": "цикл с предусловием",
-          "example": "let i = 0;\nwhile (i < 5) {\n  console.log(i);\n  i++;\n}"
+          "example": "while (condition) { }"
         },
         {
           "term": "do...while loop",
           "english": "do...while loop",
           "russian": "цикл с постусловием",
-          "example": "let i = 0;\ndo {\n  console.log(i);\n  i++;\n} while (i < 5);"
+          "example": "do { } while (condition);"
         },
         {
           "term": "infinite loop",
           "english": "infinite loop",
           "russian": "бесконечный цикл (ошибка)",
-          "example": "while (true) {\n  // This will run forever!\n}"
+          "example": "while (true) { }"
         }
       ]
     },
     {
-      "id": "functions",
-      "title": "Неделя 2: Функции и объекты",
+      "id": "day4_functions_basics",
+      "title": "Неделя 4: Функции — объявление и вызов",
       "cards": [
         {
           "term": "function",
           "english": "function",
           "russian": "функция (блок кода для переиспользования)",
-          "example": "function greet(name) {\n  return 'Hello ' + name;\n}"
+          "example": "function greet(name) { return 'Hello ' + name; }"
         },
         {
           "term": "function declaration",
           "english": "function declaration",
           "russian": "объявление функции (через function f() {})",
-          "example": "function add(a, b) {\n  return a + b;\n}"
+          "example": "function add(a, b) { return a + b; }"
         },
         {
           "term": "function expression",
           "english": "function expression",
           "russian": "функциональное выражение (const f = function() {})",
-          "example": "const add = function(a, b) {\n  return a + b;\n};"
+          "example": "const add = function(a, b) { return a + b; };"
         },
         {
           "term": "arrow function",
           "english": "arrow function",
           "russian": "стрелочная функция (() => {})",
-          "example": "const add = (a, b) => a + b;\nconst greet = name => `Hello ${name}`;"
+          "example": "const add = (a, b) => a + b;"
         },
         {
           "term": "parameter",
           "english": "parameter",
           "russian": "параметр (переменная в определении функции)",
-          "example": "function greet(name) { // name is parameter\n  console.log(name);\n}"
+          "example": "function greet(name) { }"
         },
         {
           "term": "argument",
           "english": "argument",
           "russian": "аргумент (значение, передаваемое при вызове)",
-          "example": "greet('John'); // 'John' is argument"
+          "example": "greet('John');"
         },
         {
           "term": "return",
           "english": "return statement",
           "russian": "оператор возврата значения из функции",
-          "example": "function add(a, b) {\n  return a + b;\n}"
+          "example": "return a + b;"
         },
         {
           "term": "callback",
           "english": "callback function",
           "russian": "функция обратного вызова (передаётся как аргумент)",
-          "example": "setTimeout(() => {\n  console.log('Done!');\n}, 1000);"
+          "example": "setTimeout(() => console.log('Done'), 1000);"
         },
         {
           "term": "anonymous function",
           "english": "anonymous function",
           "russian": "анонимная функция (без имени)",
-          "example": "btn.addEventListener('click', function() {\n  console.log('clicked');\n});"
+          "example": "btn.addEventListener('click', function() { });"
         },
         {
           "term": "recursion",
           "english": "recursion",
           "russian": "рекурсия (вызов функции самой себя)",
-          "example": "function factorial(n) {\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n}"
+          "example": "function factorial(n) { return n <= 1 ? 1 : n * factorial(n-1); }"
         },
         {
           "term": "IIFE",
           "english": "Immediately Invoked Function Expression",
           "russian": "немедленно вызываемое функциональное выражение",
-          "example": "(function() {\n  console.log('Executed immediately');\n})();"
+          "example": "(function() { console.log('Executed'); })();"
         },
         {
           "term": "scope",
           "english": "scope",
           "russian": "область видимости (глобальная / локальная)",
-          "example": "let global = 'global';\nfunction foo() {\n  let local = 'local';\n}"
-        },
+          "example": "let global = 'global'; function foo() { let local = 'local'; }"
+        }
+      ]
+    },
+    {
+      "id": "day5_advanced_functions",
+      "title": "Неделя 5: Продвинутые темы функций",
+      "cards": [
         {
           "term": "closure",
           "english": "closure",
           "russian": "замыкание (функция запоминает свою внешнюю область)",
-          "example": "function createCounter() {\n  let count = 0;\n  return () => ++count;\n}"
+          "example": "function createCounter() { let count = 0; return () => ++count; }"
         },
         {
           "term": "hoisting",
           "english": "hoisting",
-          "russian": "поднятие (переменные и функции «поднимаются» в начало)",
-          "example": "console.log(x); // undefined (hoisted)\nvar x = 5;"
+          "russian": "поднятие (переменные и функции «поднимаются» в начало области)",
+          "example": "console.log(x); var x = 5; // undefined (hoisted)"
         },
         {
           "term": "this",
           "english": "this keyword",
           "russian": "контекст выполнения (указывает на объект)",
-          "example": "const obj = {\n  name: 'John',\n  greet() { console.log(this.name); }\n};"
+          "example": "const obj = { name: 'John', greet() { console.log(this.name); } };"
         },
         {
           "term": "call()",
@@ -332,67 +350,73 @@
           "term": "rest parameters",
           "english": "rest parameters",
           "russian": "остаточные параметры (...args)",
-          "example": "function sum(...nums) {\n  return nums.reduce((a, b) => a + b);\n}"
+          "example": "function sum(...nums) { return nums.reduce((a, b) => a + b); }"
         },
         {
           "term": "spread operator",
           "english": "spread operator",
           "russian": "оператор расширения (...) для массивов/объектов",
-          "example": "const arr = [1, 2, 3];\nconst newArr = [...arr, 4, 5];"
+          "example": "const arr = [1, 2, 3]; const newArr = [...arr, 4, 5];"
         },
         {
           "term": "default parameters",
           "english": "default parameters",
           "russian": "параметры по умолчанию",
-          "example": "function greet(name = 'Guest') {\n  console.log('Hello ' + name);\n}"
+          "example": "function greet(name = 'Guest') { console.log('Hello ' + name); }"
         },
         {
           "term": "pure function",
           "english": "pure function",
           "russian": "чистая функция (без побочных эффектов)",
-          "example": "function add(a, b) {\n  return a + b; // always same output for same input\n}"
+          "example": "function add(a, b) { return a + b; }"
         },
         {
           "term": "higher-order function",
           "english": "higher-order function",
-          "russian": "функция высшего порядка (принимает или возвращает функцию)",
-          "example": "function multiplyBy(n) {\n  return (x) => x * n;\n}\nconst double = multiplyBy(2);"
-        },
+          "russian": "функция высшего порядка (принимает или возвращает другую функцию)",
+          "example": "function multiplyBy(n) { return (x) => x * n; }"
+        }
+      ]
+    },
+    {
+      "id": "day6_objects",
+      "title": "Неделя 6: Объекты",
+      "cards": [
         {
           "term": "object literal",
           "english": "object literal",
           "russian": "литерал объекта ({ key: value })",
-          "example": "const user = {\n  name: 'John',\n  age: 30\n};"
+          "example": "const user = { name: 'John', age: 30 };"
         },
         {
           "term": "property",
           "english": "property",
           "russian": "свойство (пара ключ-значение)",
-          "example": "const obj = { name: 'John' };\n// name is property"
+          "example": "const obj = { name: 'John' };"
         },
         {
           "term": "method",
           "english": "method",
           "russian": "метод (функция, являющаяся свойством объекта)",
-          "example": "const obj = {\n  greet() { console.log('Hi'); }\n};"
+          "example": "const obj = { greet() { console.log('Hi'); } };"
         },
         {
           "term": "key",
           "english": "key",
           "russian": "ключ (имя свойства)",
-          "example": "const obj = { name: 'John' };\n// 'name' is the key"
+          "example": "const obj = { name: 'John' };"
         },
         {
           "term": "dot notation",
           "english": "dot notation",
           "russian": "точечная запись (obj.prop)",
-          "example": "obj.name  // dot notation"
+          "example": "obj.name"
         },
         {
           "term": "bracket notation",
           "english": "bracket notation",
-          "russian": "скобочная запись (obj[\"prop\"])",
-          "example": "obj['name']  // bracket notation"
+          "russian": "скобочная запись (obj['prop'])",
+          "example": "obj['name']"
         },
         {
           "term": "delete operator",
@@ -404,7 +428,7 @@
           "term": "in operator",
           "english": "in operator",
           "russian": "проверяет существование свойства",
-          "example": "'name' in obj  // true or false"
+          "example": "'name' in obj"
         },
         {
           "term": "hasOwnProperty()",
@@ -416,37 +440,43 @@
           "term": "Object.keys()",
           "english": "Object.keys()",
           "russian": "возвращает массив ключей объекта",
-          "example": "Object.keys({ a: 1, b: 2 }); // ['a', 'b']"
+          "example": "Object.keys({ a: 1, b: 2 });"
         },
         {
           "term": "Object.values()",
           "english": "Object.values()",
           "russian": "возвращает массив значений",
-          "example": "Object.values({ a: 1, b: 2 }); // [1, 2]"
+          "example": "Object.values({ a: 1, b: 2 });"
         },
         {
           "term": "Object.entries()",
           "english": "Object.entries()",
           "russian": "возвращает массив пар [ключ, значение]",
-          "example": "Object.entries({ a: 1, b: 2 }); // [['a', 1], ['b', 2]]"
+          "example": "Object.entries({ a: 1, b: 2 });"
         },
         {
           "term": "Object.assign()",
           "english": "Object.assign()",
           "russian": "копирует свойства из одного объекта в другой",
           "example": "Object.assign({}, obj1, obj2);"
-        },
+        }
+      ]
+    },
+    {
+      "id": "day7_prototypes_classes",
+      "title": "Неделя 7: Прототипы и классы (ES6)",
+      "cards": [
         {
           "term": "prototype",
           "english": "prototype",
           "russian": "прототип (механизм наследования в JS)",
-          "example": "Array.prototype.myMethod = function() {};"
+          "example": "Array.prototype.myMethod = function() { };"
         },
         {
           "term": "constructor",
           "english": "constructor",
           "russian": "конструктор (функция, создающая объекты через new)",
-          "example": "function User(name) {\n  this.name = name;\n}"
+          "example": "function User(name) { this.name = name; }"
         },
         {
           "term": "new operator",
@@ -458,739 +488,3439 @@
           "term": "class",
           "english": "class",
           "russian": "класс (синтаксический сахар над прототипами)",
-          "example": "class User {\n  constructor(name) {\n    this.name = name;\n  }\n}"
+          "example": "class User { constructor(name) { this.name = name; } }"
         },
         {
           "term": "extends",
           "english": "extends keyword",
           "russian": "наследование одного класса от другого",
-          "example": "class Admin extends User {}"
+          "example": "class Admin extends User { }"
         },
         {
           "term": "super",
           "english": "super keyword",
-          "russian": "вызывает конструктор родителя или его методы",
-          "example": "class Admin extends User {\n  constructor(name, role) {\n    super(name);\n    this.role = role;\n  }\n}"
+          "russian": "вызывает конструктор родителя или обращается к его методам",
+          "example": "class Admin extends User { constructor(name, role) { super(name); this.role = role; } }"
         },
         {
           "term": "static",
           "english": "static keyword",
           "russian": "статическое свойство/метод класса",
-          "example": "class User {\n  static create() { return new User(); }\n}"
+          "example": "class User { static create() { return new User(); } }"
         },
         {
           "term": "getter",
           "english": "getter",
-          "russian": "геттер (метод для получения значения)",
-          "example": "class User {\n  get fullName() {\n    return this.first + ' ' + this.last;\n  }\n}"
+          "russian": "геттер (метод для получения значения, вызывается как свойство)",
+          "example": "class User { get fullName() { return this.first + ' ' + this.last; } }"
         },
         {
           "term": "setter",
           "english": "setter",
           "russian": "сеттер (метод для установки значения)",
-          "example": "class User {\n  set age(value) {\n    this._age = value;\n  }\n}"
+          "example": "class User { set age(value) { this._age = value; } }"
         },
         {
           "term": "instanceof",
           "english": "instanceof operator",
           "russian": "проверяет, принадлежит ли объект классу",
-          "example": "user instanceof User  // true"
+          "example": "user instanceof User"
         }
       ]
     },
     {
-      "id": "arrays",
-      "title": "Неделя 3: Массивы, строки, числа",
+      "id": "day8_arrays_basic",
+      "title": "Неделя 8: Массивы — базовые методы",
       "cards": [
         {
           "term": "array",
           "english": "array",
           "russian": "массив (упорядоченный список элементов)",
-          "example": "const arr = [1, 2, 3, 4, 5];"
+          "example": "const arr = [1, 2, 3];"
         },
         {
           "term": "length",
           "english": "length property",
           "russian": "длина массива (количество элементов)",
-          "example": "arr.length  // 5"
+          "example": "[1,2,3].length; // 3"
         },
         {
           "term": "push()",
           "english": "push() method",
           "russian": "добавляет элемент в конец массива",
-          "example": "arr.push(6);  // [1, 2, 3, 4, 5, 6]"
+          "example": "arr.push(4); // [1,2,3,4]"
         },
         {
           "term": "pop()",
           "english": "pop() method",
           "russian": "удаляет последний элемент и возвращает его",
-          "example": "arr.pop();  // removes and returns last element"
+          "example": "arr.pop(); // 4"
         },
         {
           "term": "unshift()",
           "english": "unshift() method",
           "russian": "добавляет элемент в начало",
-          "example": "arr.unshift(0);  // [0, 1, 2, 3, 4, 5]"
+          "example": "arr.unshift(0); // [0,1,2,3]"
         },
         {
           "term": "shift()",
           "english": "shift() method",
           "russian": "удаляет первый элемент",
-          "example": "arr.shift();  // removes first element"
+          "example": "arr.shift(); // 0"
         },
         {
           "term": "indexOf()",
           "english": "indexOf() method",
-          "russian": "возвращает индекс первого вхождения элемента",
-          "example": "arr.indexOf(3);  // 2"
+          "russian": "возвращает индекс первого вхождения элемента (или -1)",
+          "example": "[1,2,3].indexOf(2); // 1"
+        },
+        {
+          "term": "lastIndexOf()",
+          "english": "lastIndexOf() method",
+          "russian": "индекс последнего вхождения",
+          "example": "[1,2,3,2].lastIndexOf(2); // 3"
         },
         {
           "term": "includes()",
           "english": "includes() method",
           "russian": "проверяет наличие элемента",
-          "example": "arr.includes(3);  // true"
+          "example": "[1,2,3].includes(2); // true"
         },
         {
           "term": "concat()",
           "english": "concat() method",
           "russian": "объединяет массивы",
-          "example": "[1, 2].concat([3, 4]);  // [1, 2, 3, 4]"
+          "example": "[1,2].concat([3,4]); // [1,2,3,4]"
         },
         {
           "term": "slice()",
           "english": "slice() method",
-          "russian": "возвращает копию части массива",
-          "example": "arr.slice(1, 3);  // [2, 3]"
+          "russian": "возвращает копию части массива (не изменяя исходный)",
+          "example": "[1,2,3,4].slice(1,3); // [2,3]"
         },
         {
           "term": "splice()",
           "english": "splice() method",
           "russian": "изменяет содержимое массива (удаляет/добавляет)",
-          "example": "arr.splice(1, 2, 'a', 'b');  // remove 2, insert 'a', 'b'"
-        },
+          "example": "arr.splice(1, 1, 'a'); // удаляет 1 элемент с индекса 1 и вставляет 'a'"
+        }
+      ]
+    },
+    {
+      "id": "day9_arrays_iteration",
+      "title": "Неделя 9: Массивы — итерационные методы (часть 1)",
+      "cards": [
         {
           "term": "forEach()",
           "english": "forEach() method",
           "russian": "выполняет функцию для каждого элемента",
-          "example": "arr.forEach(item => console.log(item));"
+          "example": "[1,2,3].forEach(x => console.log(x));"
         },
         {
           "term": "map()",
           "english": "map() method",
-          "russian": "создаёт новый массив из результатов функции",
-          "example": "arr.map(x => x * 2);  // [2, 4, 6, 8, 10]"
+          "russian": "создаёт новый массив из результатов вызова функции",
+          "example": "[1,2,3].map(x => x*2); // [2,4,6]"
         },
         {
           "term": "filter()",
           "english": "filter() method",
           "russian": "фильтрует элементы по условию",
-          "example": "arr.filter(x => x > 2);  // [3, 4, 5]"
+          "example": "[1,2,3,4].filter(x => x%2===0); // [2,4]"
         },
         {
           "term": "reduce()",
           "english": "reduce() method",
           "russian": "свёртка массива к одному значению",
-          "example": "arr.reduce((sum, x) => sum + x, 0);  // 15"
+          "example": "[1,2,3].reduce((acc, x) => acc + x, 0); // 6"
+        },
+        {
+          "term": "reduceRight()",
+          "english": "reduceRight() method",
+          "russian": "то же, но справа налево",
+          "example": "['a','b','c'].reduceRight((acc, x) => acc + x); // 'cba'"
         },
         {
           "term": "every()",
           "english": "every() method",
           "russian": "проверяет, все ли элементы удовлетворяют условию",
-          "example": "arr.every(x => x > 0);  // true"
+          "example": "[1,2,3].every(x => x>0); // true"
         },
         {
           "term": "some()",
           "english": "some() method",
-          "russian": "проверяет, есть ли хотя бы один подходящий",
-          "example": "arr.some(x => x > 3);  // true"
+          "russian": "проверяет, есть ли хотя бы один удовлетворяющий условию",
+          "example": "[1,2,3].some(x => x>2); // true"
         },
         {
           "term": "find()",
           "english": "find() method",
           "russian": "возвращает первый элемент, удовлетворяющий условию",
-          "example": "arr.find(x => x > 2);  // 3"
+          "example": "[1,2,3].find(x => x>1); // 2"
         },
         {
           "term": "findIndex()",
           "english": "findIndex() method",
           "russian": "индекс первого подходящего элемента",
-          "example": "arr.findIndex(x => x > 2);  // 2"
+          "example": "[1,2,3].findIndex(x => x>1); // 1"
         },
         {
           "term": "sort()",
           "english": "sort() method",
-          "russian": "сортирует массив",
-          "example": "arr.sort((a, b) => a - b);"
+          "russian": "сортирует массив (по умолчанию как строки)",
+          "example": "[3,1,2].sort(); // [1,2,3]"
         },
         {
           "term": "reverse()",
           "english": "reverse() method",
           "russian": "переворачивает порядок элементов",
-          "example": "arr.reverse();"
+          "example": "[1,2,3].reverse(); // [3,2,1]"
+        }
+      ]
+    },
+    {
+      "id": "day10_strings",
+      "title": "Неделя 10: Строки",
+      "cards": [
+        {
+          "term": "string",
+          "english": "string",
+          "russian": "строка (тип данных)",
+          "example": "const str = 'hello';"
+        },
+        {
+          "term": "length",
+          "english": "length property",
+          "russian": "длина строки",
+          "example": "'hello'.length; // 5"
         },
         {
           "term": "charAt()",
           "english": "charAt() method",
           "russian": "возвращает символ по индексу",
-          "example": "'hello'.charAt(0);  // 'h'"
+          "example": "'hello'.charAt(1); // 'e'"
         },
         {
-          "term": "includes() string",
+          "term": "charCodeAt()",
+          "english": "charCodeAt() method",
+          "russian": "код символа UTF-16",
+          "example": "'a'.charCodeAt(0); // 97"
+        },
+        {
+          "term": "concat()",
+          "english": "concat() method",
+          "russian": "объединяет строки (аналог +)",
+          "example": "'Hello'.concat(' ', 'World');"
+        },
+        {
+          "term": "includes()",
           "english": "includes() method",
           "russian": "проверяет наличие подстроки",
-          "example": "'hello'.includes('ell');  // true"
+          "example": "'Hello World'.includes('World'); // true"
         },
         {
-          "term": "slice() string",
+          "term": "indexOf()",
+          "english": "indexOf() method",
+          "russian": "индекс первого вхождения подстроки",
+          "example": "'hello'.indexOf('l'); // 2"
+        },
+        {
+          "term": "lastIndexOf()",
+          "english": "lastIndexOf() method",
+          "russian": "индекс последнего вхождения",
+          "example": "'hello'.lastIndexOf('l'); // 3"
+        },
+        {
+          "term": "slice()",
           "english": "slice() method",
           "russian": "извлекает часть строки",
-          "example": "'hello'.slice(1, 4);  // 'ell'"
+          "example": "'hello'.slice(1,4); // 'ell'"
+        },
+        {
+          "term": "substring()",
+          "english": "substring() method",
+          "russian": "аналогично slice, но с другими нюансами",
+          "example": "'hello'.substring(1,4); // 'ell'"
+        },
+        {
+          "term": "substr()",
+          "english": "substr() method",
+          "russian": "устаревший, извлекает подстроку по длине",
+          "example": "'hello'.substr(1,3); // 'ell'"
         },
         {
           "term": "toLowerCase()",
           "english": "toLowerCase() method",
           "russian": "в нижний регистр",
-          "example": "'HELLO'.toLowerCase();  // 'hello'"
+          "example": "'Hello'.toLowerCase(); // 'hello'"
         },
         {
           "term": "toUpperCase()",
           "english": "toUpperCase() method",
           "russian": "в верхний регистр",
-          "example": "'hello'.toUpperCase();  // 'HELLO'"
+          "example": "'Hello'.toUpperCase(); // 'HELLO'"
         },
         {
           "term": "trim()",
           "english": "trim() method",
           "russian": "удаляет пробелы с концов",
-          "example": "'  hello  '.trim();  // 'hello'"
+          "example": "'  hi  '.trim(); // 'hi'"
         },
         {
           "term": "split()",
           "english": "split() method",
           "russian": "разбивает строку на массив по разделителю",
-          "example": "'a,b,c'.split(',');  // ['a', 'b', 'c']"
+          "example": "'a,b,c'.split(','); // ['a','b','c']"
         },
         {
           "term": "replace()",
           "english": "replace() method",
-          "russian": "заменяет подстроку",
-          "example": "'hello'.replace('l', 'L');  // 'heLlo'"
+          "russian": "заменяет подстроку (первое вхождение)",
+          "example": "'hello'.replace('l', 'x'); // 'hexlo'"
+        },
+        {
+          "term": "replaceAll()",
+          "english": "replaceAll() method",
+          "russian": "заменяет все вхождения",
+          "example": "'hello'.replaceAll('l', 'x'); // 'hexxo'"
+        }
+      ]
+    },
+    {
+      "id": "day11_numbers_math",
+      "title": "Неделя 11: Числа и математические функции",
+      "cards": [
+        {
+          "term": "number",
+          "english": "number",
+          "russian": "числовой тип",
+          "example": "const n = 42;"
         },
         {
           "term": "NaN",
           "english": "Not a Number",
-          "russian": "«не число» (результат некорректной операции)",
-          "example": "parseInt('abc');  // NaN"
+          "russian": "«не число» (результат некорректной математической операции)",
+          "example": "parseInt('abc'); // NaN"
+        },
+        {
+          "term": "Infinity",
+          "english": "Infinity",
+          "russian": "бесконечность",
+          "example": "1 / 0; // Infinity"
+        },
+        {
+          "term": "isNaN()",
+          "english": "isNaN() function",
+          "russian": "проверяет, является ли значение NaN",
+          "example": "isNaN(NaN); // true"
+        },
+        {
+          "term": "isFinite()",
+          "english": "isFinite() function",
+          "russian": "проверяет, конечно ли число",
+          "example": "isFinite(42); // true"
         },
         {
           "term": "parseInt()",
           "english": "parseInt() function",
           "russian": "преобразует строку в целое число",
-          "example": "parseInt('42px');  // 42"
+          "example": "parseInt('42px'); // 42"
         },
         {
           "term": "parseFloat()",
           "english": "parseFloat() function",
-          "russian": "преобразует строку в число с точкой",
-          "example": "parseFloat('3.14');  // 3.14"
+          "russian": "в число с плавающей точкой",
+          "example": "parseFloat('3.14'); // 3.14"
         },
         {
           "term": "toFixed()",
           "english": "toFixed() method",
-          "russian": "округляет до указанного количества знаков",
-          "example": "(3.14159).toFixed(2);  // '3.14'"
+          "russian": "округляет число до указанного количества знаков после запятой (возвращает строку)",
+          "example": "(3.1415).toFixed(2); // '3.14'"
+        },
+        {
+          "term": "toPrecision()",
+          "english": "toPrecision() method",
+          "russian": "возвращает строку с числом заданной длины",
+          "example": "(123.456).toPrecision(4); // '123.5'"
+        },
+        {
+          "term": "Math",
+          "english": "Math object",
+          "russian": "встроенный объект с математическими константами и функциями",
+          "example": "Math.PI; // 3.14159"
         },
         {
           "term": "Math.random()",
           "english": "Math.random()",
           "russian": "случайное число от 0 до 1",
-          "example": "Math.random();  // 0.123... (random)"
+          "example": "Math.random(); // 0.123..."
         },
         {
           "term": "Math.floor()",
           "english": "Math.floor()",
           "russian": "округление вниз",
-          "example": "Math.floor(4.9);  // 4"
+          "example": "Math.floor(3.9); // 3"
         },
         {
           "term": "Math.ceil()",
           "english": "Math.ceil()",
           "russian": "округление вверх",
-          "example": "Math.ceil(4.1);  // 5"
+          "example": "Math.ceil(3.1); // 4"
         },
         {
           "term": "Math.round()",
           "english": "Math.round()",
           "russian": "округление до ближайшего целого",
-          "example": "Math.round(4.5);  // 5"
+          "example": "Math.round(3.5); // 4"
         },
+        {
+          "term": "Math.max()",
+          "english": "Math.max()",
+          "russian": "максимальное из переданных чисел",
+          "example": "Math.max(1, 5, 2); // 5"
+        },
+        {
+          "term": "Math.min()",
+          "english": "Math.min()",
+          "russian": "минимальное",
+          "example": "Math.min(1, 5, 2); // 1"
+        },
+        {
+          "term": "Math.abs()",
+          "english": "Math.abs()",
+          "russian": "модуль числа",
+          "example": "Math.abs(-5); // 5"
+        },
+        {
+          "term": "Math.pow()",
+          "english": "Math.pow()",
+          "russian": "возведение в степень",
+          "example": "Math.pow(2, 3); // 8"
+        }
+      ]
+    },
+    {
+      "id": "day12_date",
+      "title": "Неделя 12: Дата и время",
+      "cards": [
         {
           "term": "Date",
           "english": "Date object",
           "russian": "объект для работы с датой и временем",
+          "example": "new Date();"
+        },
+        {
+          "term": "new Date()",
+          "english": "new Date()",
+          "russian": "создаёт объект текущей даты",
           "example": "const now = new Date();"
         },
         {
           "term": "getFullYear()",
           "english": "getFullYear() method",
           "russian": "возвращает год",
-          "example": "new Date().getFullYear();  // 2024"
+          "example": "now.getFullYear();"
         },
         {
           "term": "getMonth()",
           "english": "getMonth() method",
           "russian": "месяц (0–11)",
-          "example": "new Date().getMonth();  // 0-11"
+          "example": "now.getMonth(); // 2 = март"
         },
         {
           "term": "getDate()",
           "english": "getDate() method",
           "russian": "день месяца (1–31)",
-          "example": "new Date().getDate();  // 1-31"
+          "example": "now.getDate();"
         },
         {
-          "term": "RegExp",
-          "english": "Regular Expression",
-          "russian": "регулярное выражение",
-          "example": "const regex = /\\d+/;"
+          "term": "getDay()",
+          "english": "getDay() method",
+          "russian": "день недели (0–6, воскресенье — 0)",
+          "example": "now.getDay();"
         },
         {
-          "term": "test()",
-          "english": "test() method",
-          "russian": "проверяет, есть ли совпадение",
-          "example": "/\\d+/.test('abc123');  // true"
+          "term": "getHours()",
+          "english": "getHours() method",
+          "russian": "часы (0–23)",
+          "example": "now.getHours();"
         },
         {
-          "term": "match()",
-          "english": "match() method",
-          "russian": "ищет совпадения по регулярному выражению",
-          "example": "'abc123'.match(/\\d+/);  // ['123']"
+          "term": "getMinutes()",
+          "english": "getMinutes() method",
+          "russian": "минуты",
+          "example": "now.getMinutes();"
+        },
+        {
+          "term": "getSeconds()",
+          "english": "getSeconds() method",
+          "russian": "секунды",
+          "example": "now.getSeconds();"
+        },
+        {
+          "term": "getMilliseconds()",
+          "english": "getMilliseconds() method",
+          "russian": "миллисекунды",
+          "example": "now.getMilliseconds();"
+        },
+        {
+          "term": "getTime()",
+          "english": "getTime() method",
+          "russian": "количество миллисекунд с 01.01.1970",
+          "example": "now.getTime();"
+        },
+        {
+          "term": "setFullYear()",
+          "english": "setFullYear() method",
+          "russian": "устанавливает год",
+          "example": "now.setFullYear(2025);"
+        },
+        {
+          "term": "toISOString()",
+          "english": "toISOString() method",
+          "russian": "возвращает строку в формате ISO",
+          "example": "now.toISOString(); // '2023-...'"
+        },
+        {
+          "term": "toLocaleDateString()",
+          "english": "toLocaleDateString() method",
+          "russian": "локализованное представление даты",
+          "example": "now.toLocaleDateString('ru-RU');"
         }
       ]
     },
     {
-      "id": "async",
-      "title": "Неделя 4: Асинхронность, ошибки, DOM",
+      "id": "day13_regex",
+      "title": "Неделя 13: Регулярные выражения",
       "cards": [
+        {
+          "term": "RegExp",
+          "english": "Regular Expression",
+          "russian": "регулярное выражение (объект)",
+          "example": "/abc/ или new RegExp('abc')"
+        },
+        {
+          "term": "pattern",
+          "english": "pattern",
+          "russian": "шаблон регулярного выражения",
+          "example": "/\\d+/"
+        },
+        {
+          "term": "flags",
+          "english": "flags",
+          "russian": "флаги (g, i, m и др.)",
+          "example": "/abc/gi"
+        },
+        {
+          "term": "test()",
+          "english": "test() method",
+          "russian": "проверяет, есть ли совпадение в строке (возвращает true/false)",
+          "example": "/\\d+/.test('abc123'); // true"
+        },
+        {
+          "term": "exec()",
+          "english": "exec() method",
+          "russian": "выполняет поиск и возвращает массив с деталями",
+          "example": "/(\\d+)/.exec('abc123');"
+        },
+        {
+          "term": "match()",
+          "english": "match() method (строковый)",
+          "russian": "ищет совпадения по регулярному выражению",
+          "example": "'abc123'.match(/\\d+/);"
+        },
+        {
+          "term": "matchAll()",
+          "english": "matchAll() method",
+          "russian": "возвращает итератор всех совпадений",
+          "example": "'a1b2'.matchAll(/\\d/g);"
+        },
+        {
+          "term": "search()",
+          "english": "search() method",
+          "russian": "возвращает индекс первого совпадения",
+          "example": "'abc123'.search(/\\d/); // 3"
+        },
+        {
+          "term": "replace() с regex",
+          "english": "replace() with regex",
+          "russian": "замена по регулярному выражению",
+          "example": "'a1b2'.replace(/\\d/g, 'X'); // 'aXbX'"
+        },
+        {
+          "term": "split() с regex",
+          "english": "split() with regex",
+          "russian": "разбиение по регулярному выражению",
+          "example": "'a1b2c'.split(/\\d/); // ['a','b','c']"
+        },
+        {
+          "term": "character classes",
+          "english": "character classes",
+          "russian": "символьные классы (\\d, \\w, \\s и т.д.)",
+          "example": "/\\w+/"
+        },
+        {
+          "term": "quantifiers",
+          "english": "quantifiers",
+          "russian": "квантификаторы (*, +, ?, {n})",
+          "example": "/a+/"
+        },
+        {
+          "term": "groups",
+          "english": "capturing groups",
+          "russian": "захватывающие группы (…)",
+          "example": "/(\\d{2})-(\\d{2})/"
+        }
+      ]
+    },
+    {
+      "id": "day14_errors",
+      "title": "Неделя 14: Обработка ошибок",
+      "cards": [
+        {
+          "term": "error",
+          "english": "error",
+          "russian": "ошибка (объект)",
+          "example": "new Error('message');"
+        },
+        {
+          "term": "exception",
+          "english": "exception",
+          "russian": "исключение (ошибка во время выполнения)",
+          "example": "throw new Error();"
+        },
         {
           "term": "try",
           "english": "try block",
           "russian": "блок, в котором отслеживаются ошибки",
-          "example": "try {\n  // code that may throw error\n}"
+          "example": "try { }"
         },
         {
           "term": "catch",
           "english": "catch block",
           "russian": "блок обработки ошибки",
-          "example": "try {\n  // ...\n} catch (error) {\n  console.log(error);\n}"
+          "example": "catch(err) { }"
         },
         {
           "term": "finally",
           "english": "finally block",
-          "russian": "блок, выполняющийся всегда",
-          "example": "try {\n  // ...\n} finally {\n  // cleanup\n}"
+          "russian": "блок, выполняющийся всегда (после try/catch)",
+          "example": "finally { }"
         },
         {
           "term": "throw",
           "english": "throw statement",
           "russian": "выброс исключения",
-          "example": "throw new Error('Something went wrong');"
+          "example": "throw new Error('fail');"
         },
         {
-          "term": "Error",
+          "term": "Error object",
           "english": "Error object",
           "russian": "объект ошибки с полями name, message, stack",
-          "example": "new Error('Invalid input');"
+          "example": "new Error('msg')"
         },
+        {
+          "term": "TypeError",
+          "english": "TypeError",
+          "russian": "ошибка несоответствия типа",
+          "example": "null.foo(); // TypeError"
+        },
+        {
+          "term": "ReferenceError",
+          "english": "ReferenceError",
+          "russian": "ошибка ссылки (переменная не определена)",
+          "example": "console.log(x); // ReferenceError"
+        },
+        {
+          "term": "SyntaxError",
+          "english": "SyntaxError",
+          "russian": "синтаксическая ошибка",
+          "example": "eval('foo bar'); // SyntaxError"
+        },
+        {
+          "term": "RangeError",
+          "english": "RangeError",
+          "russian": "выход за допустимые границы",
+          "example": "new Array(-1); // RangeError"
+        },
+        {
+          "term": "custom error",
+          "english": "custom error",
+          "russian": "пользовательская ошибка",
+          "example": "class MyError extends Error {}"
+        }
+      ]
+    },
+    {
+      "id": "day15_promises_basics",
+      "title": "Неделя 15: Промисы — основы",
+      "cards": [
         {
           "term": "Promise",
           "english": "Promise",
-          "russian": "промис (объект асинхронной операции)",
-          "example": "const p = new Promise((resolve, reject) => {\n  resolve('done');\n});"
+          "russian": "промис (объект, представляющий асинхронную операцию)",
+          "example": "new Promise((resolve, reject) => {})"
+        },
+        {
+          "term": "pending",
+          "english": "pending",
+          "russian": "состояние ожидания",
+          "example": "new Promise(() => {}) // pending"
+        },
+        {
+          "term": "fulfilled",
+          "english": "fulfilled",
+          "russian": "выполнено успешно",
+          "example": "Promise.resolve() // fulfilled"
+        },
+        {
+          "term": "rejected",
+          "english": "rejected",
+          "russian": "отклонено (ошибка)",
+          "example": "Promise.reject() // rejected"
+        },
+        {
+          "term": "settled",
+          "english": "settled",
+          "russian": "состояние завершённости (успех или неудача)",
+          "example": "promise.finally(() => {}) // after settle"
         },
         {
           "term": "then()",
           "english": "then() method",
           "russian": "обрабатывает успешное выполнение",
-          "example": "promise.then(result => console.log(result));"
+          "example": "promise.then(result => {})"
         },
         {
-          "term": "catch() promise",
+          "term": "catch()",
           "english": "catch() method",
-          "russian": "обрабатывает ошибку промиса",
-          "example": "promise.catch(error => console.log(error));"
+          "russian": "обрабатывает ошибку",
+          "example": "promise.catch(err => {})"
+        },
+        {
+          "term": "finally()",
+          "english": "finally() method",
+          "russian": "выполняется после завершения промиса",
+          "example": "promise.finally(() => {})"
         },
         {
           "term": "resolve()",
           "english": "resolve() function",
           "russian": "возвращает успешно завершённый промис",
-          "example": "Promise.resolve('done');"
+          "example": "Promise.resolve(42)"
         },
         {
           "term": "reject()",
           "english": "reject() function",
           "russian": "возвращает отклонённый промис",
-          "example": "Promise.reject('error');"
+          "example": "Promise.reject('error')"
         },
         {
           "term": "Promise.all()",
           "english": "Promise.all()",
-          "russian": "ждёт все промисы",
-          "example": "Promise.all([p1, p2, p3]).then(results => {});"
+          "russian": "ждёт все промисы (если один упадёт — падает весь)",
+          "example": "Promise.all([p1, p2])"
         },
+        {
+          "term": "Promise.allSettled()",
+          "english": "Promise.allSettled()",
+          "russian": "ждёт все, возвращает результаты всех",
+          "example": "Promise.allSettled([p1, p2])"
+        },
+        {
+          "term": "Promise.race()",
+          "english": "Promise.race()",
+          "russian": "ждёт первый завершившийся промис",
+          "example": "Promise.race([p1, p2])"
+        },
+        {
+          "term": "Promise.any()",
+          "english": "Promise.any()",
+          "russian": "ждёт первый успешный промис",
+          "example": "Promise.any([p1, p2])"
+        }
+      ]
+    },
+    {
+      "id": "day16_async_await",
+      "title": "Неделя 16: Async/await",
+      "cards": [
         {
           "term": "async",
           "english": "async keyword",
-          "russian": "объявляет асинхронную функцию",
-          "example": "async function fetchData() {\n  return 'data';\n}"
+          "russian": "объявляет асинхронную функцию (возвращает промис)",
+          "example": "async function foo() {}"
         },
         {
           "term": "await",
           "english": "await operator",
-          "russian": "ждёт выполнения промиса",
+          "russian": "ждёт выполнения промиса внутри async-функции",
+          "example": "let res = await fetch(url);"
+        },
+        {
+          "term": "async function",
+          "english": "async function",
+          "russian": "асинхронная функция",
+          "example": "const getData = async () => {}"
+        },
+        {
+          "term": "try/catch с await",
+          "english": "try/catch with await",
+          "russian": "обработка ошибок в async-функциях",
+          "example": "try { await promise; } catch(e) {}"
+        },
+        {
+          "term": "top-level await",
+          "english": "top-level await",
+          "russian": "ожидание на верхнем уровне модуля (ES2022)",
           "example": "const data = await fetch(url);"
         },
+        {
+          "term": "sequential execution",
+          "english": "sequential execution",
+          "russian": "последовательное выполнение",
+          "example": "await p1; await p2;"
+        },
+        {
+          "term": "parallel execution",
+          "english": "parallel execution",
+          "russian": "параллельное выполнение (через Promise.all)",
+          "example": "await Promise.all([p1, p2]);"
+        }
+      ]
+    },
+    {
+      "id": "day17_events",
+      "title": "Неделя 17: События",
+      "cards": [
         {
           "term": "event",
           "english": "event",
           "russian": "событие (действие пользователя или системы)",
-          "example": "button.addEventListener('click', handler);"
+          "example": "click, keydown"
+        },
+        {
+          "term": "event handler",
+          "english": "event handler",
+          "russian": "обработчик события",
+          "example": "element.onclick = handler;"
+        },
+        {
+          "term": "event listener",
+          "english": "event listener",
+          "russian": "слушатель события (добавляется через addEventListener)",
+          "example": "element.addEventListener('click', handler);"
         },
         {
           "term": "addEventListener()",
           "english": "addEventListener() method",
           "russian": "назначает обработчик события",
-          "example": "element.addEventListener('click', () => {});"
+          "example": "btn.addEventListener('click', handler);"
         },
         {
-          "term": "event.target",
+          "term": "removeEventListener()",
+          "english": "removeEventListener() method",
+          "russian": "удаляет обработчик",
+          "example": "btn.removeEventListener('click', handler);"
+        },
+        {
+          "term": "event object",
+          "english": "event object",
+          "russian": "объект события (содержит информацию о событии)",
+          "example": "function handler(e) { console.log(e.target); }"
+        },
+        {
+          "term": "target",
           "english": "target property",
           "russian": "элемент, на котором произошло событие",
-          "example": "event.target  // element that was clicked"
+          "example": "e.target"
+        },
+        {
+          "term": "currentTarget",
+          "english": "currentTarget property",
+          "russian": "элемент, к которому привязан обработчик",
+          "example": "e.currentTarget"
         },
         {
           "term": "preventDefault()",
           "english": "preventDefault() method",
           "russian": "отменяет действие по умолчанию",
-          "example": "event.preventDefault();"
+          "example": "e.preventDefault();"
         },
         {
           "term": "stopPropagation()",
           "english": "stopPropagation() method",
           "russian": "предотвращает всплытие события",
-          "example": "event.stopPropagation();"
+          "example": "e.stopPropagation();"
         },
+        {
+          "term": "event bubbling",
+          "english": "event bubbling",
+          "russian": "всплытие события (от цели к корню)",
+          "example": "событие сначала на цели, потом на родителях"
+        },
+        {
+          "term": "event capturing",
+          "english": "event capturing",
+          "russian": "погружение события (от корня к цели)",
+          "example": "использование { capture: true }"
+        },
+        {
+          "term": "event delegation",
+          "english": "event delegation",
+          "russian": "делегирование событий (обработка на родителе)",
+          "example": "parent.addEventListener('click', handler);"
+        },
+        {
+          "term": "click",
+          "english": "click event",
+          "russian": "событие клика",
+          "example": "btn.click();"
+        },
+        {
+          "term": "mouseover, mouseout",
+          "english": "mouseover/mouseout",
+          "russian": "наведение мыши",
+          "example": "element.onmouseover = handler;"
+        },
+        {
+          "term": "keydown, keyup",
+          "english": "keydown/keyup",
+          "russian": "нажатие клавиш",
+          "example": "window.addEventListener('keydown', handler);"
+        },
+        {
+          "term": "submit",
+          "english": "submit event",
+          "russian": "отправка формы",
+          "example": "form.addEventListener('submit', handler);"
+        }
+      ]
+    },
+    {
+      "id": "day18_dom_search",
+      "title": "Неделя 18: DOM — поиск элементов",
+      "cards": [
         {
           "term": "DOM",
           "english": "Document Object Model",
           "russian": "объектная модель документа",
-          "example": "// HTML structure as objects"
+          "example": "document.body"
         },
         {
-          "term": "querySelector()",
-          "english": "querySelector() method",
-          "russian": "поиск первого элемента по CSS-селектору",
-          "example": "document.querySelector('.class');"
+          "term": "document",
+          "english": "document object",
+          "russian": "глобальный объект документа",
+          "example": "document.getElementById('id')"
         },
         {
-          "term": "querySelectorAll()",
-          "english": "querySelectorAll() method",
-          "russian": "все элементы по селектору",
-          "example": "document.querySelectorAll('.class');"
+          "term": "element",
+          "english": "element",
+          "russian": "элемент (HTML-узел)",
+          "example": "<div> — элемент"
+        },
+        {
+          "term": "node",
+          "english": "node",
+          "russian": "узел (element, text, comment и др.)",
+          "example": "текстовый узел"
         },
         {
           "term": "getElementById()",
           "english": "getElementById() method",
           "russian": "поиск по id",
-          "example": "document.getElementById('myId');"
+          "example": "document.getElementById('main')"
         },
+        {
+          "term": "getElementsByClassName()",
+          "english": "getElementsByClassName()",
+          "russian": "поиск по классу (живая коллекция)",
+          "example": "document.getElementsByClassName('item')"
+        },
+        {
+          "term": "getElementsByTagName()",
+          "english": "getElementsByTagName()",
+          "russian": "поиск по тегу",
+          "example": "document.getElementsByTagName('div')"
+        },
+        {
+          "term": "querySelector()",
+          "english": "querySelector() method",
+          "russian": "поиск первого элемента по CSS-селектору",
+          "example": "document.querySelector('.class')"
+        },
+        {
+          "term": "querySelectorAll()",
+          "english": "querySelectorAll() method",
+          "russian": "все элементы по селектору (статическая коллекция)",
+          "example": "document.querySelectorAll('p')"
+        },
+        {
+          "term": "parentNode",
+          "english": "parentNode property",
+          "russian": "родительский узел",
+          "example": "elem.parentNode"
+        },
+        {
+          "term": "childNodes",
+          "english": "childNodes property",
+          "russian": "дочерние узлы (включая текстовые)",
+          "example": "elem.childNodes"
+        },
+        {
+          "term": "children",
+          "english": "children property",
+          "russian": "дочерние элементы (только теги)",
+          "example": "elem.children"
+        },
+        {
+          "term": "firstChild / lastChild",
+          "english": "firstChild / lastChild",
+          "russian": "первый/последний дочерний узел",
+          "example": "elem.firstChild"
+        },
+        {
+          "term": "firstElementChild / lastElementChild",
+          "english": "firstElementChild / lastElementChild",
+          "russian": "первый/последний дочерний элемент",
+          "example": "elem.firstElementChild"
+        },
+        {
+          "term": "nextSibling / previousSibling",
+          "english": "nextSibling / previousSibling",
+          "russian": "следующий/предыдущий соседний узел",
+          "example": "elem.nextSibling"
+        },
+        {
+          "term": "nextElementSibling / previousElementSibling",
+          "english": "nextElementSibling / previousElementSibling",
+          "russian": "соседний элемент",
+          "example": "elem.nextElementSibling"
+        }
+      ]
+    },
+    {
+      "id": "day19_dom_manipulation",
+      "title": "Неделя 19: DOM — манипуляции",
+      "cards": [
         {
           "term": "innerHTML",
           "english": "innerHTML property",
-          "russian": "HTML-содержимое элемента",
-          "example": "element.innerHTML = '<p>Hello</p>';"
+          "russian": "HTML-содержимое элемента (строка)",
+          "example": "elem.innerHTML = '<b>text</b>';"
         },
         {
           "term": "textContent",
           "english": "textContent property",
           "russian": "текстовое содержимое (без тегов)",
-          "example": "element.textContent = 'Hello';"
+          "example": "elem.textContent = 'text';"
+        },
+        {
+          "term": "innerText",
+          "english": "innerText property",
+          "russian": "видимый текст (с учётом стилей)",
+          "example": "elem.innerText"
+        },
+        {
+          "term": "outerHTML",
+          "english": "outerHTML property",
+          "russian": "HTML элемента вместе с самим элементом",
+          "example": "elem.outerHTML"
         },
         {
           "term": "createElement()",
           "english": "createElement() method",
           "russian": "создаёт новый элемент",
-          "example": "const div = document.createElement('div');"
+          "example": "document.createElement('div')"
+        },
+        {
+          "term": "createTextNode()",
+          "english": "createTextNode() method",
+          "russian": "создаёт текстовый узел",
+          "example": "document.createTextNode('hello')"
         },
         {
           "term": "appendChild()",
           "english": "appendChild() method",
           "russian": "добавляет дочерний узел в конец",
-          "example": "parent.appendChild(child);"
+          "example": "parent.appendChild(child)"
+        },
+        {
+          "term": "insertBefore()",
+          "english": "insertBefore() method",
+          "russian": "вставляет узел перед указанным",
+          "example": "parent.insertBefore(newNode, referenceNode)"
+        },
+        {
+          "term": "removeChild()",
+          "english": "removeChild() method",
+          "russian": "удаляет дочерний узел",
+          "example": "parent.removeChild(child)"
+        },
+        {
+          "term": "replaceChild()",
+          "english": "replaceChild() method",
+          "russian": "заменяет узел",
+          "example": "parent.replaceChild(newNode, oldNode)"
+        },
+        {
+          "term": "cloneNode()",
+          "english": "cloneNode() method",
+          "russian": "клонирует узел (true — глубокое клонирование)",
+          "example": "elem.cloneNode(true)"
         },
         {
           "term": "classList",
           "english": "classList property",
           "russian": "коллекция классов элемента",
-          "example": "element.classList.add('active');"
+          "example": "elem.classList.add('class')"
         },
         {
           "term": "classList.add()",
           "english": "add() method",
           "russian": "добавить класс",
-          "example": "element.classList.add('active');"
+          "example": "elem.classList.add('new')"
         },
         {
           "term": "classList.remove()",
           "english": "remove() method",
           "russian": "удалить класс",
-          "example": "element.classList.remove('active');"
+          "example": "elem.classList.remove('old')"
         },
         {
           "term": "classList.toggle()",
           "english": "toggle() method",
           "russian": "переключить класс",
-          "example": "element.classList.toggle('active');"
+          "example": "elem.classList.toggle('active')"
+        },
+        {
+          "term": "classList.contains()",
+          "english": "contains() method",
+          "russian": "проверяет наличие класса",
+          "example": "elem.classList.contains('active')"
         },
         {
           "term": "setAttribute()",
           "english": "setAttribute() method",
           "russian": "устанавливает атрибут",
-          "example": "element.setAttribute('data-id', '123');"
+          "example": "elem.setAttribute('data-id', '1')"
         },
+        {
+          "term": "getAttribute()",
+          "english": "getAttribute() method",
+          "russian": "получает значение атрибута",
+          "example": "elem.getAttribute('data-id')"
+        },
+        {
+          "term": "removeAttribute()",
+          "english": "removeAttribute() method",
+          "russian": "удаляет атрибут",
+          "example": "elem.removeAttribute('data-id')"
+        }
+      ]
+    },
+    {
+      "id": "day20_styles_dimensions",
+      "title": "Неделя 20: Стили и размеры",
+      "cards": [
         {
           "term": "style",
           "english": "style property",
           "russian": "объект для работы с инлайн-стилями",
-          "example": "element.style.color = 'red';"
+          "example": "elem.style.color = 'red';"
+        },
+        {
+          "term": "getComputedStyle()",
+          "english": "getComputedStyle() method",
+          "russian": "вычисленные стили элемента",
+          "example": "getComputedStyle(elem).color"
+        },
+        {
+          "term": "className",
+          "english": "className property",
+          "russian": "строка с классами (устаревшее, лучше classList)",
+          "example": "elem.className = 'class1 class2'"
+        },
+        {
+          "term": "offsetWidth / offsetHeight",
+          "english": "offsetWidth / offsetHeight",
+          "russian": "ширина/высота элемента с учётом рамок",
+          "example": "elem.offsetWidth"
+        },
+        {
+          "term": "clientWidth / clientHeight",
+          "english": "clientWidth / clientHeight",
+          "russian": "ширина/высота без рамок, но с внутренними отступами",
+          "example": "elem.clientWidth"
+        },
+        {
+          "term": "scrollWidth / scrollHeight",
+          "english": "scrollWidth / scrollHeight",
+          "russian": "полный размер с учётом прокрутки",
+          "example": "elem.scrollWidth"
+        },
+        {
+          "term": "offsetTop / offsetLeft",
+          "english": "offsetTop / offsetLeft",
+          "russian": "смещение относительно родителя",
+          "example": "elem.offsetTop"
+        },
+        {
+          "term": "scrollTop / scrollLeft",
+          "english": "scrollTop / scrollLeft",
+          "russian": "текущая прокрутка",
+          "example": "elem.scrollTop"
+        },
+        {
+          "term": "getBoundingClientRect()",
+          "english": "getBoundingClientRect()",
+          "russian": "возвращает координаты элемента относительно окна",
+          "example": "elem.getBoundingClientRect()"
+        }
+      ]
+    },
+    {
+      "id": "day21_bom",
+      "title": "Неделя 21: BOM (Browser Object Model)",
+      "cards": [
+        {
+          "term": "window",
+          "english": "window object",
+          "russian": "глобальный объект браузера",
+          "example": "window.alert('hi');"
+        },
+        {
+          "term": "navigator",
+          "english": "navigator object",
+          "russian": "информация о браузере",
+          "example": "navigator.userAgent"
+        },
+        {
+          "term": "screen",
+          "english": "screen object",
+          "russian": "информация об экране",
+          "example": "screen.width"
+        },
+        {
+          "term": "location",
+          "english": "location object",
+          "russian": "информация об URL и методы навигации",
+          "example": "location.href"
+        },
+        {
+          "term": "history",
+          "english": "history object",
+          "russian": "история браузера",
+          "example": "history.back()"
         },
         {
           "term": "localStorage",
           "english": "localStorage",
           "russian": "хранилище без срока давности",
-          "example": "localStorage.setItem('key', 'value');\nlocalStorage.getItem('key');"
+          "example": "localStorage.setItem('key', 'value')"
         },
         {
           "term": "sessionStorage",
           "english": "sessionStorage",
           "russian": "хранилище на время сессии",
-          "example": "sessionStorage.setItem('key', 'value');"
+          "example": "sessionStorage.getItem('key')"
+        },
+        {
+          "term": "cookie",
+          "english": "cookie",
+          "russian": "куки (небольшие данные, хранящиеся в браузере)",
+          "example": "document.cookie"
+        },
+        {
+          "term": "alert()",
+          "english": "alert() method",
+          "russian": "диалоговое окно с сообщением",
+          "example": "alert('Hello');"
+        },
+        {
+          "term": "confirm()",
+          "english": "confirm() method",
+          "russian": "окно с подтверждением (OK/Отмена)",
+          "example": "confirm('Are you sure?');"
+        },
+        {
+          "term": "prompt()",
+          "english": "prompt() method",
+          "russian": "окно с вводом текста",
+          "example": "prompt('Enter name');"
         },
         {
           "term": "setTimeout()",
           "english": "setTimeout() method",
           "russian": "выполняет функцию через заданное время",
-          "example": "setTimeout(() => {\n  console.log('delayed');\n}, 1000);"
+          "example": "setTimeout(() => {}, 1000);"
         },
         {
           "term": "setInterval()",
           "english": "setInterval() method",
           "russian": "выполняет функцию периодически",
-          "example": "setInterval(() => {\n  console.log('tick');\n}, 1000);"
+          "example": "setInterval(() => {}, 1000);"
         },
         {
-          "term": "fetch()",
-          "english": "fetch() function",
-          "russian": "выполняет HTTP-запрос",
-          "example": "fetch('https://api.example.com/data')\n  .then(res => res.json());"
+          "term": "clearTimeout()",
+          "english": "clearTimeout()",
+          "russian": "отменяет таймер",
+          "example": "clearTimeout(id);"
         },
         {
-          "term": "JSON",
-          "english": "JavaScript Object Notation",
-          "russian": "формат обмена данными",
-          "example": "JSON.stringify({ a: 1 });  // '{\"a\":1}'"
+          "term": "clearInterval()",
+          "english": "clearInterval()",
+          "russian": "отменяет интервал",
+          "example": "clearInterval(id);"
         },
         {
-          "term": "JSON.stringify()",
-          "english": "JSON.stringify()",
-          "russian": "преобразует объект в JSON-строку",
-          "example": "JSON.stringify({ name: 'John' });"
-        },
-        {
-          "term": "JSON.parse()",
-          "english": "JSON.parse()",
-          "russian": "преобразует JSON-строку в объект",
-          "example": "JSON.parse('{\"name\":\"John\"}');"
-        },
+          "term": "requestAnimationFrame()",
+          "english": "requestAnimationFrame()",
+          "russian": "оптимизированный цикл анимации",
+          "example": "requestAnimationFrame(animate);"
+        }
+      ]
+    },
+    {
+      "id": "day22_modules",
+      "title": "Неделя 22: Модули",
+      "cards": [
         {
           "term": "module",
           "english": "module",
           "russian": "модуль (отдельный файл с кодом)",
-          "example": "// file.js is a module"
+          "example": "export const x = 5;"
         },
         {
           "term": "export",
           "english": "export keyword",
           "russian": "экспорт переменных/функций из модуля",
-          "example": "export const name = 'John';\nexport function greet() {}"
+          "example": "export function foo() {}"
         },
         {
           "term": "import",
           "english": "import keyword",
           "russian": "импорт из модуля",
-          "example": "import { name, greet } from './file.js';"
+          "example": "import { foo } from './module.js';"
         },
         {
           "term": "default export",
           "english": "default export",
           "russian": "экспорт по умолчанию",
-          "example": "export default function() {}"
+          "example": "export default class {}"
+        },
+        {
+          "term": "named export",
+          "english": "named export",
+          "russian": "именованный экспорт",
+          "example": "export const bar = 42;"
+        },
+        {
+          "term": "import * as",
+          "english": "import all",
+          "russian": "импорт всего модуля под псевдонимом",
+          "example": "import * as mod from './mod.js';"
+        },
+        {
+          "term": "dynamic import()",
+          "english": "dynamic import()",
+          "russian": "асинхронный импорт (возвращает промис)",
+          "example": "import('./mod.js').then(mod => {});"
+        },
+        {
+          "term": "ES modules",
+          "english": "ES modules",
+          "russian": "модули стандарта ES6",
+          "example": "type='module'"
+        },
+        {
+          "term": "CommonJS",
+          "english": "CommonJS",
+          "russian": "модули Node.js (require, module.exports)",
+          "example": "const fs = require('fs');"
+        },
+        {
+          "term": "AMD",
+          "english": "Asynchronous Module Definition",
+          "russian": "асинхронное определение модулей (устаревшее)",
+          "example": "define(['dep'], function(dep) {});"
+        },
+        {
+          "term": "module bundler",
+          "english": "module bundler",
+          "russian": "сборщик модулей (Webpack, Rollup)",
+          "example": "webpack, rollup"
         }
       ]
     },
     {
-      "id": "advanced",
-      "title": "Продвинутые термины",
+      "id": "day23_json_fetch",
+      "title": "Неделя 23: JSON, AJAX, Fetch",
+      "cards": [
+        {
+          "term": "JSON",
+          "english": "JavaScript Object Notation",
+          "russian": "формат обмена данными",
+          "example": "{\"name\":\"John\"}"
+        },
+        {
+          "term": "JSON.stringify()",
+          "english": "JSON.stringify()",
+          "russian": "преобразует объект в JSON-строку",
+          "example": "JSON.stringify({a:1}) // '{\"a\":1}'"
+        },
+        {
+          "term": "JSON.parse()",
+          "english": "JSON.parse()",
+          "russian": "преобразует JSON-строку в объект",
+          "example": "JSON.parse('{\"a\":1}')"
+        },
+        {
+          "term": "AJAX",
+          "english": "Asynchronous JavaScript and XML",
+          "russian": "асинхронный обмен данными с сервером",
+          "example": "XMLHttpRequest"
+        },
+        {
+          "term": "XMLHttpRequest",
+          "english": "XMLHttpRequest object",
+          "russian": "старый способ AJAX-запросов",
+          "example": "new XMLHttpRequest()"
+        },
+        {
+          "term": "Fetch API",
+          "english": "Fetch API",
+          "russian": "современный интерфейс для запросов (на промисах)",
+          "example": "fetch(url)"
+        },
+        {
+          "term": "fetch()",
+          "english": "fetch() function",
+          "russian": "выполняет запрос и возвращает промис",
+          "example": "fetch('/api')"
+        },
+        {
+          "term": "Response",
+          "english": "Response object",
+          "russian": "объект ответа fetch",
+          "example": "res.json()"
+        },
+        {
+          "term": "Request",
+          "english": "Request object",
+          "russian": "объект запроса fetch",
+          "example": "new Request(url)"
+        },
+        {
+          "term": "Headers",
+          "english": "Headers object",
+          "russian": "заголовки запроса/ответа",
+          "example": "new Headers({'Content-Type':'application/json'})"
+        },
+        {
+          "term": "CORS",
+          "english": "Cross-Origin Resource Sharing",
+          "russian": "механизм обмена ресурсами между разными источниками",
+          "example": "CORS headers"
+        },
+        {
+          "term": "REST API",
+          "english": "REST API",
+          "russian": "архитектурный стиль взаимодействия компонентов",
+          "example": "GET /users"
+        }
+      ]
+    },
+    {
+      "id": "day24_advanced_abbr",
+      "title": "Неделя 24: Продвинутые аббревиатуры и термины",
       "cards": [
         {
           "term": "API",
           "english": "Application Programming Interface",
           "russian": "интерфейс взаимодействия программ",
-          "example": "// REST API endpoints"
+          "example": "REST API"
+        },
+        {
+          "term": "CDN",
+          "english": "Content Delivery Network",
+          "russian": "сеть доставки контента",
+          "example": "https://cdn.jsdelivr.net/..."
         },
         {
           "term": "SPA",
           "english": "Single Page Application",
           "russian": "одностраничное приложение",
-          "example": "// React, Vue, Angular apps"
+          "example": "React app"
         },
         {
-          "term": "TypeScript",
-          "english": "TypeScript",
-          "russian": "надстройка над JS со статической типизацией",
-          "example": "let name: string = 'John';"
+          "term": "SSR",
+          "english": "Server-Side Rendering",
+          "russian": "рендеринг на сервере",
+          "example": "Next.js"
         },
         {
-          "term": "npm",
-          "english": "Node Package Manager",
-          "russian": "менеджер пакетов Node.js",
-          "example": "npm install lodash"
+          "term": "CSR",
+          "english": "Client-Side Rendering",
+          "russian": "рендеринг на клиенте",
+          "example": "create-react-app"
         },
         {
-          "term": "iterator",
-          "english": "iterator",
-          "russian": "объект с методом next()",
-          "example": "const iter = arr[Symbol.iterator]();\niter.next();  // { value: 1, done: false }"
+          "term": "JWT",
+          "english": "JSON Web Token",
+          "russian": "токен для аутентификации",
+          "example": "jwt.io"
         },
         {
-          "term": "generator",
-          "english": "generator",
-          "russian": "функция, которую можно приостанавливать",
-          "example": "function* gen() {\n  yield 1;\n  yield 2;\n}"
-        },
-        {
-          "term": "yield",
-          "english": "yield keyword",
-          "russian": "приостанавливает генератор и возвращает значение",
-          "example": "function* gen() {\n  yield 1;\n  yield 2;\n}"
-        },
-        {
-          "term": "Symbol",
-          "english": "Symbol",
-          "russian": "примитивный тип для уникальных идентификаторов",
-          "example": "const sym = Symbol('description');"
-        },
-        {
-          "term": "for...of",
-          "english": "for...of loop",
-          "russian": "цикл по итерируемым объектам",
-          "example": "for (const item of arr) {\n  console.log(item);\n}"
-        },
-        {
-          "term": "for...in",
-          "english": "for...in loop",
-          "russian": "цикл по перечислимым свойствам объекта",
-          "example": "for (const key in obj) {\n  console.log(key, obj[key]);\n}"
-        },
-        {
-          "term": "debounce",
-          "english": "debounce",
-          "russian": "функция вызывается только после паузы в событиях",
-          "example": "const debounced = debounce(fn, 300);"
-        },
-        {
-          "term": "throttle",
-          "english": "throttle",
-          "russian": "ограничение частоты вызова функции",
-          "example": "const throttled = throttle(fn, 100);"
-        },
-        {
-          "term": "event loop",
-          "english": "event loop",
-          "russian": "цикл событий (обработка очередей задач)",
-          "example": "// Call stack -> Event loop -> Callback queue"
-        },
-        {
-          "term": "WeakMap",
-          "english": "WeakMap",
-          "russian": "коллекция с ключами-объектами",
-          "example": "const wm = new WeakMap();\nwm.set(obj, 'value');"
-        },
-        {
-          "term": "immutability",
-          "english": "immutability",
-          "russian": "неизменяемость данных",
-          "example": "const newObj = { ...obj, key: 'new value' };"
-        },
-        {
-          "term": "currying",
-          "english": "currying",
-          "russian": "преобразование функции в последовательность функций",
-          "example": "const add = a => b => a + b;\nconst add5 = add(5);\nadd5(3);  // 8"
-        },
-        {
-          "term": "memoization",
-          "english": "memoization",
-          "russian": "кэширование результатов вызова функций",
-          "example": "const memo = fn => {\n  const cache = {};\n  return (...args) => cache[args] ??= fn(...args);\n};"
+          "term": "OAuth",
+          "english": "Open Authorization",
+          "russian": "протокол авторизации",
+          "example": "login with Google"
         },
         {
           "term": "WebSocket",
           "english": "WebSocket",
           "russian": "протокол двусторонней связи",
-          "example": "const ws = new WebSocket('ws://...');"
+          "example": "new WebSocket('ws://...')"
+        },
+        {
+          "term": "GraphQL",
+          "english": "GraphQL",
+          "russian": "язык запросов к API",
+          "example": "query { users { name } }"
+        },
+        {
+          "term": "Babel",
+          "english": "Babel",
+          "russian": "транспилятор современного JS в старый",
+          "example": "babel.config.js"
+        },
+        {
+          "term": "Webpack",
+          "english": "Webpack",
+          "russian": "сборщик модулей",
+          "example": "webpack.config.js"
+        },
+        {
+          "term": "npm",
+          "english": "Node Package Manager",
+          "russian": "менеджер пакетов Node.js",
+          "example": "npm install"
+        },
+        {
+          "term": "yarn",
+          "english": "Yarn",
+          "russian": "альтернативный менеджер пакетов",
+          "example": "yarn add"
+        },
+        {
+          "term": "ESLint",
+          "english": "ESLint",
+          "russian": "инструмент для проверки качества кода",
+          "example": ".eslintrc.js"
+        },
+        {
+          "term": "Prettier",
+          "english": "Prettier",
+          "russian": "форматировщик кода",
+          "example": "prettier.config.js"
+        },
+        {
+          "term": "TypeScript",
+          "english": "TypeScript",
+          "russian": "надстройка над JS со статической типизацией",
+          "example": "tsc"
+        },
+        {
+          "term": "JSX",
+          "english": "JavaScript XML",
+          "russian": "расширение синтаксиса для React",
+          "example": "<div>Hello</div>"
+        },
+        {
+          "term": "Virtual DOM",
+          "english": "Virtual DOM",
+          "russian": "виртуальная модель DOM (используется в React)",
+          "example": "React's diffing algorithm"
+        }
+      ]
+    },
+    {
+      "id": "day25_generators_iterators",
+      "title": "Неделя 25: Генераторы, итераторы, символы",
+      "cards": [
+        {
+          "term": "iterator",
+          "english": "iterator",
+          "russian": "объект с методом next(), возвращающим элементы последовательности",
+          "example": "arr[Symbol.iterator]()"
+        },
+        {
+          "term": "iterable",
+          "english": "iterable",
+          "russian": "объект, который можно перебирать (имеет Symbol.iterator)",
+          "example": "arrays, strings"
+        },
+        {
+          "term": "next()",
+          "english": "next() method",
+          "russian": "метод итератора, возвращает {value, done}",
+          "example": "iterator.next()"
+        },
+        {
+          "term": "generator",
+          "english": "generator",
+          "russian": "функция, которую можно приостанавливать и возобновлять (function*)",
+          "example": "function* gen() { yield 1; }"
+        },
+        {
+          "term": "yield",
+          "english": "yield keyword",
+          "russian": "приостанавливает генератор и возвращает значение",
+          "example": "yield 42;"
+        },
+        {
+          "term": "yield*",
+          "english": "yield* expression",
+          "russian": "делегирует выполнение другому генератору",
+          "example": "yield* otherGen();"
+        },
+        {
+          "term": "Symbol",
+          "english": "Symbol",
+          "russian": "примитивный тип для уникальных идентификаторов",
+          "example": "Symbol('id')"
+        },
+        {
+          "term": "Symbol.iterator",
+          "english": "Symbol.iterator",
+          "russian": "известный символ, указывающий на итератор по умолчанию",
+          "example": "[][Symbol.iterator]"
+        },
+        {
+          "term": "for...of",
+          "english": "for...of loop",
+          "russian": "цикл по итерируемым объектам",
+          "example": "for (let x of arr) {}"
+        },
+        {
+          "term": "for...in",
+          "english": "for...in loop",
+          "russian": "цикл по перечислимым свойствам объекта",
+          "example": "for (let key in obj) {}"
+        }
+      ]
+    },
+    {
+      "id": "day26_timers_debounce",
+      "title": "Неделя 26: Таймеры, debounce, throttle",
+      "cards": [
+        {
+          "term": "debounce",
+          "english": "debounce",
+          "russian": "техника, при которой функция вызывается только после паузы в событиях",
+          "example": "debounce(search, 300)"
+        },
+        {
+          "term": "throttle",
+          "english": "throttle",
+          "russian": "ограничение частоты вызова функции",
+          "example": "throttle(update, 100)"
+        },
+        {
+          "term": "setImmediate()",
+          "english": "setImmediate() (Node.js)",
+          "russian": "выполняет код асинхронно, но как можно скорее",
+          "example": "setImmediate(() => {})"
+        },
+        {
+          "term": "process.nextTick()",
+          "english": "process.nextTick() (Node.js)",
+          "russian": "откладывает выполнение на следующий цикл событий",
+          "example": "process.nextTick(() => {})"
+        },
+        {
+          "term": "microtask",
+          "english": "microtask",
+          "russian": "микрозадача (промисы, queueMicrotask)",
+          "example": "Promise.then()"
+        },
+        {
+          "term": "macrotask",
+          "english": "macrotask",
+          "russian": "макрозадача (setTimeout, setInterval, I/O)",
+          "example": "setTimeout()"
+        },
+        {
+          "term": "event loop",
+          "english": "event loop",
+          "russian": "цикл событий (обработка очередей задач)",
+          "example": "event loop concept"
+        },
+        {
+          "term": "callback queue",
+          "english": "callback queue",
+          "russian": "очередь колбэков",
+          "example": "task queue"
+        },
+        {
+          "term": "stack",
+          "english": "call stack",
+          "russian": "стек вызовов",
+          "example": "LIFO structure"
+        }
+      ]
+    },
+    {
+      "id": "day27_memory_performance",
+      "title": "Неделя 27: Память и производительность",
+      "cards": [
+        {
+          "term": "memory leak",
+          "english": "memory leak",
+          "russian": "утечка памяти",
+          "example": "setInterval without clear"
+        },
+        {
+          "term": "garbage collection",
+          "english": "garbage collection",
+          "russian": "сборка мусора (автоматическое управление памятью)",
+          "example": "GC in JS"
+        },
+        {
+          "term": "reference",
+          "english": "reference",
+          "russian": "ссылка (на объект)",
+          "example": "let obj = {}"
+        },
+        {
+          "term": "weak reference",
+          "english": "weak reference",
+          "russian": "слабая ссылка (не препятствует сборке мусора)",
+          "example": "WeakMap keys"
+        },
+        {
+          "term": "WeakMap",
+          "english": "WeakMap",
+          "russian": "коллекция с ключами-объектами, которые могут быть собраны сборщиком",
+          "example": "new WeakMap()"
+        },
+        {
+          "term": "WeakSet",
+          "english": "WeakSet",
+          "russian": "аналогично WeakSet",
+          "example": "new WeakSet()"
+        },
+        {
+          "term": "performance",
+          "english": "performance API",
+          "russian": "API для измерения производительности",
+          "example": "performance.now()"
+        },
+        {
+          "term": "console.time()",
+          "english": "console.time()",
+          "russian": "запускает таймер",
+          "example": "console.time('label')"
+        },
+        {
+          "term": "console.timeEnd()",
+          "english": "console.timeEnd()",
+          "russian": "останавливает таймер",
+          "example": "console.timeEnd('label')"
+        },
+        {
+          "term": "debugger",
+          "english": "debugger statement",
+          "russian": "останавливает выполнение, если открыты инструменты разработки",
+          "example": "debugger;"
+        }
+      ]
+    },
+    {
+      "id": "day28_functional_programming",
+      "title": "Неделя 28: Функциональное программирование в JS",
+      "cards": [
+        {
+          "term": "immutability",
+          "english": "immutability",
+          "russian": "неизменяемость данных",
+          "example": "const obj = Object.freeze({})"
+        },
+        {
+          "term": "side effect",
+          "english": "side effect",
+          "russian": "побочный эффект (изменение внешнего состояния)",
+          "example": "console.log"
+        },
+        {
+          "term": "currying",
+          "english": "currying",
+          "russian": "каррирование (преобразование функции с несколькими аргументами в последовательность функций с одним)",
+          "example": "const add = a => b => a + b;"
+        },
+        {
+          "term": "composition",
+          "english": "function composition",
+          "russian": "композиция функций",
+          "example": "const compose = (f, g) => x => f(g(x));"
+        },
+        {
+          "term": "pipe",
+          "english": "pipe",
+          "russian": "последовательное применение функций (слева направо)",
+          "example": "pipe(f, g)(x) => g(f(x))"
+        },
+        {
+          "term": "compose",
+          "english": "compose",
+          "russian": "последовательное применение функций (справа налево)",
+          "example": "compose(f, g)(x) => f(g(x))"
+        },
+        {
+          "term": "monad",
+          "english": "monad",
+          "russian": "монада (структура данных для организации вычислений)",
+          "example": "Maybe, Promise"
+        },
+        {
+          "term": "functor",
+          "english": "functor",
+          "russian": "функтор (объект, реализующий map)",
+          "example": "Array.map"
+        },
+        {
+          "term": "flatMap()",
+          "english": "flatMap() method",
+          "russian": "комбинация map и flatten (для массивов)",
+          "example": "arr.flatMap(x => [x, x*2])"
+        }
+      ]
+    },
+    {
+      "id": "day29_web_apis",
+      "title": "Неделя 29: Web APIs (дополнительно)",
+      "cards": [
+        {
+          "term": "Geolocation",
+          "english": "Geolocation API",
+          "russian": "определение местоположения",
+          "example": "navigator.geolocation.getCurrentPosition()"
+        },
+        {
+          "term": "Canvas",
+          "english": "Canvas API",
+          "russian": "рисование 2D-графики",
+          "example": "canvas.getContext('2d')"
+        },
+        {
+          "term": "WebGL",
+          "english": "WebGL",
+          "russian": "3D-графика",
+          "example": "canvas.getContext('webgl')"
+        },
+        {
+          "term": "Web Workers",
+          "english": "Web Workers",
+          "russian": "многопоточность в браузере",
+          "example": "new Worker('worker.js')"
         },
         {
           "term": "Service Workers",
           "english": "Service Workers",
-          "russian": "фоновые скрипты для кэширования",
-          "example": "// PWA offline support"
+          "russian": "фоновые скрипты для кэширования и push-уведомлений",
+          "example": "navigator.serviceWorker.register()"
         },
         {
           "term": "IndexedDB",
           "english": "IndexedDB",
           "russian": "клиентская база данных",
-          "example": "const db = await openDB('myDB', 1);"
+          "example": "indexedDB.open('db', 1)"
         },
+        {
+          "term": "File API",
+          "english": "File API",
+          "russian": "работа с файлами",
+          "example": "input.files[0]"
+        },
+        {
+          "term": "Drag and Drop",
+          "english": "Drag and Drop API",
+          "russian": "перетаскивание элементов",
+          "example": "dragstart, dragover, drop"
+        },
+        {
+          "term": "History API",
+          "english": "History API",
+          "russian": "управление историей браузера (SPA)",
+          "example": "history.pushState()"
+        },
+        {
+          "term": "URL",
+          "english": "URL API",
+          "russian": "парсинг и работа с URL",
+          "example": "new URL('https://...')"
+        }
+      ]
+    },
+    {
+      "id": "day30_patterns",
+      "title": "Неделя 30: Полезные паттерны и идиомы",
+      "cards": [
         {
           "term": "singleton",
           "english": "singleton",
-          "russian": "одиночка (единственный экземпляр класса)",
-          "example": "class Singleton {\n  static instance;\n  static getInstance() {\n    return this.instance ??= new Singleton();\n  }\n}"
+          "russian": "одиночка (гарантирует единственный экземпляр класса)",
+          "example": "class Singleton { static instance; }"
         },
         {
           "term": "factory",
           "english": "factory function",
           "russian": "функция, создающая объекты",
-          "example": "function createUser(name) {\n  return { name, greet() {} };\n}"
+          "example": "function createUser(name) { return { name }; }"
+        },
+        {
+          "term": "module pattern",
+          "english": "module pattern",
+          "russian": "модульный паттерн (инкапсуляция через замыкание)",
+          "example": "(function() { ... })();"
+        },
+        {
+          "term": "revealing module pattern",
+          "english": "revealing module pattern",
+          "russian": "разновидность модульного паттерна",
+          "example": "return { publicMethod: privateMethod }"
         },
         {
           "term": "observer",
           "english": "observer",
-          "russian": "наблюдатель (уведомление об изменениях)",
-          "example": "// Pub/Sub pattern"
+          "russian": "наблюдатель (один объект уведомляет других об изменениях)",
+          "example": "addEventListener"
+        },
+        {
+          "term": "pub/sub",
+          "english": "Publish/Subscribe",
+          "russian": "издатель-подписчик (слабая связь)",
+          "example": "EventEmitter"
         },
         {
           "term": "MVC",
           "english": "Model-View-Controller",
           "russian": "модель-представление-контроллер",
-          "example": "// Architecture pattern"
+          "example": "backend pattern"
+        },
+        {
+          "term": "MVVM",
+          "english": "Model-View-ViewModel",
+          "russian": "модель-представление-модель представления",
+          "example": "frontend pattern"
+        },
+        {
+          "term": "HOC",
+          "english": "Higher-Order Component (React)",
+          "russian": "компонент высшего порядка",
+          "example": "withRouter(Component)"
+        },
+        {
+          "term": "render prop",
+          "english": "render prop (React)",
+          "russian": "свойство-рендер",
+          "example": "<DataProvider render={data => ...} />"
         },
         {
           "term": "hook",
           "english": "hook (React)",
-          "russian": "перехватчик состояния в функциональных компонентах",
-          "example": "const [state, setState] = useState(initial);"
+          "russian": "перехватчик состояния и жизненного цикла в функциональных компонентах",
+          "example": "useState"
+        },
+        {
+          "term": "memoization",
+          "english": "memoization",
+          "russian": "кэширование результатов вызова функций",
+          "example": "useMemo, React.memo"
+        }
+      ]
+    },
+    {
+      "id": "day31_react_basics",
+      "title": "Неделя 31: React — основы",
+      "cards": [
+        {
+          "term": "JSX",
+          "english": "JSX (JavaScript XML)",
+          "russian": "расширение синтаксиса для описания разметки в React",
+          "example": "<div>Hello</div>"
+        },
+        {
+          "term": "component",
+          "english": "React component",
+          "russian": "компонент (функциональный или классовый)",
+          "example": "function App() {}"
+        },
+        {
+          "term": "functional component",
+          "english": "functional component",
+          "russian": "функциональный компонент",
+          "example": "const Comp = () => <div/>"
+        },
+        {
+          "term": "class component",
+          "english": "class component",
+          "russian": "классовый компонент",
+          "example": "class Comp extends React.Component {}"
+        },
+        {
+          "term": "props",
+          "english": "properties (props)",
+          "russian": "входные данные компонента",
+          "example": "<Comp name='John' />"
+        },
+        {
+          "term": "state",
+          "english": "state",
+          "russian": "внутреннее состояние компонента",
+          "example": "this.state = { count: 0 }"
+        },
+        {
+          "term": "setState",
+          "english": "setState method",
+          "russian": "метод обновления состояния в классовых компонентах",
+          "example": "this.setState({ count: 1 })"
+        },
+        {
+          "term": "render",
+          "english": "render method",
+          "russian": "метод рендеринга в классовых компонентах",
+          "example": "render() { return <div/> }"
+        },
+        {
+          "term": "lifecycle methods",
+          "english": "lifecycle methods",
+          "russian": "методы жизненного цикла классовых компонентов",
+          "example": "componentDidMount"
+        },
+        {
+          "term": "componentDidMount",
+          "english": "componentDidMount",
+          "russian": "вызывается после монтирования компонента",
+          "example": "componentDidMount() { fetch() }"
+        },
+        {
+          "term": "componentDidUpdate",
+          "english": "componentDidUpdate",
+          "russian": "вызывается после обновления",
+          "example": "componentDidUpdate(prevProps) {}"
+        },
+        {
+          "term": "componentWillUnmount",
+          "english": "componentWillUnmount",
+          "russian": "вызывается перед размонтированием",
+          "example": "componentWillUnmount() { clearTimeout() }"
+        }
+      ]
+    },
+    {
+      "id": "day32_react_hooks",
+      "title": "Неделя 32: React — хуки",
+      "cards": [
+        {
+          "term": "useState",
+          "english": "useState hook",
+          "russian": "хук для добавления состояния в функциональный компонент",
+          "example": "const [count, setCount] = useState(0);"
+        },
+        {
+          "term": "useEffect",
+          "english": "useEffect hook",
+          "russian": "хук для побочных эффектов",
+          "example": "useEffect(() => {}, []);"
+        },
+        {
+          "term": "useContext",
+          "english": "useContext hook",
+          "russian": "хук для доступа к контексту",
+          "example": "const value = useContext(MyContext);"
+        },
+        {
+          "term": "useReducer",
+          "english": "useReducer hook",
+          "russian": "хук для сложной логики состояния (редюсер)",
+          "example": "const [state, dispatch] = useReducer(reducer, initialState);"
+        },
+        {
+          "term": "useMemo",
+          "english": "useMemo hook",
+          "russian": "мемоизация вычисляемых значений",
+          "example": "const memoized = useMemo(() => compute(a, b), [a, b]);"
+        },
+        {
+          "term": "useCallback",
+          "english": "useCallback hook",
+          "russian": "мемоизация функций",
+          "example": "const cb = useCallback(() => {}, [deps]);"
+        },
+        {
+          "term": "useRef",
+          "english": "useRef hook",
+          "russian": "создание изменяемой ссылки",
+          "example": "const ref = useRef(null);"
+        },
+        {
+          "term": "useLayoutEffect",
+          "english": "useLayoutEffect hook",
+          "russian": "аналог useEffect, срабатывающий синхронно после изменений DOM",
+          "example": "useLayoutEffect(() => {}, []);"
+        },
+        {
+          "term": "useImperativeHandle",
+          "english": "useImperativeHandle hook",
+          "russian": "настройка возвращаемого ref",
+          "example": "useImperativeHandle(ref, () => ({}));"
+        },
+        {
+          "term": "useDebugValue",
+          "english": "useDebugValue hook",
+          "russian": "отображение метки в React DevTools",
+          "example": "useDebugValue(value);"
+        },
+        {
+          "term": "custom hook",
+          "english": "custom hook",
+          "russian": "пользовательский хук для переиспользования логики",
+          "example": "function useCustom() { ... }"
+        }
+      ]
+    },
+    {
+      "id": "day33_react_advanced",
+      "title": "Неделя 33: React — продвинутые хуки и API",
+      "cards": [
+        {
+          "term": "useTransition",
+          "english": "useTransition hook",
+          "russian": "хук для отложенных обновлений (конкурентный режим)",
+          "example": "const [isPending, startTransition] = useTransition();"
+        },
+        {
+          "term": "useDeferredValue",
+          "english": "useDeferredValue hook",
+          "russian": "хук для откладывания обновления части UI",
+          "example": "const deferred = useDeferredValue(value);"
+        },
+        {
+          "term": "useId",
+          "english": "useId hook",
+          "russian": "генерация уникальных идентификаторов на клиенте и сервере",
+          "example": "const id = useId();"
+        },
+        {
+          "term": "React.memo",
+          "english": "React.memo HOC",
+          "russian": "мемоизация функциональных компонентов",
+          "example": "export default React.memo(Component);"
+        },
+        {
+          "term": "forwardRef",
+          "english": "forwardRef API",
+          "russian": "передача ref дочерним компонентам",
+          "example": "const FancyInput = forwardRef((props, ref) => <input ref={ref} />);"
+        },
+        {
+          "term": "Suspense",
+          "english": "Suspense component",
+          "russian": "компонент для ожидания загрузки (ленивая загрузка)",
+          "example": "<Suspense fallback={<div>Loading...</div>}> ... </Suspense>"
+        },
+        {
+          "term": "lazy",
+          "english": "lazy function",
+          "russian": "ленивая загрузка компонентов",
+          "example": "const LazyComp = lazy(() => import('./Comp'));"
+        },
+        {
+          "term": "StrictMode",
+          "english": "StrictMode component",
+          "russian": "строгий режим для выявления потенциальных проблем",
+          "example": "<StrictMode><App /></StrictMode>"
+        },
+        {
+          "term": "Error Boundary",
+          "english": "Error Boundary component",
+          "russian": "компонент-граница ошибок",
+          "example": "class ErrorBoundary extends React.Component {}"
+        },
+        {
+          "term": "Fragment",
+          "english": "Fragment component",
+          "russian": "группировка дочерних элементов без лишнего узла DOM",
+          "example": "<>...</>  или <Fragment>..."
+        },
+        {
+          "term": "Portal",
+          "english": "Portal",
+          "russian": "рендеринг дочерних элементов в другую часть DOM",
+          "example": "ReactDOM.createPortal(child, container);"
+        },
+        {
+          "term": "Context",
+          "english": "Context API",
+          "russian": "контекст для передачи данных без пропсов",
+          "example": "const MyContext = React.createContext();"
+        },
+        {
+          "term": "Provider",
+          "english": "Provider",
+          "russian": "поставщик контекста",
+          "example": "<MyContext.Provider value={...}>"
+        },
+        {
+          "term": "Consumer",
+          "english": "Consumer",
+          "russian": "потребитель контекста",
+          "example": "<MyContext.Consumer>{value => ...}</MyContext.Consumer>"
+        }
+      ]
+    },
+    {
+      "id": "day34_react_router",
+      "title": "Неделя 34: React Router",
+      "cards": [
+        {
+          "term": "React Router",
+          "english": "React Router",
+          "russian": "библиотека маршрутизации для React",
+          "example": "import { BrowserRouter } from 'react-router-dom';"
+        },
+        {
+          "term": "Route",
+          "english": "Route component",
+          "russian": "компонент маршрута",
+          "example": "<Route path='/' element={<Home />} />"
+        },
+        {
+          "term": "Link",
+          "english": "Link component",
+          "russian": "компонент навигации без перезагрузки",
+          "example": "<Link to='/about'>About</Link>"
+        },
+        {
+          "term": "NavLink",
+          "english": "NavLink component",
+          "russian": "Link с активным стилем",
+          "example": "<NavLink to='/' activeClassName='active'>Home</NavLink>"
+        },
+        {
+          "term": "Switch / Routes",
+          "english": "Switch (v5) / Routes (v6)",
+          "russian": "компонент, рендерящий первый подходящий маршрут",
+          "example": "<Routes><Route ... /></Routes>"
+        },
+        {
+          "term": "Redirect",
+          "english": "Redirect component",
+          "russian": "перенаправление",
+          "example": "<Navigate to='/' /> (v6)"
+        },
+        {
+          "term": "useHistory / useNavigate",
+          "english": "useHistory (v5) / useNavigate (v6)",
+          "russian": "хук для доступа к истории/навигации",
+          "example": "const navigate = useNavigate(); navigate('/');"
+        },
+        {
+          "term": "useParams",
+          "english": "useParams hook",
+          "russian": "хук для параметров URL",
+          "example": "const { id } = useParams();"
+        },
+        {
+          "term": "useLocation",
+          "english": "useLocation hook",
+          "russian": "хук для объекта местоположения",
+          "example": "const location = useLocation();"
+        },
+        {
+          "term": "useRouteMatch",
+          "english": "useRouteMatch hook",
+          "russian": "хук для проверки соответствия маршрута",
+          "example": "const match = useRouteMatch('/user/:id');"
+        }
+      ]
+    },
+    {
+      "id": "day35_redux",
+      "title": "Неделя 35: Управление состоянием (Redux)",
+      "cards": [
+        {
+          "term": "Redux",
+          "english": "Redux",
+          "russian": "библиотека управления состоянием",
+          "example": "createStore(reducer)"
+        },
+        {
+          "term": "store",
+          "english": "Redux store",
+          "russian": "хранилище состояния",
+          "example": "const store = createStore(reducer);"
+        },
+        {
+          "term": "action",
+          "english": "Redux action",
+          "russian": "объект действия",
+          "example": "{ type: 'INCREMENT', payload: 1 }"
+        },
+        {
+          "term": "action creator",
+          "english": "action creator",
+          "russian": "функция создания действия",
+          "example": "const increment = () => ({ type: 'INCREMENT' });"
+        },
+        {
+          "term": "reducer",
+          "english": "reducer",
+          "russian": "чистая функция, определяющая изменение состояния",
+          "example": "(state, action) => newState"
+        },
+        {
+          "term": "dispatch",
+          "english": "dispatch function",
+          "russian": "отправка действия в хранилище",
+          "example": "store.dispatch(action);"
+        },
+        {
+          "term": "selector",
+          "english": "selector",
+          "russian": "функция извлечения данных из хранилища",
+          "example": "const selectCount = state => state.count;"
+        },
+        {
+          "term": "middleware",
+          "english": "middleware",
+          "russian": "промежуточное ПО (расширение dispatch)",
+          "example": "applyMiddleware(thunk)"
+        },
+        {
+          "term": "thunk",
+          "english": "Redux Thunk",
+          "russian": "промежуточное ПО для асинхронных действий",
+          "example": "const fetchData = () => async dispatch => {}"
+        },
+        {
+          "term": "saga",
+          "english": "Redux Saga",
+          "russian": "промежуточное ПО на генераторах для побочных эффектов",
+          "example": "takeEvery('FETCH', fetchSaga)"
+        },
+        {
+          "term": "Redux Toolkit",
+          "english": "Redux Toolkit",
+          "russian": "официальный инструментарий для Redux",
+          "example": "configureStore({ reducer })"
+        },
+        {
+          "term": "slice",
+          "english": "Redux slice",
+          "russian": "срез состояния и редюсеров",
+          "example": "createSlice({ name, initialState, reducers })"
+        },
+        {
+          "term": "immer",
+          "english": "Immer",
+          "russian": "библиотека для работы с неизменяемым состоянием",
+          "example": "produce(state, draft => {})"
+        },
+        {
+          "term": "reselect",
+          "english": "Reselect",
+          "russian": "библиотека мемоизированных селекторов",
+          "example": "createSelector(...)"
+        },
+        {
+          "term": "Flux",
+          "english": "Flux",
+          "russian": "архитектурный паттерн однонаправленного потока данных",
+          "example": "Flux pattern"
+        }
+      ]
+    },
+    {
+      "id": "day36_node_basics",
+      "title": "Неделя 36: Node.js — основы",
+      "cards": [
+        {
+          "term": "Node.js",
+          "english": "Node.js",
+          "russian": "среда выполнения JavaScript на движке V8",
+          "example": "node app.js"
+        },
+        {
+          "term": "npm",
+          "english": "npm (Node Package Manager)",
+          "russian": "менеджер пакетов Node",
+          "example": "npm install express"
+        },
+        {
+          "term": "yarn",
+          "english": "Yarn",
+          "russian": "альтернативный менеджер пакетов",
+          "example": "yarn add express"
+        },
+        {
+          "term": "pnpm",
+          "english": "pnpm",
+          "russian": "быстрый менеджер пакетов, экономящий место",
+          "example": "pnpm install"
+        },
+        {
+          "term": "package.json",
+          "english": "package.json",
+          "russian": "файл метаданных проекта",
+          "example": "{ \"name\": \"my-app\" }"
+        },
+        {
+          "term": "dependencies",
+          "english": "dependencies",
+          "russian": "зависимости для продакшена",
+          "example": "npm install --save"
+        },
+        {
+          "term": "devDependencies",
+          "english": "devDependencies",
+          "russian": "зависимости для разработки",
+          "example": "npm install --save-dev"
+        },
+        {
+          "term": "scripts",
+          "english": "npm scripts",
+          "russian": "команды, запускаемые через npm run",
+          "example": "\"start\": \"node server.js\""
+        },
+        {
+          "term": "npx",
+          "english": "npx",
+          "russian": "исполнение пакетов без установки",
+          "example": "npx create-react-app my-app"
+        },
+        {
+          "term": "global",
+          "english": "global object",
+          "russian": "глобальный объект Node.js",
+          "example": "global.console.log"
+        },
+        {
+          "term": "__dirname",
+          "english": "__dirname",
+          "russian": "текущая директория",
+          "example": "console.log(__dirname);"
+        },
+        {
+          "term": "__filename",
+          "english": "__filename",
+          "russian": "текущий файл",
+          "example": "console.log(__filename);"
+        },
+        {
+          "term": "require",
+          "english": "require function",
+          "russian": "импорт модулей в CommonJS",
+          "example": "const fs = require('fs');"
+        },
+        {
+          "term": "module.exports",
+          "english": "module.exports",
+          "russian": "экспорт в CommonJS",
+          "example": "module.exports = function() {}"
+        },
+        {
+          "term": "exports",
+          "english": "exports",
+          "russian": "сокращение для module.exports",
+          "example": "exports.foo = bar;"
+        },
+        {
+          "term": "process",
+          "english": "process object",
+          "russian": "информация о текущем процессе",
+          "example": "process.argv"
+        },
+        {
+          "term": "process.env",
+          "english": "process.env",
+          "russian": "переменные окружения",
+          "example": "process.env.NODE_ENV"
+        },
+        {
+          "term": "process.argv",
+          "english": "process.argv",
+          "russian": "аргументы командной строки",
+          "example": "process.argv.slice(2)"
+        }
+      ]
+    },
+    {
+      "id": "day37_node_modules",
+      "title": "Неделя 37: Node.js — встроенные модули",
+      "cards": [
+        {
+          "term": "fs",
+          "english": "fs (file system)",
+          "russian": "модуль файловой системы",
+          "example": "fs.readFileSync('file.txt')"
+        },
+        {
+          "term": "path",
+          "english": "path",
+          "russian": "модуль для работы с путями",
+          "example": "path.join(__dirname, 'file.txt')"
+        },
+        {
+          "term": "http",
+          "english": "http",
+          "russian": "модуль HTTP-сервера и клиента",
+          "example": "http.createServer()"
+        },
+        {
+          "term": "https",
+          "english": "https",
+          "russian": "модуль HTTPS",
+          "example": "https.get(url)"
+        },
+        {
+          "term": "url",
+          "english": "url",
+          "russian": "модуль разбора URL",
+          "example": "url.parse('http://...')"
+        },
+        {
+          "term": "querystring",
+          "english": "querystring",
+          "russian": "модуль работы со строкой запроса",
+          "example": "querystring.parse('a=1&b=2')"
+        },
+        {
+          "term": "crypto",
+          "english": "crypto",
+          "russian": "криптографический модуль",
+          "example": "crypto.createHash('sha256')"
+        },
+        {
+          "term": "os",
+          "english": "os",
+          "russian": "модуль операционной системы",
+          "example": "os.cpus()"
+        },
+        {
+          "term": "events",
+          "english": "events",
+          "russian": "модуль EventEmitter",
+          "example": "const EventEmitter = require('events');"
+        },
+        {
+          "term": "EventEmitter",
+          "english": "EventEmitter class",
+          "russian": "класс для событий",
+          "example": "new EventEmitter()"
+        },
+        {
+          "term": "stream",
+          "english": "stream",
+          "russian": "абстрактный интерфейс потоков",
+          "example": "fs.createReadStream()"
+        },
+        {
+          "term": "Readable",
+          "english": "Readable stream",
+          "russian": "поток для чтения",
+          "example": "new stream.Readable()"
+        },
+        {
+          "term": "Writable",
+          "english": "Writable stream",
+          "russian": "поток для записи",
+          "example": "new stream.Writable()"
+        },
+        {
+          "term": "Transform",
+          "english": "Transform stream",
+          "russian": "поток для преобразования",
+          "example": "new stream.Transform()"
+        },
+        {
+          "term": "buffer",
+          "english": "Buffer class",
+          "russian": "буфер для двоичных данных",
+          "example": "Buffer.from('hello')"
+        }
+      ]
+    },
+    {
+      "id": "day38_express",
+      "title": "Неделя 38: Express.js",
+      "cards": [
+        {
+          "term": "Express.js",
+          "english": "Express.js",
+          "russian": "веб-фреймворк для Node.js",
+          "example": "const express = require('express');"
+        },
+        {
+          "term": "middleware",
+          "english": "middleware",
+          "russian": "промежуточное ПО",
+          "example": "app.use((req, res, next) => {})"
+        },
+        {
+          "term": "route",
+          "english": "route",
+          "russian": "маршрут",
+          "example": "app.get('/users', handler)"
+        },
+        {
+          "term": "request (req)",
+          "english": "request object",
+          "russian": "объект HTTP-запроса",
+          "example": "req.params, req.query"
+        },
+        {
+          "term": "response (res)",
+          "english": "response object",
+          "russian": "объект HTTP-ответа",
+          "example": "res.json({})"
+        },
+        {
+          "term": "next",
+          "english": "next function",
+          "russian": "функция передачи управления следующему middleware",
+          "example": "next();"
+        },
+        {
+          "term": "body-parser",
+          "english": "body-parser",
+          "russian": "парсер тела запроса",
+          "example": "app.use(bodyParser.json())"
+        },
+        {
+          "term": "cors",
+          "english": "cors",
+          "russian": "промежуточное ПО для CORS",
+          "example": "app.use(cors())"
+        },
+        {
+          "term": "helmet",
+          "english": "helmet",
+          "russian": "защита через HTTP-заголовки",
+          "example": "app.use(helmet())"
+        },
+        {
+          "term": "morgan",
+          "english": "morgan",
+          "russian": "логгер HTTP-запросов",
+          "example": "app.use(morgan('combined'))"
+        },
+        {
+          "term": "static",
+          "english": "express.static",
+          "russian": "раздача статических файлов",
+          "example": "app.use(express.static('public'))"
+        }
+      ]
+    },
+    {
+      "id": "day39_typescript",
+      "title": "Неделя 39: TypeScript",
+      "cards": [
+        {
+          "term": "TypeScript",
+          "english": "TypeScript",
+          "russian": "типизированное надмножество JavaScript",
+          "example": "tsc file.ts"
+        },
+        {
+          "term": "type annotation",
+          "english": "type annotation",
+          "russian": "аннотация типа",
+          "example": "let x: number = 5;"
+        },
+        {
+          "term": "interface",
+          "english": "interface",
+          "russian": "интерфейс (описание формы объекта)",
+          "example": "interface User { name: string; }"
+        },
+        {
+          "term": "type alias",
+          "english": "type alias",
+          "russian": "псевдоним типа",
+          "example": "type ID = string | number;"
+        },
+        {
+          "term": "union type",
+          "english": "union type",
+          "russian": "объединение типов",
+          "example": "string | number"
+        },
+        {
+          "term": "intersection type",
+          "english": "intersection type",
+          "russian": "пересечение типов",
+          "example": "A & B"
+        },
+        {
+          "term": "enum",
+          "english": "enum",
+          "russian": "перечисление",
+          "example": "enum Color { Red, Green, Blue }"
+        },
+        {
+          "term": "generics",
+          "english": "generics",
+          "russian": "обобщения",
+          "example": "function identity<T>(arg: T): T {}"
+        },
+        {
+          "term": "type inference",
+          "english": "type inference",
+          "russian": "вывод типов",
+          "example": "let x = 3; // number inferred"
+        },
+        {
+          "term": "type assertion",
+          "english": "type assertion",
+          "russian": "утверждение типа",
+          "example": "let str = (obj as string).length;"
+        },
+        {
+          "term": "declaration file",
+          "english": "declaration file (.d.ts)",
+          "russian": "файл объявлений",
+          "example": "index.d.ts"
+        },
+        {
+          "term": "namespace",
+          "english": "namespace",
+          "russian": "пространство имён",
+          "example": "namespace MyNamespace {}"
+        },
+        {
+          "term": "module",
+          "english": "module (in TS)",
+          "russian": "модуль (файл с import/export)",
+          "example": "export const foo;"
+        },
+        {
+          "term": "tsconfig.json",
+          "english": "tsconfig.json",
+          "russian": "конфигурация компилятора",
+          "example": "{ \"compilerOptions\": {} }"
+        },
+        {
+          "term": "tsc",
+          "english": "tsc",
+          "russian": "компилятор TypeScript",
+          "example": "tsc --init"
+        }
+      ]
+    },
+    {
+      "id": "day40_testing",
+      "title": "Неделя 40: Тестирование (Jest, Mocha)",
+      "cards": [
+        {
+          "term": "jest",
+          "english": "Jest",
+          "russian": "фреймворк тестирования",
+          "example": "npm test"
+        },
+        {
+          "term": "Mocha",
+          "english": "Mocha",
+          "russian": "фреймворк тестирования",
+          "example": "mocha test.js"
+        },
+        {
+          "term": "Chai",
+          "english": "Chai",
+          "russian": "библиотека утверждений",
+          "example": "expect(1).to.equal(1);"
+        },
+        {
+          "term": "Jasmine",
+          "english": "Jasmine",
+          "russian": "фреймворк тестирования",
+          "example": "jasmine init"
+        },
+        {
+          "term": "test case",
+          "english": "test case",
+          "russian": "тест-кейс",
+          "example": "it('should work', () => {})"
+        },
+        {
+          "term": "test suite",
+          "english": "test suite",
+          "russian": "набор тестов",
+          "example": "describe('suite', () => {})"
+        },
+        {
+          "term": "assertion",
+          "english": "assertion",
+          "russian": "утверждение",
+          "example": "assert.equal(1, 1);"
+        },
+        {
+          "term": "expect",
+          "english": "expect",
+          "russian": "стиль утверждений",
+          "example": "expect(result).toBe(2);"
+        },
+        {
+          "term": "describe",
+          "english": "describe",
+          "russian": "группировка тестов",
+          "example": "describe('group', () => {})"
+        },
+        {
+          "term": "it / test",
+          "english": "it / test",
+          "russian": "определение теста",
+          "example": "it('does something', () => {})"
+        },
+        {
+          "term": "beforeEach / afterEach",
+          "english": "beforeEach / afterEach",
+          "russian": "хуки до/после каждого теста",
+          "example": "beforeEach(() => {})"
+        },
+        {
+          "term": "beforeAll / afterAll",
+          "english": "beforeAll / afterAll",
+          "russian": "хуки один раз до/после всех",
+          "example": "beforeAll(() => {})"
+        },
+        {
+          "term": "mock",
+          "english": "mock",
+          "russian": "имитация функции/модуля",
+          "example": "jest.fn()"
+        },
+        {
+          "term": "spy",
+          "english": "spy",
+          "russian": "шпион (запись вызовов)",
+          "example": "jest.spyOn(obj, 'method')"
+        },
+        {
+          "term": "stub",
+          "english": "stub",
+          "russian": "заглушка",
+          "example": "sinon.stub()"
+        },
+        {
+          "term": "snapshot testing",
+          "english": "snapshot testing",
+          "russian": "тестирование снимками",
+          "example": "expect(tree).toMatchSnapshot();"
+        },
+        {
+          "term": "unit test",
+          "english": "unit test",
+          "russian": "модульное тестирование",
+          "example": "test a function"
+        },
+        {
+          "term": "integration test",
+          "english": "integration test",
+          "russian": "интеграционное тестирование",
+          "example": "test multiple modules"
+        },
+        {
+          "term": "end-to-end test (E2E)",
+          "english": "E2E test",
+          "russian": "сквозное тестирование",
+          "example": "Cypress test"
+        },
+        {
+          "term": "Cypress",
+          "english": "Cypress",
+          "russian": "фреймворк E2E-тестирования",
+          "example": "cy.visit('/')"
+        },
+        {
+          "term": "Puppeteer",
+          "english": "Puppeteer",
+          "russian": "управление Chrome/Chromium",
+          "example": "puppeteer.launch()"
+        },
+        {
+          "term": "Playwright",
+          "english": "Playwright",
+          "russian": "автоматизация браузеров",
+          "example": "playwright.chromium.launch()"
+        }
+      ]
+    },
+    {
+      "id": "day41_build_tools",
+      "title": "Неделя 41: Инструменты сборки и форматирования",
+      "cards": [
+        {
+          "term": "Webpack",
+          "english": "Webpack",
+          "russian": "сборщик модулей",
+          "example": "webpack.config.js"
+        },
+        {
+          "term": "entry",
+          "english": "entry",
+          "russian": "точка входа",
+          "example": "entry: './src/index.js'"
+        },
+        {
+          "term": "output",
+          "english": "output",
+          "russian": "выходной файл",
+          "example": "output: { filename: 'bundle.js' }"
+        },
+        {
+          "term": "loader",
+          "english": "loader",
+          "russian": "загрузчик (трансформация файлов)",
+          "example": "babel-loader"
+        },
+        {
+          "term": "plugin",
+          "english": "plugin",
+          "russian": "плагин",
+          "example": "HtmlWebpackPlugin"
+        },
+        {
+          "term": "bundle",
+          "english": "bundle",
+          "russian": "собранный файл",
+          "example": "dist/bundle.js"
+        },
+        {
+          "term": "chunk",
+          "english": "chunk",
+          "russian": "часть кода",
+          "example": "code splitting chunk"
+        },
+        {
+          "term": "code splitting",
+          "english": "code splitting",
+          "russian": "разделение кода",
+          "example": "import() for lazy"
+        },
+        {
+          "term": "tree shaking",
+          "english": "tree shaking",
+          "russian": "удаление мёртвого кода",
+          "example": "Webpack's optimization"
+        },
+        {
+          "term": "Babel",
+          "english": "Babel",
+          "russian": "транспилятор",
+          "example": "babel.config.json"
+        },
+        {
+          "term": "preset",
+          "english": "Babel preset",
+          "russian": "набор плагинов Babel",
+          "example": "@babel/preset-env"
+        },
+        {
+          "term": "polyfill",
+          "english": "polyfill",
+          "russian": "полифилл",
+          "example": "core-js"
+        },
+        {
+          "term": "core-js",
+          "english": "core-js",
+          "russian": "библиотека полифиллов",
+          "example": "import 'core-js/stable'"
+        },
+        {
+          "term": "regenerator-runtime",
+          "english": "regenerator-runtime",
+          "russian": "рантайм для генераторов",
+          "example": "import 'regenerator-runtime'"
+        },
+        {
+          "term": "PostCSS",
+          "english": "PostCSS",
+          "russian": "трансформация CSS",
+          "example": "postcss.config.js"
+        },
+        {
+          "term": "CSS Modules",
+          "english": "CSS Modules",
+          "russian": "CSS с локальной областью видимости",
+          "example": "import styles from './style.css'"
+        },
+        {
+          "term": "Sass / SCSS",
+          "english": "Sass/SCSS",
+          "russian": "препроцессор CSS",
+          "example": "npm install sass"
+        },
+        {
+          "term": "ESLint",
+          "english": "ESLint",
+          "russian": "линтер",
+          "example": ".eslintrc.json"
+        },
+        {
+          "term": "Prettier",
+          "english": "Prettier",
+          "russian": "форматировщик",
+          "example": ".prettierrc"
+        }
+      ]
+    },
+    {
+      "id": "day42_databases_orm",
+      "title": "Неделя 42: Базы данных и ORM",
+      "cards": [
+        {
+          "term": "MongoDB",
+          "english": "MongoDB",
+          "russian": "NoSQL база данных",
+          "example": "mongodb://localhost"
+        },
+        {
+          "term": "Mongoose",
+          "english": "Mongoose",
+          "russian": "ODM для MongoDB",
+          "example": "mongoose.connect('...')"
+        },
+        {
+          "term": "PostgreSQL",
+          "english": "PostgreSQL",
+          "russian": "реляционная база данных",
+          "example": "postgresql://"
+        },
+        {
+          "term": "MySQL",
+          "english": "MySQL",
+          "russian": "реляционная база данных",
+          "example": "mysql://"
+        },
+        {
+          "term": "Sequelize",
+          "english": "Sequelize",
+          "russian": "ORM для SQL (Node.js)",
+          "example": "new Sequelize('database')"
+        },
+        {
+          "term": "Prisma",
+          "english": "Prisma",
+          "russian": "ORM нового поколения",
+          "example": "prisma.schema"
+        },
+        {
+          "term": "Redis",
+          "english": "Redis",
+          "russian": "хранилище структур данных в памяти",
+          "example": "redis.createClient()"
+        },
+        {
+          "term": "index",
+          "english": "database index",
+          "russian": "индекс базы данных",
+          "example": "CREATE INDEX"
+        },
+        {
+          "term": "query",
+          "english": "query",
+          "russian": "запрос к базе данных",
+          "example": "SELECT * FROM users"
+        },
+        {
+          "term": "transaction",
+          "english": "database transaction",
+          "russian": "транзакция",
+          "example": "BEGIN; COMMIT;"
+        },
+        {
+          "term": "ACID",
+          "english": "ACID",
+          "russian": "свойства транзакций",
+          "example": "Atomicity, Consistency, Isolation, Durability"
+        },
+        {
+          "term": "sharding",
+          "english": "sharding",
+          "russian": "шардирование",
+          "example": "horizontal partitioning"
+        },
+        {
+          "term": "replication",
+          "english": "replication",
+          "russian": "репликация",
+          "example": "master-slave replication"
+        }
+      ]
+    },
+    {
+      "id": "day43_security_auth_cicd",
+      "title": "Неделя 43: Безопасность, аутентификация, CI/CD",
+      "cards": [
+        {
+          "term": "JWT",
+          "english": "JSON Web Token",
+          "russian": "токен аутентификации",
+          "example": "jwt.sign(payload, secret)"
+        },
+        {
+          "term": "OAuth",
+          "english": "OAuth",
+          "russian": "открытый стандарт делегирования доступа",
+          "example": "OAuth2 flow"
+        },
+        {
+          "term": "OAuth2",
+          "english": "OAuth2",
+          "russian": "версия 2 OAuth",
+          "example": "authorization code grant"
+        },
+        {
+          "term": "Passport.js",
+          "english": "Passport.js",
+          "russian": "аутентификация для Node.js",
+          "example": "passport.authenticate('jwt')"
+        },
+        {
+          "term": "bcrypt",
+          "english": "bcrypt",
+          "russian": "хеширование паролей",
+          "example": "bcrypt.hash(password, 10)"
+        },
+        {
+          "term": "helmet",
+          "english": "helmet",
+          "russian": "защита HTTP-заголовков",
+          "example": "app.use(helmet())"
+        },
+        {
+          "term": "CORS",
+          "english": "CORS",
+          "russian": "кросс-доменные запросы",
+          "example": "cors middleware"
+        },
+        {
+          "term": "XSS",
+          "english": "XSS (Cross-Site Scripting)",
+          "russian": "межсайтовый скриптинг",
+          "example": "sanitize input"
+        },
+        {
+          "term": "CSRF",
+          "english": "CSRF (Cross-Site Request Forgery)",
+          "russian": "межсайтовая подделка запроса",
+          "example": "anti-CSRF tokens"
+        },
+        {
+          "term": "SQL injection",
+          "english": "SQL injection",
+          "russian": "внедрение SQL-кода",
+          "example": "parameterized queries"
+        },
+        {
+          "term": "HTTPS",
+          "english": "HTTPS",
+          "russian": "безопасный HTTP",
+          "example": "https.createServer()"
+        },
+        {
+          "term": "SSL/TLS",
+          "english": "SSL/TLS",
+          "russian": "протоколы безопасной связи",
+          "example": "certificates"
+        },
+        {
+          "term": "CI/CD",
+          "english": "CI/CD",
+          "russian": "непрерывная интеграция и доставка",
+          "example": "GitHub Actions"
+        },
+        {
+          "term": "GitHub Actions",
+          "english": "GitHub Actions",
+          "russian": "CI/CD от GitHub",
+          "example": ".github/workflows"
+        },
+        {
+          "term": "GitLab CI",
+          "english": "GitLab CI",
+          "russian": "CI/CD от GitLab",
+          "example": ".gitlab-ci.yml"
+        },
+        {
+          "term": "Jenkins",
+          "english": "Jenkins",
+          "russian": "сервер автоматизации",
+          "example": "Jenkinsfile"
+        },
+        {
+          "term": "deploy",
+          "english": "deploy",
+          "russian": "развёртывание",
+          "example": "npm run deploy"
+        },
+        {
+          "term": "environment",
+          "english": "environment",
+          "russian": "окружение (dev/stage/prod)",
+          "example": "NODE_ENV=production"
+        },
+        {
+          "term": "dotenv",
+          "english": "dotenv",
+          "russian": "загрузка переменных из .env",
+          "example": "require('dotenv').config()"
+        }
+      ]
+    },
+    {
+      "id": "day44_microservices_docker_advanced",
+      "title": "Неделя 44: Микросервисы, Docker, продвинутые темы",
+      "cards": [
+        {
+          "term": "microservices",
+          "english": "microservices",
+          "russian": "микросервисная архитектура",
+          "example": "independent services"
+        },
+        {
+          "term": "monolith",
+          "english": "monolith",
+          "russian": "монолит",
+          "example": "single codebase"
+        },
+        {
+          "term": "API gateway",
+          "english": "API gateway",
+          "russian": "шлюз API",
+          "example": "Kong, Nginx"
+        },
+        {
+          "term": "service discovery",
+          "english": "service discovery",
+          "russian": "обнаружение сервисов",
+          "example": "Consul, etcd"
+        },
+        {
+          "term": "load balancer",
+          "english": "load balancer",
+          "russian": "балансировщик нагрузки",
+          "example": "nginx, HAProxy"
+        },
+        {
+          "term": "message queue",
+          "english": "message queue",
+          "russian": "очередь сообщений",
+          "example": "RabbitMQ, Kafka"
+        },
+        {
+          "term": "RabbitMQ",
+          "english": "RabbitMQ",
+          "russian": "брокер сообщений",
+          "example": "amqp://"
+        },
+        {
+          "term": "Kafka",
+          "english": "Kafka",
+          "russian": "платформа потоковой передачи событий",
+          "example": "kafka-node"
+        },
+        {
+          "term": "WebSocket",
+          "english": "WebSocket",
+          "russian": "протокол двусторонней связи",
+          "example": "ws://"
+        },
+        {
+          "term": "Server-Sent Events (SSE)",
+          "english": "Server-Sent Events",
+          "russian": "события с сервера через HTTP",
+          "example": "EventSource"
+        },
+        {
+          "term": "Docker",
+          "english": "Docker",
+          "russian": "платформа контейнеризации",
+          "example": "docker build"
+        },
+        {
+          "term": "container",
+          "english": "container",
+          "russian": "контейнер",
+          "example": "docker run"
+        },
+        {
+          "term": "image",
+          "english": "Docker image",
+          "russian": "образ",
+          "example": "docker pull"
+        },
+        {
+          "term": "Dockerfile",
+          "english": "Dockerfile",
+          "russian": "инструкции для сборки образа",
+          "example": "FROM node:14"
+        },
+        {
+          "term": "docker-compose",
+          "english": "docker-compose",
+          "russian": "многоконтейнерные приложения",
+          "example": "docker-compose up"
+        },
+        {
+          "term": "PM2",
+          "english": "PM2",
+          "russian": "менеджер процессов для Node.js (продакшен)",
+          "example": "pm2 start app.js"
+        },
+        {
+          "term": "Nodemon",
+          "english": "Nodemon",
+          "russian": "автоматический перезапуск при разработке",
+          "example": "nodemon app.js"
+        },
+        {
+          "term": "forever",
+          "english": "forever",
+          "russian": "обеспечение непрерывной работы скрипта",
+          "example": "forever start app.js"
+        },
+        {
+          "term": "cluster",
+          "english": "cluster module",
+          "russian": "модуль кластеризации Node.js",
+          "example": "cluster.fork()"
+        },
+        {
+          "term": "worker threads",
+          "english": "worker threads",
+          "russian": "потоки для параллельных вычислений",
+          "example": "new Worker(__filename)"
+        },
+        {
+          "term": "debugging",
+          "english": "debugging",
+          "russian": "отладка",
+          "example": "node inspect app.js"
+        },
+        {
+          "term": "profiling",
+          "english": "profiling",
+          "russian": "профилирование производительности",
+          "example": "node --prof"
+        },
+        {
+          "term": "memory leak",
+          "english": "memory leak",
+          "russian": "утечка памяти",
+          "example": "heapdump"
+        },
+        {
+          "term": "heap snapshot",
+          "english": "heap snapshot",
+          "russian": "снимок памяти",
+          "example": "process.memoryUsage()"
+        },
+        {
+          "term": "garbage collection",
+          "english": "garbage collection",
+          "russian": "сборка мусора",
+          "example": "--expose-gc"
+        },
+        {
+          "term": "stack trace",
+          "english": "stack trace",
+          "russian": "стек вызовов",
+          "example": "console.trace()"
+        },
+        {
+          "term": "linting",
+          "english": "linting",
+          "russian": "статический анализ кода",
+          "example": "ESLint"
+        },
+        {
+          "term": "formatting",
+          "english": "code formatting",
+          "russian": "форматирование кода",
+          "example": "Prettier"
+        },
+        {
+          "term": "pre-commit hook",
+          "english": "pre-commit hook",
+          "russian": "хук перед коммитом",
+          "example": "husky"
+        },
+        {
+          "term": "Husky",
+          "english": "Husky",
+          "russian": "управление Git-хуками",
+          "example": "husky install"
+        },
+        {
+          "term": "lint-staged",
+          "english": "lint-staged",
+          "russian": "запуск линтеров на подготовленных файлах",
+          "example": "lint-staged"
+        },
+        {
+          "term": "SemVer",
+          "english": "Semantic Versioning",
+          "russian": "семантическое версионирование",
+          "example": "1.2.3"
+        },
+        {
+          "term": "major version",
+          "english": "major version",
+          "russian": "мажорная версия",
+          "example": "2.0.0"
+        },
+        {
+          "term": "minor version",
+          "english": "minor version",
+          "russian": "минорная версия",
+          "example": "1.1.0"
+        },
+        {
+          "term": "patch version",
+          "english": "patch version",
+          "russian": "патч-версия",
+          "example": "1.0.1"
+        },
+        {
+          "term": "lock file",
+          "english": "lock file (package-lock.json, yarn.lock)",
+          "russian": "файл блокировки версий",
+          "example": "package-lock.json"
+        },
+        {
+          "term": "peer dependencies",
+          "english": "peer dependencies",
+          "russian": "пиринговые зависимости",
+          "example": "react >=17"
+        },
+        {
+          "term": "bundled dependencies",
+          "english": "bundled dependencies",
+          "russian": "связанные зависимости",
+          "example": "bundledDependencies"
+        },
+        {
+          "term": "optional dependencies",
+          "english": "optional dependencies",
+          "russian": "опциональные зависимости",
+          "example": "optionalDependencies"
         }
       ]
     }
