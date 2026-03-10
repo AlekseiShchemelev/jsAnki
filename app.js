@@ -753,8 +753,8 @@ function setupSwipeGestures() {
             return;
         }
         
-        // Prevent default only for horizontal swipes
-        if (Math.abs(diffX) > 10) {
+        // Prevent default only for horizontal swipes (check if cancelable first)
+        if (Math.abs(diffX) > 10 && e.cancelable) {
             e.preventDefault();
         }
     };
