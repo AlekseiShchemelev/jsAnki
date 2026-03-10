@@ -531,6 +531,13 @@ function updateCard() {
 const highlightCache = new Map();
 const MAX_CACHE_SIZE = 100;
 
+function decodeHtmlEntities(text) {
+    if (typeof text !== 'string') return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
 function highlightCode(code) {
     if (typeof code !== 'string') return '';
     
@@ -539,7 +546,10 @@ function highlightCode(code) {
         return highlightCache.get(code);
     }
     
-    let highlighted = escapeHtml(code)
+    // Decode existing HTML entities first (in case data already contains encoded HTML)
+    const decodedCode = decodeHtmlEntities(code);
+    
+    let highlighted = escapeHtml(decodedCode)
         .replace(/\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|default|try|catch|finally|throw|new|this|class|extends|super|static|get|set|import|export|from|async|await|typeof|instanceof|in|of|void|delete|with|yield)\b/g, 
             '<span class="token-keyword">$1</span>')
         .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 
