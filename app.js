@@ -641,8 +641,12 @@ function updateCard() {
 // ========================================
 function stripHtmlTags(text) {
     if (typeof text !== 'string') return '';
-    // Use regex to remove HTML tags - safer than DOM manipulation
-    return text.replace(/<[^>]*>/g, '');
+    // First decode any HTML entities (&lt; &gt; &quot; etc.)
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    const decoded = textarea.value;
+    // Then remove HTML tags
+    return decoded.replace(/<[^>]*>/g, '');
 }
 
 function highlightCode(code) {
