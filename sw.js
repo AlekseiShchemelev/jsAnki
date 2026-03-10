@@ -1,4 +1,4 @@
-const CACHE_NAME = 'anki-js-v7';
+const CACHE_NAME = 'anki-js-v9';
 const STATIC_ASSETS = [
     './',
     './index.html',

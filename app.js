@@ -641,12 +641,33 @@ function updateCard() {
 // ========================================
 function stripHtmlTags(text) {
     if (typeof text !== 'string') return '';
-    // First decode any HTML entities (&lt; &gt; &quot; etc.)
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    const decoded = textarea.value;
-    // Then remove HTML tags
-    return decoded.replace(/<[^>]*>/g, '');
+    
+    let result = text;
+    
+    // First decode HTML entities if present (&lt; &gt; &quot; etc.)
+    try {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = text;
+        result = textarea.value;
+    } catch (e) {
+        // If DOM fails, continue with original
+    }
+    
+    // Remove HTML tags and their attributes
+    // This handles: <span class="...">, </span>, <br>, etc.
+    result = result.replace(/<\/?[^>]+(>|$)/g, '');
+    
+    // Remove leftover HTML entities
+    result = result.replace(/&lt;|&gt;|&quot;|&amp;/g, '');
+    
+    // Clean up any leftover attribute values like "token-keyword">
+    result = result.replace(/"[^"]*"\s*>\s*/g, '');
+    result = result.replace(/'[^']*'\s*>\s*/g, '');
+    
+    // Remove standalone > and stray quotes
+    result = result.replace(/^\s*>\s*/gm, '');
+    
+    return result.trim();
 }
 
 function highlightCode(code) {
@@ -661,20 +682,22 @@ function highlightCode(code) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
     
-    // Apply syntax highlighting
-    return escaped
+    // Apply syntax highlighting (no quotes around class value to avoid string regex conflicts)
+    const result = escaped
         .replace(/\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|default|try|catch|finally|throw|new|this|class|extends|super|static|get|set|import|export|from|async|await|typeof|instanceof|in|of|void|delete|with|yield)\b/g, 
-            '<span class="token-keyword">$1</span>')
+            '<span class=token-keyword>$1</span>')
         .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 
-            '<span class="token-boolean">$1</span>')
+            '<span class=token-boolean>$1</span>')
         .replace(/(\/\/.*$)/gm, 
-            '<span class="token-comment">$1</span>')
+            '<span class=token-comment>$1</span>')
         .replace(/("[^"]*"|'[^']*'|`[^`]*`)/g, 
-            '<span class="token-string">$1</span>')
+            '<span class=token-string>$1</span>')
         .replace(/\b(\d+\.?\d*)\b/g, 
-            '<span class="token-number">$1</span>')
+            '<span class=token-number>$1</span>')
         .replace(/\b(console|Math|JSON|Object|Array|String|Number|Boolean|Date|RegExp|Promise|Set|Map|WeakMap|WeakSet|Error|window|document|localStorage|sessionStorage|fetch|navigator|history|location)\b/g, 
-            '<span class="token-builtins">$1</span>');
+            '<span class=token-builtins>$1</span>');
+    
+    return result;
 }
 
 // ========================================
